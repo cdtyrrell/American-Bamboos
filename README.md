@@ -1,11 +1,14 @@
-# Welcome to the Symbiota-light code repository
+# American Bamboos code repository
 
-### ABOUT THIS SOFTWARE
+### ABOUT THE PROJECT
 
-The Symbiota Software Project is building a library of webtools to aid biologists in establishing specimen based virtual floras and faunas. This project developed from the realization that complex, information rich biodiversity portals are best built through collaborative efforts between software developers, biologist, wildlife managers, and citizen scientist. The central premise of this open source software project is that through a partnership between software engineers and scientific community, higher quality and more publicly useful biodiversity portals can be built. An open source software framework allows the technicians to create the tools, thus freeing the biologist to concentrate their efforts on the curation of quality datasets. In this manor, we can create 
-something far greater than a single entity is capable of doing on their own.
+American Bamboos is dedicated to documenting and presenting information on the diversity and distribution of bamboo species native to the western hemisphere.
 
-More information about this project can be accessed through:
+### ABOUT THE SOFTWARE
+
+This repository a customized fork the Symbiota Virtual Flora/Fauna software project. The Symbiota Software Project is building a library of webtools to aid biologists in establishing specimen based virtual floras and faunas. Symbiota developed from the realization that complex, information rich biodiversity portals are best built through collaborative efforts between software developers, biologists, natural resource managers, and citizen scientists.
+
+For more information about Symbiota, visit:
 
 (https://symbiota.org)
 
@@ -21,29 +24,3 @@ Arizona State University Vascular Plant and Lichen Herbarium have
 been intricately involved in the development from the start. 
 Sky Island Alliance and the Arizona-Sonora Desert Museum have both 
 been long-term participants in the development of this product.
-
-## FEATURES
-
-* Specimen Search Engine
-  * Taxonomic Thesaurus for querying taxonomic synonyms
-  * Google Map and Google Earth mapping capabilities
-  * Dynamic species list generated from specimens records
-* Flora/Fauna Management System
-  * Static species list (local floras/faunas) 
-* Interactive Identification Keys
-  * Key generation for are species list within system
-  * Key generator based on a point locality
-* Image Library 
-
-
-## LIMITATIONS
-
-* Tested thoroughly on Linux and Window operating systems
-* Code should work with an PHP enabled web server, though central development and testing done using Apache HTTP Server
-
-
-## INSTALLATION
-
-Please read the [INSTALL.md](docs/INSTALL.md) file for installation instructions.
-
-
