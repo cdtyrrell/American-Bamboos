@@ -16,3 +16,4 @@ includes/spprofilehead.php
 includes/usagepolicy.php
 .project
 .settings/org.eclipse.core.resources.prefs
+.DS-Store
