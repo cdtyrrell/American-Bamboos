@@ -17,10 +17,9 @@ if($activateJQuery){
 	echo '<link href="'.$CLIENT_ROOT.'/css/jquery-ui.css" type="text/css" rel="stylesheet">';
 }
 ?>
-<!--
+
 <link href="<?php echo $CLIENT_ROOT; ?>/css/base.css?ver=1" type="text/css" rel="stylesheet">
-<link href="<?php echo $CLIENT_ROOT; ?>/css/symb/main.css?ver=1" type="text/css" rel="stylesheet">
--->
+<!-- <link href="<?php echo $CLIENT_ROOT; ?>/css/symb/main.css?ver=1" type="text/css" rel="stylesheet"> -->
 <link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/w3.css">
 <link rel="stylesheet" href="<?php echo $CLIENT_ROOT; ?>/css/w3-theme-light-green.css">
 <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Open+Sans'>
