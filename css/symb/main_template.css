@@ -6,7 +6,7 @@ body{
 	min-width:1400px;
 	margin-top:0px;
 	font-family: Verdana, Geneva, sans-serif;
-	background-color:#8DAA9D;
+	background-color:#e9e9e9;
 	font-size: 12px;
 }
 
@@ -14,7 +14,7 @@ body{
 #maintable{
 	width: 100%;
 	background-color:#FFFFFF;
-	border:1px solid #474b4f;
+	border:1px solid grey;
 }
 
 #maintable td{
@@ -36,12 +36,10 @@ body{
 
 /*Central div in the middle center table div */
 #innertext{
-	background-color:#FFFFFF;
-	color:#000000;
 }
 
 #innertext a{
-	color: #F6AE2D;
+
 }
 #innertext a:hover{
 
@@ -76,7 +74,6 @@ table{
 }
 
 h1{
-	color: #6b6e60;
 }
 
 h2{
@@ -108,21 +105,12 @@ table.styledtable tr.alt td {
  */
 
 #header{
-	color:#6b6e60;
-	background-color:#FFFFFF;
+	color:#FFFFFF;
+	background-color:#000000;
 	text-align:left;
 	padding: 0px;
 	padding-bottom: 0px;
-	border-bottom:1px solid #000000;
-	font-family: Arial, Helvetica, sans-serif;
-}
-
-#title_div{
-	margin-left: 40px;
-	color: #6b6e60;
-	font-family: 'Mate', serif;
-	letter-spacing: 1px;
-	/* text-shadow: 0 0 7px rgba(0,0,0,0.5); */
+	border-bottom:1px solid #333333;
 }
 
 #top_navbar{
@@ -131,13 +119,13 @@ table.styledtable tr.alt td {
 	background-image:url(images/menu_pri_background.jpg);
 	background-repeat:repeat-x;
 	background-position:top;
-	background-color:#6b6e60;;
+	background-color:#c2c2c2;
 }
 #right_navbarlinks{
 	clear:both;
 	font-size:11px;
 	float:right;
-	color:#FFFFFF;
+	color:#000000;
 	margin-top:9px;
 }
 
@@ -154,7 +142,7 @@ table.styledtable tr.alt td {
 	background-image:url(images/menu_pri_background.jpg);
 	background-repeat:repeat-x;
 	background-position:top;
-	background-color:#6b6e60;;
+	background-color:#c2c2c2;
 }
 #hor_dropdown li{		
 	float:left;
@@ -164,7 +152,7 @@ table.styledtable tr.alt td {
 }
 #hor_dropdown a{
 	display:block;
-	color:#FFFFFF;
+	color:#000000;
 	text-decoration:none;
 	padding-top:8px;
 	padding-bottom:10px;
@@ -175,8 +163,8 @@ table.styledtable tr.alt td {
     background-position: right bottom;
 }
 #hor_dropdown a:hover{
-	background-color:#F6AE2D;
-	color:#000000;
+	background-color:#999999;
+	color:#FFFFFF;
 	padding-top:8px;
 	padding-bottom:10px;
 	padding-left:10px;
@@ -189,7 +177,7 @@ table.styledtable tr.alt td {
 	position:absolute;
 	left:-9999px;
 	top:-9999px;
-	background-color:#6b6e60;
+	background-color:#dcdcdc;
 	z-index:1000;
 }
 #hor_dropdown ul li{
@@ -210,11 +198,11 @@ table.styledtable tr.alt td {
 	text-indent:8px;
 	padding-right:8px;
 	background-image: none;
-	background-color:#6b6e60;
+	background-color:#dcdcdc;
 	z-index:1000;
 }
 #hor_dropdown li:hover ul li a:hover { 
-	background:#F6AE2D; 
+	background:#999999; 
 }
 
 #hor_dropdown li ul li ul {
