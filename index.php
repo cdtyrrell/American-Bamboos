@@ -40,10 +40,10 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	      <!-- Profile -->
 	      <div class="w3-card w3-round w3-white">
 	        <div class="w3-container">
-	          <h4 class="w3-center">American Bamboos</h4>
+	          <h4 class="w3-center"><?php echo $LANG['AMERICAN_BAMBOOS']; ?></h4>
 	          <p class="w3-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Bamboo_DSCN2465.jpg/450px-Bamboo_DSCN2465.jpg" class="w3-rounded-rect" style="height:106px;width:106px" alt="image credit: Michele~commonswiki"></p>
 	          <hr>
-	          <p>Dedicated to documenting and presenting information on the diversity and distribution of bamboo species native to the western hemisphere.</p>
+	          <p><?php echo $LANG['MISSION']; ?></p>
 	         </div>
 	       </div>
 	       <br>
@@ -132,9 +132,9 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	             <div class="w3-container w3-padding">
 
 	               <span class="w3-right w3-opacity">Poaceae: Bambusoideae</span>
-	               <h4>What is a bamboo?</h4><br>
+	               <h4><?php echo $LANG['WHAT_IS_H4']; ?></h4><br>
 	               <hr class="w3-clear">
-	               <p>The bamboos (Poaceae: Bambusoideae) are grasses that evolved in and adapted to forest habitats (though some species can now be found in more open environments). There are over 1,500 species of bamboo worldwide, around a third of which are native to the western hemisphere including one genus with three species (<i>Arundinaria</i>; "cane") that is native to what is now the southeastern continental United States.</p>
+	               <p><?php echo $LANG['WHAT_IS']; ?></p>
 	                 <div class="w3-row-padding" style="margin:0 -16px">
 	                   <div class="w3-half">
 	                     <img src="images/uploads/Chusquea_pohlii-cropped.jpg" style="width:100%" alt="Branch of Chusquea species" class="w3-margin-bottom">

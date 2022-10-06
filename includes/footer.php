@@ -5,7 +5,7 @@
 		<a href="https://www.americanbamboos.org"><h5>www.americanbamboos.org</h5></a>
 	</p>
 	<p>
-	<a href="<?php $_SERVER ?>?lang=en">English</a> -- <a href="<?php $_SERVER ?>?lang=es">Español</a> -- <a href="<?php $_SERVER ?>?lang=pt">Português</a> 
+	<a onClick="setLanguage({value:'en'})" href="<?php $_SERVER ?>?lang=en">English</a> -- <a onClick="setLanguage({value:'es'})" href="<?php $_SERVER ?>?lang=es">Español</a> -- <a onClick="setLanguage({value:'pt'})" href="<?php $_SERVER ?>?lang=pt">Português</a> 
 	</p>
 </footer>
 
