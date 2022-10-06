@@ -3,22 +3,19 @@ include_once('config/symbini.php');
 include_once('content/lang/index.'.$LANG_TAG.'.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 ?>
-
+<!DOCTYPE html>
 <html>
 <head>
 	<title><?php echo $DEFAULT_TITLE; ?> Home</title>
 	<?php
-	$activateJQuery = true;
+	$activateJQuery = false;
 	include_once($SERVER_ROOT.'/includes/head.php');
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
 	?>
+<!--
 	<link href="css/quicksearch.css" type="text/css" rel="Stylesheet" />
 	<script src="js/jquery-3.2.1.min.js" type="text/javascript"></script>
-	<script src="js/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
-	<link href="js/jquery-ui/jquery-ui.min.css" type="text/css" rel="Stylesheet" />
-	<script type="text/javascript">
-		var clientRoot = "<?php echo $CLIENT_ROOT; ?>";
-	</script>
+	<script src="js/jquery-ui-1.12.1/jquery-ui.min.js" type="text/javascript"></script>
 	<script src="js/symb/api.taxonomy.taxasuggest.js" type="text/javascript"></script>
 	<style>
 		#slideshowcontainer{
@@ -29,12 +26,14 @@ header("Content-Type: text/html; charset=".$CHARSET);
 			margin-right: auto;
 		}
 	</style>
+-->
 </head>
 <body class="w3-theme-l5">
 	<?php
 	include($SERVER_ROOT.'/includes/header.php');
 	?>
-	<!-- This is inner text! -->
+
+	<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
 	  <!-- The Grid -->
 	  <div class="w3-row">
 	    <!-- Left Column -->
@@ -42,10 +41,8 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	      <!-- Profile -->
 	      <div class="w3-card w3-round w3-white">
 	        <div class="w3-container">
-
-						<h4 class="w3-center">American Bamboos</h4>
-	          <p class="w3-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Bamboo_DSCN2465.jpg/450px-Bamboo_DSCN2465.jpg" class="w3-circle" style="height:106px;width:106px" alt="A bamboo"></p>
-	          <p>image credit: Michele~commonswiki<p>
+	          <h4 class="w3-center">American Bamboos</h4>
+	          <p class="w3-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Bamboo_DSCN2465.jpg/450px-Bamboo_DSCN2465.jpg" class="w3-rounded-rect" style="height:106px;width:106px" alt="image credit: Michele~commonswiki"></p>
 	          <hr>
 	          <p>Dedicated to documenting and presenting information on the diversity and distribution of bamboo species native to the western hemisphere.</p>
 	         </div>
@@ -53,6 +50,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	       <br>
 
 	       <!-- Accordion -->
+<!--
 	       <div class="w3-card w3-round">
 	         <div class="w3-white">
 	           <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-theme-l1 w3-left-align">Systematics</button>
@@ -90,6 +88,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	         </div>
 	       </div>
 	       <br>
+-->
 
 	       <!-- Interests -->
 	       <div class="w3-card w3-round w3-white w3-hide-small">
@@ -112,7 +111,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	       </div>
 	       <br>
 
-	       <!-- Alert Box -->
+	       <!-- Alert Box 
 	       <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
 	         <span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
 	           <i class="fa fa-remove"></i>
@@ -120,6 +119,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	         <p><strong>Hey!</strong></p>
 	         <p>This box can be closed.</p>
 	       </div>
+		   -->
 
 	     <!-- End Left Column -->
 	     </div>
@@ -151,17 +151,17 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	       </div>
 
 	       <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
-	 				<?php
-	   				$searchText = 'Search Taxon';
-	   				$buttonText = 'Search';
-	   				include_once($SERVER_ROOT.'/classes/PluginsManager.php');
-	   				$pluginManager = new PluginsManager();
-	           $quicksearch = $pluginManager->quickSearchScript();
-	           $quicksearch .= $pluginManager->quickSearchDiv($searchText,"w3-container w3-padding");
-	       		$quicksearch .= $pluginManager->quickSearchInput("Bambusoideae","w3-padding");
-	           $quicksearch .= $pluginManager->quickSearchButton($buttonText,"w3-button w3-theme-d2 w3-margin-bottom");
-	   				echo $quicksearch;
-	 				?>
+					 <div id="quicksearchdiv">
+ 						<form name="quicksearch" id="quicksearch" action="<?php echo $CLIENT_ROOT; ?>/taxa/index.php" method="get" onsubmit="return verifyQuickSearch(this);">
+ 							<div id="quicksearchtext" >
+ 							<?php echo (isset($LANG['QSEARCH_SEARCH'])?$LANG['QSEARCH_SEARCH']:'Taxon Search'); ?>
+ 						</div>
+ 							<input id="taxa" type="text" name="taxon" />
+ 							<button name="formsubmit"  id="quicksearchbutton" type="submit" value="Search Terms">
+ 							<?php echo (isset($LANG['QSEARCH_SEARCH_BUTTON'])?$LANG['QSEARCH_SEARCH_BUTTON']:'Search'); ?>
+ 						</button>
+ 						</form>
+ 					</div>
 	       </div>
 
 	     <!-- End Right Column -->
@@ -179,15 +179,3 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	?>
 </body>
 </html>
-
-<!-- <div id="quicksearchdiv">
-	<form name="quicksearch" id="quicksearch" action="<?php echo $CLIENT_ROOT; ?>/taxa/index.php" method="get" onsubmit="return verifyQuickSearch(this);">
-		<div id="quicksearchtext" >
-		<?php #echo (isset($LANG['QSEARCH_SEARCH'])?$LANG['QSEARCH_SEARCH']:'Taxon Search'); ?>
-	</div>
-		<input id="taxa" type="text" name="taxon" />
-		<button name="formsubmit"  id="quicksearchbutton" type="submit" value="Search Terms">
-		<?php #echo (isset($LANG['QSEARCH_SEARCH_BUTTON'])?$LANG['QSEARCH_SEARCH_BUTTON']:'Search'); ?>
-	</button>
-	</form>
-</div> -->

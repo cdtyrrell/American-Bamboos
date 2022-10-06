@@ -37,10 +37,10 @@ elseif($taxonValue){
 $taxonManager->setLanguage($lang);
 if($pid === '' && isset($DEFAULT_PROJ_ID) && $DEFAULT_PROJ_ID) $pid = $DEFAULT_PROJ_ID;
 
-if($redirect = $taxonManager->getRedirectLink()){
+/* if($redirect = $taxonManager->getRedirectLink()){
 	header('Location: '.$redirect);
 	exit;
-}
+} */
 
 $isEditor = false;
 if($SYMB_UID){
