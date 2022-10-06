@@ -25,7 +25,7 @@ $smManager = new SiteMapManager();
 	</script>
 	<script type="text/javascript" src="js/symb/shared.js"></script>
 </head>
-<body>
+<body class="w3-theme-l5">
 	<?php
 	$displayLeftMenu = (isset($sitemapMenu)?$sitemapMenu:"true");
 	include($SERVER_ROOT.'/includes/header.php');

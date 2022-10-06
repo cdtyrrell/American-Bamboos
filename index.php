@@ -33,7 +33,6 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	include($SERVER_ROOT.'/includes/header.php');
 	?>
 
-	<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
 	  <!-- The Grid -->
 	  <div class="w3-row">
 	    <!-- Left Column -->
@@ -169,11 +168,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 
 	   <!-- End Grid -->
 	   </div>
-
-	 <!-- End Page Container -->
-	 </div>
 	 <br>
-
 	<?php
 	include($SERVER_ROOT.'/includes/footer.php');
 	?>

@@ -1,4 +1,5 @@
 <!-- Footer -->
+</div>  <!-- this closes the "w3-page-container div that is created in header.php-->
 <footer class="w3-container w3-theme-d3 w3-padding-16 w3-center">
   <a href="https://www.americanbamboos.org"><h5>www.americanbamboos.org</h5></a>
 </footer>

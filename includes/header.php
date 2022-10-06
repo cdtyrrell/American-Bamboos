@@ -95,3 +95,5 @@
            ?>
 
          </div>
+  
+<div class="w3-container w3-content w3-page-content">
