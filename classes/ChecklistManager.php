@@ -1,10 +1,9 @@
 <?php
-include_once($SERVER_ROOT.'/config/dbconnection.php');
+include_once($SERVER_ROOT.'/classes/Manager.php');
 include_once($SERVER_ROOT.'/classes/ChecklistVoucherAdmin.php');
 
-class ChecklistManager {
+class ChecklistManager extends Manager{
 
-	private $conn;
 	private $clid;
 	private $dynClid;
 	private $clName;
@@ -13,7 +12,7 @@ class ChecklistManager {
 	private $voucherArr = array();
 	private $pid = '';
 	private $projName = '';
-	private $taxaList = Array();
+	private $taxaList = array();
 	private $langId;
 	private $thesFilter = 0;
 	private $taxonFilter;
@@ -21,11 +20,12 @@ class ChecklistManager {
 	private $showCommon = false;
 	private $showSynonyms = false;
 	private $showImages = false;
+	private $limitImagesToVouchers = false;
 	private $showVouchers = false;
 	private $showAlphaTaxa = false;
 	private $searchCommon = false;
 	private $searchSynonyms = true;
-	private $filterArr = Array();
+	private $filterArr = array();
 	private $imageLimit = 100;
 	private $taxaLimit = 500;
 	private $speciesCount = 0;
@@ -35,11 +35,11 @@ class ChecklistManager {
 	private $basicSql;
 
 	function __construct() {
-		$this->conn = MySQLiConnectionFactory::getCon("readonly");
+		parent::__construct();
 	}
 
 	function __destruct(){
- 		if(!($this->conn === false)) $this->conn->close();
+		parent::__destruct();
 	}
 
 	public function setClid($clid){
@@ -185,7 +185,7 @@ class ChecklistManager {
 
 	//return an array: family => array(TID => sciName)
 	public function getTaxaList($pageNumber = 1,$retLimit = 500){
-		if(!$this->clid && !$this->dynClid) return;
+		if(!$this->clid && !$this->dynClid) return array();
 		//Get species list
 		$speciesPrev="";
 		$taxonPrev="";
@@ -263,6 +263,7 @@ class ChecklistManager {
 		if($this->taxaCount < (($pageNumber-1)*$retLimit)){
 			$this->taxaCount = 0; $this->genusCount = 0; $this->familyCount = 0;
 			unset($this->filterArr);
+			$this->filterArr = array();
 			return $this->getTaxaList(1,$retLimit);
 		}
 		if($this->taxaList){
@@ -324,44 +325,55 @@ class ChecklistManager {
 
 	private function setImages(){
 		if($this->taxaList){
-			$sql = 'SELECT i2.tid, i.url, i.thumbnailurl FROM images i INNER JOIN '.
-				'(SELECT ts1.tid, SUBSTR(MIN(CONCAT(LPAD(i.sortsequence,6,"0"),i.imgid)),7) AS imgid '.
-				'FROM taxstatus ts1 INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
-				'INNER JOIN images i ON ts2.tid = i.tid '.
-				'WHERE i.sortsequence < 500 AND (i.thumbnailurl IS NOT NULL) AND ts1.taxauthid = 1 AND ts2.taxauthid = 1 AND (ts1.tid IN('.implode(',',array_keys($this->taxaList)).')) '.
-				'GROUP BY ts1.tid) i2 ON i.imgid = i2.imgid';
-			//echo $sql;
-			$rs = $this->conn->query($sql);
 			$matchedArr = array();
-			while($row = $rs->fetch_object()){
-				$this->taxaList[$row->tid]['url'] = $row->url;
-				$this->taxaList[$row->tid]['tnurl'] = $row->thumbnailurl;
-				$matchedArr[] = $row->tid;
+			if($this->limitImagesToVouchers){
+				$sql = 'SELECT i.tid, i.url, i.thumbnailurl, i.originalurl
+					FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid
+					INNER JOIN fmvouchers v ON o.occid = v.occid
+					WHERE (v.clid = 2) AND (i.tid IN('.implode(',',array_keys($this->taxaList)).'))';
+				$matchedArr = $this->setImageSubset($sql);
 			}
-			$rs->free();
-			$missingArr = array_diff(array_keys($this->taxaList),$matchedArr);
-			if($missingArr){
-				//Get children images
-				$sql2 = 'SELECT i2.tid, i.url, i.thumbnailurl FROM images i INNER JOIN '.
-					'(SELECT ts1.parenttid AS tid, SUBSTR(MIN(CONCAT(LPAD(i.sortsequence,6,"0"),i.imgid)),7) AS imgid '.
+			if($missingArr = array_diff(array_keys($this->taxaList),$matchedArr)){
+				$sql = 'SELECT i2.tid, i.url, i.thumbnailurl FROM images i INNER JOIN '.
+					'(SELECT ts1.tid, SUBSTR(MIN(CONCAT(LPAD(i.sortsequence,6,"0"),i.imgid)),7) AS imgid '.
 					'FROM taxstatus ts1 INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
 					'INNER JOIN images i ON ts2.tid = i.tid '.
-					'WHERE i.sortsequence < 500 AND (i.thumbnailurl IS NOT NULL) AND ts1.taxauthid = 1 AND ts2.taxauthid = 1 AND (ts1.parenttid IN('.implode(',',$missingArr).')) '.
+					'WHERE i.sortsequence < 500 AND (i.thumbnailurl IS NOT NULL) AND ts1.taxauthid = 1 AND ts2.taxauthid = 1 AND (ts1.tid IN('.implode(',',$missingArr).')) '.
 					'GROUP BY ts1.tid) i2 ON i.imgid = i2.imgid';
-				//echo $sql;
-				$rs2 = $this->conn->query($sql2);
-				while($row2 = $rs2->fetch_object()){
-					$this->taxaList[$row2->tid]['url'] = $row2->url;
-					$this->taxaList[$row2->tid]['tnurl'] = $row2->thumbnailurl;
+				$matchedArr = $this->setImageSubset($sql);
+				if($missingArr = array_diff(array_keys($this->taxaList),$matchedArr)){
+					//Get children images
+					$sql = 'SELECT i2.tid, i.url, i.thumbnailurl FROM images i INNER JOIN '.
+						'(SELECT ts1.parenttid AS tid, SUBSTR(MIN(CONCAT(LPAD(i.sortsequence,6,"0"),i.imgid)),7) AS imgid '.
+						'FROM taxstatus ts1 INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
+						'INNER JOIN images i ON ts2.tid = i.tid '.
+						'WHERE i.sortsequence < 500 AND (i.thumbnailurl IS NOT NULL) AND ts1.taxauthid = 1 AND ts2.taxauthid = 1 AND (ts1.parenttid IN('.implode(',',$missingArr).')) '.
+						'GROUP BY ts1.tid) i2 ON i.imgid = i2.imgid';
+					$this->setImageSubset($sql);
 				}
-				$rs2->free();
 			}
 		}
 	}
 
+	private function setImageSubset($sql){
+		$matchTidArr = array();
+		if($this->taxaList){
+			//echo $sql;
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_object()){
+				if(!in_array($r->tid,$matchTidArr)){
+					$this->taxaList[$r->tid]['url'] = $r->url;
+					$this->taxaList[$r->tid]['tnurl'] = $r->thumbnailurl;
+					$matchTidArr[$r->tid] = $r->tid;
+				}
+			}
+			$rs->free();
+		}
+		return $matchTidArr;
+	}
+
 	private function setVernaculars(){
 		if($this->taxaList){
-			$tempVernArr = array();
 			$sql = 'SELECT ts1.tid, v.vernacularname '.
 				'FROM taxstatus ts1 INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
 				'INNER JOIN taxavernaculars v ON ts2.tid = v.tid '.
@@ -614,17 +626,17 @@ class ChecklistManager {
 	//Checklist index page fucntions
 	public function getChecklists($limitToKey=false){
 		$retArr = Array();
-		$sql = 'SELECT p.pid, p.projname, p.ispublic, c.clid, c.name, c.access, c.defaultSettings '.
-			'FROM fmchecklists c LEFT JOIN fmchklstprojlink cpl ON c.clid = cpl.clid '.
-			'LEFT JOIN fmprojects p ON cpl.pid = p.pid '.
-			'WHERE ((c.access LIKE "public%") ';
+		$sql = 'SELECT p.pid, p.projname, p.ispublic, c.clid, c.name, c.access, c.defaultSettings, COUNT(l.tid) AS sppcnt
+			FROM fmchecklists c LEFT JOIN fmchklstprojlink cpl ON c.clid = cpl.clid
+			INNER JOIN fmchklsttaxalink l ON c.clid = l.clid
+			LEFT JOIN fmprojects p ON cpl.pid = p.pid
+			WHERE ((c.access LIKE "public%") ';
 		if(isset($GLOBALS['USER_RIGHTS']['ClAdmin']) && $GLOBALS['USER_RIGHTS']['ClAdmin']) $sql .= 'OR (c.clid IN('.implode(',',$GLOBALS['USER_RIGHTS']['ClAdmin']).'))';
 		$sql .= ') AND ((p.pid IS NULL) OR (p.ispublic = 1) ';
 		if(isset($GLOBALS['USER_RIGHTS']['ProjAdmin']) && $GLOBALS['USER_RIGHTS']['ProjAdmin']) $sql .= 'OR (p.pid IN('.implode(',',$GLOBALS['USER_RIGHTS']['ProjAdmin']).'))';
 		$sql .= ') ';
 		if($this->pid) $sql .= 'AND (p.pid = '.$this->pid.') ';
-		$sql .= 'ORDER BY p.projname, c.Name';
-		//echo $sql;
+		$sql .= 'GROUP BY p.projname, c.Name HAVING sppcnt > 10';
 		$rs = $this->conn->query($sql);
 		while($row = $rs->fetch_object()){
 			if($limitToKey){
@@ -760,6 +772,10 @@ class ChecklistManager {
 		if($bool) $this->showImages = true;
 	}
 
+	public function setLimitImagesToVouchers($bool){
+		if($bool) $this->limitImagesToVouchers = true;
+	}
+
 	public function setShowVouchers($bool){
 		if($bool) $this->showVouchers = true;
 	}
@@ -866,17 +882,12 @@ class ChecklistManager {
 	}
 
 	//Misc functions
-	private function cleanOutStr($str){
-		$str = str_replace('"',"&quot;",$str);
-		$str = str_replace("'","&apos;",$str);
+	public function cleanOutText($str){
+		//Need to clean for MS Word ouput: strip html tags, convert all html entities and then reset as html tags
+		$str = strip_tags($str);
+		$str = html_entity_decode($str);
+		$str = htmlspecialchars($str);
 		return $str;
-	}
-
-	private function cleanInStr($str){
-		$newStr = trim($str);
-		$newStr = preg_replace('/\s\s+/', ' ',$newStr);
-		$newStr = $this->conn->real_escape_string($newStr);
-		return $newStr;
 	}
 }
 ?>

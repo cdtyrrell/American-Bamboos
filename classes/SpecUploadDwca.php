@@ -1,5 +1,7 @@
 <?php
 include_once($SERVER_ROOT.'/classes/SpecUploadBase.php');
+include_once($SERVER_ROOT.'/classes/PortalIndex.php');
+
 class SpecUploadDwca extends SpecUploadBase{
 
 	private $metaArr;
@@ -7,6 +9,8 @@ class SpecUploadDwca extends SpecUploadBase{
 	private $enclosure = '"';
 	private $encoding = 'utf-8';
 	private $loopCnt = 0;
+	private $sourcePortalIndex = 0;
+	private $publicationGuid = null;
 	private $coreIdArr = array();
 
 	function __construct() {
@@ -24,13 +28,18 @@ class SpecUploadDwca extends SpecUploadBase{
 		if(array_key_exists('ulfnoverride',$_POST) && $_POST['ulfnoverride'] && !$this->path){
 			$this->path = $_POST['ulfnoverride'];
 		}
-
 		if($this->path){
 			if($this->uploadType == $this->IPTUPLOAD){
 				$this->path = preg_replace('/&v=[\d\.]+/', '', $this->path);
 				//If IPT resource URL was provided, adjust ULR to point to the Archive file
 				if(strpos($this->path,'/resource.do')) $this->path = str_replace('/resource.do','/archive.do',$this->path);
 				elseif(strpos($this->path,'/resource?')) $this->path = str_replace('/resource','/archive.do',$this->path);
+			}
+			elseif($this->uploadType == $this->SYMBIOTA){
+				if(strpos($this->path, 'webservices/dwc/dwcapubhandler.php')){
+					$this->publicationGuid = UuidFactory::getUuidV4();
+					$this->path .= '&publicationguid='.$this->publicationGuid.'&portalguid='.$GLOBALS['PORTAL_GUID'];
+				}
 			}
 			if((substr($this->path,0,1) == '/' || preg_match('/^[A-Za-z]{1}:/', $this->path)) && is_dir($this->path)){
 				//Path is a local directory, possible manually extracted local DWCA directory
@@ -48,12 +57,8 @@ class SpecUploadDwca extends SpecUploadBase{
 					if(!is_writable($this->uploadTargetPath)) $this->errorStr .= ', Permission issue: target directory is not writable';
 					$this->outputMsg('<li>'.$this->errorStr.' </li>');
 				}
-				if($this->unpackArchive()){
-					$retPath = $this->uploadTargetPath;
-				}
-				else{
-					$this->uploadTargetPath = '';
-				}
+				if($this->unpackArchive()) $retPath = $this->uploadTargetPath;
+				else $this->uploadTargetPath = '';
 			}
 		}
 		elseif(array_key_exists("uploadfile",$_FILES)){
@@ -77,23 +82,18 @@ class SpecUploadDwca extends SpecUploadBase{
 				if(!is_writable($this->uploadTargetPath)) $this->errorStr .= 'permission issue, target directory is not writable (path: '.$targetPath.')';
 				$this->outputMsg('<li>'.$this->errorStr.' </li>');
 			}
-			if($this->unpackArchive()){
-				$retPath = $this->uploadTargetPath;
-			}
-			else{
-				$this->uploadTargetPath = '';
-			}
+			if($this->unpackArchive()) $retPath = $this->uploadTargetPath;
+			else $this->uploadTargetPath = '';
 		}
 		return $retPath;
 	}
 
 	private function createTargetSubDir(){
-		$localFolder = $this->collMetadataArr["institutioncode"].($this->collMetadataArr["collectioncode"]?$this->collMetadataArr["collectioncode"].'_':'').time().'/';
+		$localFolder = str_replace(' ','',$this->collMetadataArr['institutioncode'].($this->collMetadataArr['collectioncode']?$this->collMetadataArr['collectioncode'].'_':'')).time().'/';
 		if(mkdir($this->uploadTargetPath.$localFolder)) $this->uploadTargetPath .= $localFolder;
 	}
 
 	private function unpackArchive(){
-		//Extract archive
 		$status = true;
 		if(file_exists($this->uploadTargetPath.'dwca.zip')){
 			$zip = new ZipArchive;
@@ -147,7 +147,7 @@ class SpecUploadDwca extends SpecUploadBase{
 			$this->errorStr = 'OccurrencesMissing';
 			return false;
 		}
-		if(!file_exists($this->uploadTargetPath.'images.csv')){
+		if(!file_exists($this->uploadTargetPath.'multimedia.csv') && !file_exists($this->uploadTargetPath.'images.csv')){
 			$this->errorStr = 'ImagesMissing';
 			return false;
 		}
@@ -253,7 +253,9 @@ class SpecUploadDwca extends SpecUploadBase{
 									$fh = fopen($this->uploadTargetPath.$this->metaArr['occur']['name'],'r') or die("Can't open occurrence file");
 									$headerArr = $this->getRecordArr($fh,true);
 									foreach($headerArr as $k => $v){
-										if(strtolower($v) != strtolower($this->metaArr['occur']['fields'][$k])){
+										$metaField = strtolower($this->metaArr['occur']['fields'][$k]);
+										if(substr($metaField,0,6) == 'paleo-') $metaField = substr($metaField,6);
+										if(strtolower($v) != $metaField){
 											$msg = '<div style="margin-left:25px;">';
 											$msg .= 'WARNING: meta.xml field order out of sync w/ '.$this->metaArr['occur']['name'].'; remapping: field #'.($k+1).' => '.$v;
 											$msg .= '</div>';
@@ -349,7 +351,7 @@ class SpecUploadDwca extends SpecUploadBase{
 												$metaField = strtolower($this->metaArr[$tagName]['fields'][$k]);
 												if(strtolower($v) != $metaField && $metaField != 'coreid'){
 													$msg = '<div style="margin-left:25px;">';
-													$msg .= 'WARNING: meta.xml field order out of sync w/ '.$this->metaArr[$tagName]['name'].'; remapping: field #'.($k+1).' => '.$v;
+													$msg .= 'WARNING: meta.xml field order out of sync with '.$this->metaArr[$tagName]['name'].'; remapping: field #'.($k+1).' => '.$v;
 													$msg .= '</div>';
 													$this->outputMsg($msg);
 													$this->errorStr = $msg;
@@ -379,6 +381,40 @@ class SpecUploadDwca extends SpecUploadBase{
 		return true;
 	}
 
+	private function readEmlFile(){
+		$emlDoc = new DOMDocument();
+		if(file_exists($this->uploadTargetPath.'eml.xml')){
+			$emlDoc->load($this->uploadTargetPath.'eml.xml');
+			$xpath = new DOMXpath($emlDoc);
+			if($symbiotaNodeList = $xpath->query('//symbiota')){
+				if($node = $symbiotaNodeList->item(0)){
+					if($node->hasAttribute('id')){
+						if($symbiotaGuid = $node->getAttribute('id')){
+							if(isset($GLOBALS['ACTIVATE_PORTAL_INDEX']) && $this->uploadType != $this->RESTOREBACKUP){
+								$portalManager = new PortalIndex();
+								if($portalArr = $portalManager->getPortalIndexArr($symbiotaGuid)){
+									$this->sourcePortalIndex = key($portalArr);
+								}
+								if(!$this->sourcePortalIndex){
+									$this->sourcePortalIndex = $symbiotaGuid;
+									$urlNodeList = $xpath->query('/eml:eml/dataset/alternateIdentifier');
+									if($urlNodeList && isset($urlNodeList->item(0)->nodeValue)){
+										$urlRoot = $urlNodeList->item(0)->nodeValue;
+										$urlRoot = substr($urlRoot,0,strpos($urlRoot,'/collections/misc/collprofiles.php'));
+										$portalName = 'GUID: '.$symbiotaGuid;
+										if($GLOBALS['DEFAULT_TITLE']) $portalName = $GLOBALS['DEFAULT_TITLE'];
+										$portalManager->initiateHandshake($urlRoot);
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			else $this->errorStr = 'Unable to locate Symbiota element';
+		}
+	}
+
 	private function locateBaseFolder($pathFrag = ''){
 		if($handle = opendir($this->uploadTargetPath.$pathFrag)) {
 			while(false !== ($item = readdir($handle))){
@@ -389,7 +425,7 @@ class SpecUploadDwca extends SpecUploadBase{
 							break;
 						}
 					}
-					elseif(is_dir($this->uploadTargetPath.$pathFrag) && $item != '.' && $item != '..'){
+					elseif(is_dir($this->uploadTargetPath.$pathFrag.$item) && $item != '.' && $item != '..'){
 						$pathFrag .= $item.'/';
 						$this->locateBaseFolder($pathFrag);
 					}
@@ -407,7 +443,6 @@ class SpecUploadDwca extends SpecUploadBase{
 
 		$fullPath = $this->uploadTargetPath;
 		if(file_exists($fullPath)){
-
 			if($this->readMetaFile() && isset($this->metaArr['occur']['fields'])){
 				//Set parsing variables
 				if(isset($this->metaArr['occur']['fieldsTerminatedBy']) && $this->metaArr['occur']['fieldsTerminatedBy']){
@@ -634,12 +669,10 @@ class SpecUploadDwca extends SpecUploadBase{
 								$this->outputMsg('<li style="margin-left:10px;">Complete: '.$this->imageTransferCount.' records loaded</li>');
 							}
 						}
-
-						//Do some cleanup
 						$this->cleanUpload();
-
 						if($finalTransfer){
 							$this->finalTransfer();
+							$this->finalCleanup();
 						}
 					}
 					else{
@@ -658,8 +691,7 @@ class SpecUploadDwca extends SpecUploadBase{
 							$this->outputMsg('<li>ABORTED: no occurrences imported</li>');
 						}
 					}
-
-					//Remove all upload files and directories
+					$this->readEmlFile();
 					$this->removeFiles();
 				}
 				else{
@@ -696,7 +728,7 @@ class SpecUploadDwca extends SpecUploadBase{
 		$dirPath = $this->uploadTargetPath.$pathFrag;
 		if(!$pathFrag){
 			//If files were not uploaded to temp directory, don't delete
-			$this->setUploadTargetPath();
+			//$this->setUploadTargetPath();
 			if(stripos($dirPath,$this->uploadTargetPath) === false){
 				return false;
 			}
@@ -709,7 +741,7 @@ class SpecUploadDwca extends SpecUploadBase{
 							unlink($dirPath.$item);
 						}
 					}
-					elseif(is_dir($dirPath) && $item != '.' && $item != '..'){
+					elseif(is_dir($dirPath.$item) && $item != '.' && $item != '..'){
 						$pathFrag .= $item.'/';
 						$this->removeFiles($pathFrag);
 					}
@@ -846,6 +878,31 @@ class SpecUploadDwca extends SpecUploadBase{
 		return $recordArr;
 	}
 
+	public function finalTransfer(){
+		$this->recordCleaningStage2();
+		$this->transferOccurrences();
+		$this->transferIdentificationHistory();
+		$this->transferImages();
+		if($GLOBALS['QUICK_HOST_ENTRY_IS_ACTIVE']) $this->transferHostAssociations();
+		if($this->sourcePortalIndex && $this->collMetadataArr['managementtype'] == 'Snapshot'){
+			$portalManager = new PortalIndex();
+			$pubArr = array('pubTitle' => 'Symbiota Portal Index import - '.date('Y-m-d'), 'portalID' => $this->sourcePortalIndex, 'collid' => $this->collId, 'direction' => 'import', 'lastDateUpdate' => date('Y-m-d h:i:s'), 'guid' => $this->publicationGuid);
+			$pubID = $portalManager->createPortalPublication($pubArr);
+			if($pubID){
+				if($portalManager->crossMapUploadedOccurrences($pubID, $this->collId)){
+					$this->outputMsg('<li>Occurrences cross-mapped to Symbiota source portal</li> ');
+				}
+				else{
+					$this->outputMsg('<li>ERROR cross-mapping occurrences to Symbiota source portal: '.$portalManager->getErrorMessage().'</li> ');
+				}
+			}
+			else $this->outputMsg('<li>ERROR cross-mapping occurrences: '.$portalManager->getErrorMessage().'</li> ');
+		}
+		$this->finalCleanup();
+		$this->outputMsg('<li style="">Upload Procedure Complete ('.date('Y-m-d h:i:s A').')!</li>');
+		$this->outputMsg(' ');
+	}
+
 	public function cleanBackupReload(){
 		//Delete records where occid is not within target collection
 		$sql = 'SELECT count(u.occid) as cnt FROM uploadspectemp u INNER JOIN omoccurrences o ON u.occid = o.occid WHERE (u.collid = '.$this->collId.') AND (o.collid != '.$this->collId.')';
@@ -895,6 +952,7 @@ class SpecUploadDwca extends SpecUploadBase{
 		}
 	}
 
+	//Setters and getters
 	public function setTargetPath($targetPath){
 		if($targetPath) $this->uploadTargetPath = $targetPath;
 	}
@@ -907,6 +965,22 @@ class SpecUploadDwca extends SpecUploadBase{
 
 	public function getMetaArr(){
 		return $this->metaArr;
+	}
+
+	public function setSourcePortalIndex($index){
+		if($index) $this->sourcePortalIndex = $index;
+	}
+
+	public function getSourcePortalIndex(){
+		return $this->sourcePortalIndex;
+	}
+
+	public function setPublicationGuid($guid){
+		if(UuidFactory::is_valid($guid)) $this->publicationGuid = $guid;
+	}
+
+	public function getPublicationGuid(){
+		return $this->publicationGuid;
 	}
 }
 ?>

@@ -14,19 +14,23 @@ $clManager = new ChecklistAdmin();
 if(!$clid && isset($_POST['delclid'])) $clid = $_POST['delclid'];
 $clManager->setClid($clid);
 
-if($action == 'SubmitAdd'){
-	//Anyone with a login can create a checklist
-	$newClid = $clManager->createChecklist($_POST);
-	header('Location: checklist.php?clid='.$newClid);
+$statusStr = '';
+if($action == 'submitAdd'){
+	//Conform User Checklist permission
+	if($IS_ADMIN || (array_key_exists('ClAdmin',$USER_RIGHTS) && in_array($clid,$USER_RIGHTS['ClAdmin'])) || array_key_exists('ClCreate',$USER_RIGHTS)){
+		$newClid = $clManager->createChecklist($_POST);
+		if($newClid) header('Location: checklist.php?clid='.$newClid);
+	}
+	//If we made it here the user does not have any checklist roles. cancel further execution.
+	$statusStr = 'You do not have permission to create a Checklist. Please contact an administrator.';
 }
 
-$statusStr = '';
 $isEditor = 0;
 if($IS_ADMIN || (array_key_exists('ClAdmin',$USER_RIGHTS) && in_array($clid,$USER_RIGHTS['ClAdmin']))){
 	$isEditor = 1;
 
 	//Submit checklist MetaData edits
-	if($action == 'SubmitEdit'){
+	if($action == 'submitEdit'){
 		$clManager->editMetaData($_POST);
 		header('Location: checklist.php?clid='.$clid.'&pid='.$pid);
 	}
@@ -58,24 +62,17 @@ if($IS_ADMIN || (array_key_exists('ClAdmin',$USER_RIGHTS) && in_array($clid,$USE
 }
 $clArray = $clManager->getMetaData();
 $defaultArr = array();
-if($clArray['defaultsettings']){
+if(array_key_exists('defaultsettings',$clArray)){
 	$defaultArr = json_decode($clArray['defaultsettings'], true);
 }
 ?>
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>"/>
-	<title><?php echo $DEFAULT_TITLE.' - '.$LANG['CHECKADMIN'];?></title>
+	<title><?php echo $DEFAULT_TITLE.' - '.$LANG['CHECKLIST_ADMIN'];?></title>
 	<?php
 	$activateJQuery = true;
-	if(file_exists($SERVER_ROOT.'/includes/head.php')){
-		include_once($SERVER_ROOT.'/includes/head.php');
-	}
-	else{
-		echo '<link href="'.$CLIENT_ROOT.'/css/jquery-ui.css" type="text/css" rel="stylesheet" />';
-		echo '<link href="'.$CLIENT_ROOT.'/css/base.css?ver=1" type="text/css" rel="stylesheet" />';
-		echo '<link href="'.$CLIENT_ROOT.'/css/main.css?ver=1" type="text/css" rel="stylesheet" />';
-	}
+	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
 	<script type="text/javascript" src="../js/jquery.js"></script>
 	<script type="text/javascript" src="../js/jquery-ui.js"></script>
@@ -90,7 +87,7 @@ if($clArray['defaultsettings']){
 			height: 300,
 			menubar: false,
 			plugins: "link,charmap,code,paste",
-			toolbar : "bold italic underline cut copy paste outdent indent undo redo subscript superscript removeformat link charmap code",
+			toolbar : ["bold italic underline | cut copy paste | outdent indent | subscript superscript | undo redo removeformat | link | charmap | code"],
 			default_link_target: "_blank",
 			paste_as_text: true
 		});
@@ -130,7 +127,7 @@ include($SERVER_ROOT.'/includes/header.php');
 <div class="navpath">
 	<a href="../index.php"><?php echo $LANG['NAV_HOME'];?></a> &gt;&gt;
 	<a href="checklist.php?clid=<?php echo $clid.'&pid='.$pid; ?>"><?php echo $LANG['RETURNCHECK'];?></a> &gt;&gt;
-	<b><?php echo $LANG['CHECKADMIN']; ?></b>
+	<b><?php echo $LANG['CHECKLIST_ADMIN']; ?></b>
 </div>
 <div id='innertext'>
 	<div style="color:#990000;font-size:20px;font-weight:bold;margin:0px 10px 10px 0px;">

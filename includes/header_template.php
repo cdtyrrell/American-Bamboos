@@ -1,34 +1,23 @@
 <script>
 	//if(top.frames.length!=0) top.location=self.document.location;
 </script>
-<!-- Navbar -->
-<div class="w3-top">
- <div class="w3-bar w3-theme-d2 w3-left-align w3-large">
-  <a class="w3-bar-item w3-button w3-hide-medium w3-hide-large w3-right w3-padding-large w3-hover-white w3-large w3-theme-d2" href="javascript:void(0);" onclick="openNav()"><i class="fa fa-bars"></i></a>
-  <!-- Home -->
-  <a href="<?php echo $clientRoot; ?>/index.php" class="w3-bar-item w3-button w3-padding-large w3-theme-d4" title="Home">Home</a>
-  <!-- icon: <i class="fa fa-home w3-margin-right"></i> -->
-  <!-- Species -->
-  <div class="w3-dropdown-hover w3-hide-small">
-    <button class="w3-button w3-padding-large" title="Search">Species</button>
-    <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:150px">
-      <a href="<?php echo $clientRoot; ?>/checklists/checklist.php?cl=1" class="w3-bar-item w3-button">Browse</a>
-      <!-- <a href="<?php echo $clientRoot; ?>/checklists/dynamicmap.php" class="w3-bar-item w3-button">Map Search</a> -->
-      <!-- <a href="<?php echo $clientRoot; ?>/imagelib/search.php" class="w3-bar-item w3-button">Images</a> -->
-    </div>
-  </div>
-  <!-- Specimens -->
-  <div class="w3-dropdown-hover w3-hide-small">
-    <button class="w3-button w3-padding-large" title="Search">Specimens</button>
-    <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:150px">
-      <a href="<?php echo $clientRoot; ?>/collections/index.php" class="w3-bar-item w3-button">Search</a>
-      <!-- <a href="<?php echo $clientRoot; ?>/collections/map/mapinterface.php" class="w3-bar-item w3-button">Map Search</a> -->
-      <!-- <a href="<?php echo $clientRoot; ?>/imagelib/search.php" class="w3-bar-item w3-button">Images</a> -->
-    </div>
-  </div>
-  <!-- Keys -->
-  <!-- <a href="<?php echo $clientRoot; ?>/ident/index.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Keys">Keys</a> -->
 
+<table id="maintable" cellspacing="0">
+	<tr>
+		<td id="header" colspan="3">
+			<div style="clear:both; width:100%; height:170px; border-bottom:1px solid #000000;">
+				<div style="float:left">
+					<img src="<?php echo $CLIENT_ROOT; ?>/images/layout/left_logo.jpg" style="margin:0px 30px;width:130px" />
+				</div>
+				<div style="margin-left: 40px; color: #fff; font-family: 'Mate', serif; letter-spacing: 1px; text-shadow: 0 0 7px rgba(0,0,0,0.5);">
+					<div style="margin-top:30px; font-size:60px; line-height:48px;">
+						<h1><?php echo ($DEFAULT_TITLE) ? $DEFAULT_TITLE : "First Level Title"; ?></h1>
+					</div>
+					<div style="margin-top:20px; font-size:35px; font-style: italic">
+						Second Level Title
+					</div>
+				</div>
+			</div>
 
 			<div id="top_navbar">
 				<div id="right_navbarlinks">
@@ -93,4 +82,63 @@
 
          </div>
 
-	<div class="w3-container w3-content" style="max-width:1400px;margin-top:80px">
+
+				</div>
+				<ul id="hor_dropdown">
+					<li>
+						<a href="<?php echo $CLIENT_ROOT; ?>/index.php" >Home</a>
+					</li>
+					<li>
+						<a href="#" >Search</a>
+						<ul>
+							<li>
+								<a href="<?php echo $CLIENT_ROOT; ?>/collections/index.php" >Search Collections</a>
+							</li>
+							<li>
+								<a href="<?php echo $CLIENT_ROOT; ?>/collections/map/index.php" target="_blank">Map Search</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="#" >Images</a>
+						<ul>
+							<li>
+								<a href="<?php echo $CLIENT_ROOT; ?>/imagelib/index.php" >Image Browser</a>
+							</li>
+							<li>
+								<a href="<?php echo $CLIENT_ROOT; ?>/imagelib/search.php" >Search Images</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="<?php echo $CLIENT_ROOT; ?>/projects/index.php" >Inventories</a>
+						<ul>
+							<li>
+								<a href="<?php echo $CLIENT_ROOT; ?>/projects/index.php?pid=1" >Project 1</a>
+							</li>
+							<li>
+								<a href="<?php echo $CLIENT_ROOT; ?>/projects/index.php?pid=2" >Project 2</a>
+							</li>
+							<li>
+								<a href="<?php echo $CLIENT_ROOT; ?>/projects/index.php?pid=3" >Project 3</a>
+							</li>
+						</ul>
+					</li>
+					<li>
+						<a href="#" >Interactive Tools</a>
+						<ul>
+							<li>
+								<a href="<?php echo $CLIENT_ROOT; ?>/checklists/dynamicmap.php?interface=checklist" >Dynamic Checklist</a>
+							</li>
+							<li>
+								<a href="<?php echo $CLIENT_ROOT; ?>/checklists/dynamicmap.php?interface=key" >Dynamic Key</a>
+							</li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td id='middlecenter'  colspan="3">
+

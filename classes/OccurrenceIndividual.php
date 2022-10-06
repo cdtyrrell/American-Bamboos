@@ -11,6 +11,7 @@ class OccurrenceIndividual extends Manager{
 	private $metadataArr = array();
 	private $displayFormat = 'html';
 	private $relationshipArr;
+	private $activeModules = array();
 
 	public function __construct($type='readonly') {
 		parent::__construct(null,$type);
@@ -23,7 +24,7 @@ class OccurrenceIndividual extends Manager{
 	private function loadMetadata(){
 		if($this->collid){
 			//$sql = 'SELECT institutioncode, collectioncode, collectionname, colltype, homepage, individualurl, contact, email, icon, publicedits, rights, rightsholder, accessrights, guidtarget FROM omcollections WHERE collid = '.$this->collid;
-			$sql = 'SELECT * FROM omcollections WHERE collid = '.$this->collid;
+			$sql = 'SELECT c.*, s.uploadDate FROM omcollections c INNER JOIN omcollectionstats s ON c.collid = s.collid WHERE c.collid = '.$this->collid;
 			if($rs = $this->conn->query($sql)){
 				$this->metadataArr = array_change_key_case($rs->fetch_assoc());
 				if(isset($this->metadataArr['contactjson'])){
@@ -38,6 +39,16 @@ class OccurrenceIndividual extends Manager{
 								$this->metadataArr['contact'] = $contactStr;
 								if(isset($cArr['email']) && $cArr['email']) $this->metadataArr['email'] = $cArr['email'];
 								if(isset($cArr['centralContact'])) break;
+							}
+						}
+					}
+				}
+				if($this->metadataArr['dynamicproperties']){
+					if($propArr = json_decode($this->metadataArr['dynamicproperties'], true)) {
+						if(isset($propArr['editorProps']['modules-panel'])) {
+							foreach($propArr['editorProps']['modules-panel'] as $k => $modArr) {
+								if(isset($modArr['paleo']['status'])) $this->activeModules['paleo'] = true;
+								elseif (isset($modArr['matSample']['status'])) $this->activeModules['matSample'] = true;
 							}
 						}
 					}
@@ -146,7 +157,7 @@ class OccurrenceIndividual extends Manager{
 						$this->occArr['occurrenceid'] = $this->occArr['catalognumber'];
 					}
 					elseif($this->metadataArr['guidtarget'] == 'symbiotaUUID'){
-						if(isset($this->occArr['guid'])) $this->occArr['occurrenceid'] = $this->occArr['guid'];
+						if(isset($this->occArr['recordid'])) $this->occArr['occurrenceid'] = $this->occArr['recordid'];
 					}
 				}
 				$this->setAdditionalIdentifiers();
@@ -154,6 +165,8 @@ class OccurrenceIndividual extends Manager{
 				$this->setLoan();
 				$this->setOccurrenceRelationships();
 				$this->setReferences();
+				$this->setMaterialSamples();
+				$this->setSource();
 			}
 			//Set access statistics
 			$accessType = 'view';
@@ -205,17 +218,19 @@ class OccurrenceIndividual extends Manager{
 	}
 
 	private function setRecordID(){
+		$guid = '';
 		$sql = 'SELECT guid FROM guidoccurrences WHERE (occid = '.$this->occid.')';
 		$rs = $this->conn->query($sql);
 		if($rs){
 			while($row = $rs->fetch_object()){
-				$this->occArr['guid'] = $row->guid;
+				$guid = $row->guid;
 			}
 			$rs->free();
 		}
 		else{
-			trigger_error('Unable to setDeterminations; '.$this->conn->error,E_USER_NOTICE);
+			trigger_error('Unable to setGUID; '.$this->conn->error,E_USER_NOTICE);
 		}
+		$this->occArr['recordid'] = $guid;
 	}
 
 	private function setDeterminations(){
@@ -245,7 +260,7 @@ class OccurrenceIndividual extends Manager{
 
 	private function setImages(){
 		global $imageDomain;
-		$sql = 'SELECT i.imgid, i.url, i.thumbnailurl, i.originalurl, i.sourceurl, i.notes, i.caption, CONCAT_WS(" ",u.firstname,u.lastname) as photographer '.
+		$sql = 'SELECT i.imgid, i.url, i.thumbnailurl, i.originalurl, i.sourceurl, i.notes, i.caption, CONCAT_WS(" ",u.firstname,u.lastname) as innerPhotographer, i.photographer  '.
 			'FROM images i LEFT JOIN users u ON i.photographeruid = u.uid '.
 			'WHERE (i.occid = '.$this->occid.') ORDER BY i.sortoccurrence,i.sortsequence';
 		$rs = $this->conn->query($sql);
@@ -268,6 +283,7 @@ class OccurrenceIndividual extends Manager{
 				$this->occArr['imgs'][$imgId]['sourceurl'] = $row->sourceurl;
 				$this->occArr['imgs'][$imgId]['caption'] = $row->caption;
 				$this->occArr['imgs'][$imgId]['photographer'] = $row->photographer;
+				if($row->innerPhotographer) $this->occArr['imgs'][$imgId]['photographer'] = $row->innerPhotographer;
 			}
 			$rs->free();
 		}
@@ -278,7 +294,7 @@ class OccurrenceIndividual extends Manager{
 
 	private function setAdditionalIdentifiers(){
 		$retArr = array();
-		$sql = 'SELECT idomoccuridentifiers, occid, identifiervalue, identifiername FROM omoccuridentifiers WHERE occid = '.$this->occid;
+		$sql = 'SELECT idomoccuridentifiers, occid, identifiervalue, identifiername FROM omoccuridentifiers WHERE (occid = '.$this->occid.') ORDER BY sortBy';
 		$rs = $this->conn->query($sql);
 		if($rs){
 			while($r = $rs->fetch_object()){
@@ -292,15 +308,17 @@ class OccurrenceIndividual extends Manager{
 	}
 
 	private function setPaleo(){
-		$sql = 'SELECT paleoid, eon, era, period, epoch, earlyinterval, lateinterval, absoluteage, storageage, stage, localstage, biota, '.
-			'biostratigraphy, lithogroup, formation, taxonenvironment, member, bed, lithology, stratremarks, element, slideproperties, geologicalcontextid '.
-			'FROM omoccurpaleo WHERE occid = '.$this->occid;
-		$rs = $this->conn->query($sql);
-		if($rs){
-			while($r = $rs->fetch_assoc()){
-				$this->occArr = array_merge($this->occArr,$r);
+		if(isset($this->activeModules['paleo']) && $this->activeModules['paleo']){
+			$sql = 'SELECT paleoid, eon, era, period, epoch, earlyinterval, lateinterval, absoluteage, storageage, stage, localstage, biota, '.
+				'biostratigraphy, lithogroup, formation, taxonenvironment, member, bed, lithology, stratremarks, element, slideproperties, geologicalcontextid '.
+				'FROM omoccurpaleo WHERE occid = '.$this->occid;
+			$rs = $this->conn->query($sql);
+			if($rs){
+				while($r = $rs->fetch_assoc()){
+					$this->occArr = array_merge($this->occArr,$r);
+				}
+				$rs->free();
 			}
-			$rs->free();
 		}
 	}
 
@@ -392,10 +410,10 @@ class OccurrenceIndividual extends Manager{
 			if($rs = $this->conn->query($sql)){
 				while($r = $rs->fetch_object()){
 					$this->relationshipArr[$r->term] = $r->inverseRelationship;
+					if($r->inverseRelationship && !isset($this->relationshipArr[$r->inverseRelationship])) $this->relationshipArr[$r->inverseRelationship] = $r->term;
 				}
 				$rs->free();
 			}
-			$this->relationshipArr = array_merge($this->relationshipArr,array_flip($this->relationshipArr));
 		}
 	}
 
@@ -414,6 +432,98 @@ class OccurrenceIndividual extends Manager{
 		}
 		else{
 			$this->warningArr[] = 'Unable to set occurrence references: '.$this->conn->error;
+		}
+	}
+
+	private function setMaterialSamples(){
+		if(isset($this->activeModules['matSample']) && $this->activeModules['matSample']){
+			$sql = 'SELECT m.matSampleID, m.sampleType, m.catalogNumber, m.guid, m.sampleCondition, m.disposition, m.preservationType, m.preparationDetails, m.preparationDate,
+				m.preparedByUid, CONCAT_WS(", ",u.lastname,u.firstname) as preparedBy, m.individualCount, m.sampleSize, m.storageLocation, m.remarks, m.dynamicFields, m.recordID, m.initialTimestamp
+				FROM ommaterialsample m LEFT JOIN users u ON m.preparedByUid = u.uid WHERE m.occid = '.$this->occid;
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_assoc()){
+				$this->occArr['matSample'][$r['matSampleID']] = $r;
+			}
+			$rs->free();
+		}
+	}
+
+	private function setSource(){
+		if(isset($GLOBALS['ACTIVATE_PORTAL_INDEX']) && $GLOBALS['ACTIVATE_PORTAL_INDEX']){
+			$sql = 'SELECT o.targetOccid, o.refreshTimestamp, o.verification, i.urlRoot, i.portalName
+				FROM portaloccurrences o INNER JOIN portalpublications p ON o.pubid = p.pubid
+				INNER JOIN portalindex i ON p.portalID = i.portalID
+				WHERE (o.occid = '.$this->occid.') AND (p.direction = "import")';
+			if($rs = $this->conn->query($sql)){
+				while($r = $rs->fetch_object()){
+					$this->occArr['source']['type'] = 'symbiota';
+					$this->occArr['source']['url'] = $r->urlRoot.'/collections/individual/index.php?occid='.$r->targetOccid;
+					$this->occArr['source']['sourceName'] = $r->portalName;
+					$this->occArr['source']['refreshTimestamp'] = $r->refreshTimestamp;
+					$this->occArr['source']['sourceID'] = $r->targetOccid;
+				}
+				$rs->free();
+			}
+			if(isset($this->occArr['source'])){
+				$sql2 = 'SELECT uploadDate FROM omcollectionstats WHERE collid = '.$this->collid;
+				if($rs2 = $this->conn->query($sql2)){
+					if($r2 = $rs2->fetch_object()){
+						if($r2->uploadDate > $this->occArr['source']['refreshTimestamp']) $this->occArr['source']['refreshTimestamp'] = $r->uploadDate.' (batch update)';
+					}
+					$rs2->free();
+				}
+			}
+		}
+
+		//Format link out to source
+		if(!isset($this->occArr['source']) && $this->metadataArr['individualurl']){
+			$iUrl = trim($this->metadataArr['individualurl']);
+			if(substr($iUrl, 0, 4) != 'http'){
+				if($pos = strpos($iUrl, ':')){
+					$this->occArr['source']['title'] = substr($iUrl, 0, $pos);
+					$iUrl = trim(substr($iUrl, $pos+1));
+				}
+			}
+			$displayStr = '';
+			$indUrl = '';
+			if(strpos($iUrl,'--DBPK--') !== false && $this->occArr['dbpk']){
+				$indUrl = str_replace('--DBPK--',$this->occArr['dbpk'],$iUrl);
+				$displayStr = $indUrl;
+			}
+			elseif(strpos($iUrl,'--CATALOGNUMBER--') !== false && $this->occArr['catalognumber']){
+				$indUrl = str_replace('--CATALOGNUMBER--',$this->occArr['catalognumber'],$iUrl);
+				$displayStr = $this->occArr['catalognumber'];
+			}
+			elseif(strpos($iUrl,'--OTHERCATALOGNUMBERS--') !== false && $this->occArr['othercatalognumbers']){
+				if(substr($this->occArr['othercatalognumbers'],0,1) == '{'){
+					if($ocnArr = json_decode($this->occArr['othercatalognumbers'],true)){
+						foreach($ocnArr as $idKey => $idArr){
+							if(!$displayStr || $idKey == 'NEON sampleID' || $idKey == 'NEON sampleCode (barcode)'){
+								$displayStr = $idArr[0];
+								if($idKey == 'NEON sampleCode (barcode)') $iUrl = str_replace('sampleTag','barcode',$iUrl);
+								$indUrl = str_replace('--OTHERCATALOGNUMBERS--',$idArr[0],$iUrl);
+								if($idKey == 'NEON sampleCode (barcode)') break;
+							}
+						}
+					}
+				}
+				else{
+					$ocn = str_replace($this->occArr['othercatalognumbers'], ',', ';');
+					$ocnArr = explode(';',$ocn);
+					$ocnValue = trim(array_pop($ocnArr));
+					if(stripos($ocnValue,':')) $ocnValue = trim(array_pop(explode(':',$ocnValue)));
+					$indUrl = str_replace('--OTHERCATALOGNUMBERS--',$ocnValue,$iUrl);
+					$displayStr = $ocnValue;
+				}
+			}
+			elseif(strpos($iUrl,'--OCCURRENCEID--') !== false && $this->occArr['occurrenceid']){
+				$indUrl = str_replace('--OCCURRENCEID--',$this->occArr['occurrenceid'],$iUrl);
+				$displayStr = $this->occArr['occurrenceid'];
+			}
+			$this->occArr['source']['type'] = 'external';
+			$this->occArr['source']['url'] = $indUrl;
+			$this->occArr['source']['displayStr'] = $displayStr;
+			$this->occArr['source']['refreshTimestamp'] = $this->metadataArr['uploaddate'];
 		}
 	}
 
@@ -506,15 +616,17 @@ class OccurrenceIndividual extends Manager{
 	}
 
 	public function echoTraitUnit($outArr, $label = '', $indent=0){
-		echo '<div style="margin-left:'.$indent.'px">';
-		if($outArr['url']) echo '<a href="'.$outArr['url'].'" target="_blank">';
-		echo '<span class="traitName">';
-		if($label) echo $label.' ';
-		echo $outArr['name'];
-		echo '</span>';
-		if($outArr['url']) echo '</a>';
-		if($outArr['desc']) echo ': '.$outArr['desc'];
-		echo '</div>';
+		if(isset($outArr['name'])){
+			echo '<div style="margin-left:'.$indent.'px">';
+			if(!empty($outArr['url'])) echo '<a href="'.$outArr['url'].'" target="_blank">';
+			echo '<span class="traitName">';
+			if(!empty($label)) echo $label.' ';
+			echo $outArr['name'];
+			echo '</span>';
+			if(!empty($outArr['url'])) echo '</a>';
+			if(!empty($outArr['desc'])) echo ': '.$outArr['desc'];
+			echo '</div>';
+		}
 	}
 
 	//Occurrence comment functions
@@ -589,9 +701,7 @@ class OccurrenceIndividual extends Manager{
 
 			//Email to portal admin
 			$emailAddr = $GLOBALS['ADMIN_EMAIL'];
-			$comUrl = 'http://';
-			if((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) $comUrl = 'https://';
-			$comUrl .= $_SERVER['SERVER_NAME'].$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$this->occid.'#commenttab';
+			$comUrl = $this->getDomain().$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?occid='.$this->occid.'#commenttab';
 			$subject = $GLOBALS['DEFAULT_TITLE'].' inappropriate comment reported<br/>';
 			$bodyStr = 'The following comment has been recorted as inappropriate:<br/> <a href="'.$comUrl.'">'.$comUrl.'</a>';
 			$headerStr = "MIME-Version: 1.0 \r\nContent-type: text/html \r\nTo: ".$emailAddr." \r\nFrom: Admin <".$emailAddr."> \r\n";
@@ -700,19 +810,23 @@ class OccurrenceIndividual extends Manager{
 
 	public function getAccessStats(){
 		$retArr = Array();
-		$sql = 'SELECT year(accessdate) as accessdate, accesstype, count(*) AS cnt FROM omoccuraccessstats WHERE (occid = '.$this->occid.') GROUP BY accessdate, accesstype';
-		//echo '<div>'.$sql.'</div>';
-		$rs = $this->conn->query($sql);
-		while($r = $rs->fetch_object()){
-			$retArr[$r->accessdate][$r->accesstype] = $r->cnt;
+		if(isset($GLOBALS['STORE_STATISTICS'])){
+			$sql = 'SELECT year(s.accessdate) as accessdate, s.accesstype, s.cnt
+				FROM omoccuraccesssummary s INNER JOIN omoccuraccesssummarylink l ON s.oasid = l.oasid
+				WHERE (l.occid = '.$this->occid.') GROUP BY s.accessdate, s.accesstype';
+			//echo '<div>'.$sql.'</div>';
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_object()){
+				$retArr[$r->accessdate][$r->accesstype] = $r->cnt;
+			}
+			$rs->free();
 		}
-		$rs->free();
 		return $retArr;
 	}
 
 	//Voucher management
 	public function getVoucherChecklists(){
-		global $IS_ADMIN, $USER_RIGHTS;
+		global $USER_RIGHTS;
 		$returnArr = Array();
 		$sql = 'SELECT c.name, c.clid, c.access, v.notes FROM fmchecklists c INNER JOIN fmvouchers v ON c.clid = v.clid WHERE v.occid = '.$this->occid.' ';
 		if(array_key_exists("ClAdmin",$USER_RIGHTS)){
@@ -1110,7 +1224,7 @@ class OccurrenceIndividual extends Manager{
 	public function activateOrcidID($inStr){
 		$retStr = $inStr;
 		$m = array();
-		if(preg_match('#ORCID[\s:]+((https://orcid.org/)?\d{4}-\d{4}-\d{4}-\d{4})#', $inStr,$m)){
+		if(preg_match('#ORCID[\s:]+((https://orcid.org/)?\d{4}-\d{4}-\d{4}-\d{3}[0-9X])#', $inStr,$m)){
 			$orcidAnchor = $m[1];
 			if(substr($orcidAnchor,5) != 'https') $orcidAnchor = 'https://orcid.org/'.$orcidAnchor;
 			$orcidAnchor = '<a href="'.$orcidAnchor.'" target="_blank">'.$m[1].'</a>';
@@ -1131,7 +1245,7 @@ class OccurrenceIndividual extends Manager{
 	}
 
 	public function setCollid($id){
-		if(is_numeric($o)){
+		if(is_numeric($id)){
 			$this->collid = $id;
 		}
 	}

@@ -142,52 +142,34 @@ class TaxonProfile extends Manager {
 	//Images functions
 	public function echoImages($start, $length = 0, $useThumbnail = 1){		//length=0 => means show all images
 		$status = false;
-		if(!isset($this->imageArr)){
-			$this->setTaxaImages();
-		}
+		if(!isset($this->imageArr)) $this->setTaxaImages();
 		if(!$this->imageArr || count($this->imageArr) < $start) return false;
 		$trueLength = ($length&&count($this->imageArr)>$length+$start?$length:count($this->imageArr)-$start);
 		$iArr = array_slice($this->imageArr,$start,$trueLength,true);
 		foreach($iArr as $imgId => $imgObj){
-			if($start == 0 && $trueLength == 1){
-				echo "<div id='centralimage'>";
-			}
-			else{
-				echo "<div class='imgthumb'>";
-			}
-			$imgUrl = $imgObj["url"];
+			if($start == 0 && $trueLength == 1) echo '<div id="centralimage">';
+			else echo '<div class="imgthumb">';
+			$imgUrl = $imgObj['url'];
 			$imgAnchor = '../imagelib/imgdetails.php?imgid='.$imgId;
-			$imgThumbnail = $imgObj["thumbnailurl"];
-			if(array_key_exists("IMAGE_DOMAIN",$GLOBALS)){
+			$imgThumbnail = $imgObj['thumbnailurl'];
+			if(array_key_exists('IMAGE_DOMAIN',$GLOBALS)){
 				//Images with relative paths are on another server
-				if(substr($imgUrl,0,1)=="/") $imgUrl = $GLOBALS["IMAGE_DOMAIN"].$imgUrl;
-				if(substr($imgThumbnail,0,1)=="/") $imgThumbnail = $GLOBALS["IMAGE_DOMAIN"].$imgThumbnail;
+				if(substr($imgUrl,0,1)=="/") $imgUrl = $GLOBALS['IMAGE_DOMAIN'].$imgUrl;
+				if(substr($imgThumbnail,0,1)=="/") $imgThumbnail = $GLOBALS['IMAGE_DOMAIN'].$imgThumbnail;
 			}
-			if($imgObj['occid']){
-				$imgAnchor = '../collections/individual/index.php?occid='.$imgObj['occid'];
-			}
-			if($useThumbnail){
-				if($imgObj['thumbnailurl']){
-					$imgUrl = $imgThumbnail;
-				}
-			}
+			if($imgObj['occid']) $imgAnchor = '../collections/individual/index.php?occid='.$imgObj['occid'];
+			if($useThumbnail) if($imgObj['thumbnailurl']) $imgUrl = $imgThumbnail;
 			echo '<div class="tptnimg"><a href="#" onclick="openPopup(\''.$imgAnchor.'\');return false;">';
 			$titleStr = $imgObj['caption'];
 			if($imgObj['sciname'] != $this->taxonName) $titleStr .= ' (linked from '.$imgObj['sciname'].')';
 			echo '<img src="'.$imgUrl.'" title="'.$titleStr.'" alt="'.$this->taxonName.' image" />';
 			/*
-			 if($length){
-			 echo '<img src="'.$imgUrl.'" title="'.$imgObj['caption'].'" alt="'.$spDisplay.' image" />';
-			 }
-			 else{
-			 //echo '<img class="delayedimg" src="" delayedsrc="'.$imgUrl.'" />';
-			 }
-			 */
+			if($length) echo '<img src="'.$imgUrl.'" title="'.$imgObj['caption'].'" alt="'.$spDisplay.' image" />';
+			//else echo '<img class="delayedimg" src="" delayedsrc="'.$imgUrl.'" />';
+			*/
 			echo '</a></div>';
 			echo '<div class="photographer">';
-			if($imgObj['photographer']){
-				echo $imgObj['photographer'];
-			}
+			if($imgObj['photographer']) echo $imgObj['photographer'];
 			echo '</div>';
 			echo '</div>';
 			$status = true;
@@ -215,7 +197,7 @@ class TaxonProfile extends Manager {
 				'INNER JOIN taxa t ON i.tid = t.tid '.
 				'WHERE (ts.taxauthid = 1 AND ts.tidaccepted IN ('.$tidStr.')) AND i.SortSequence < 500 AND i.thumbnailurl IS NOT NULL ';
 			if(!$this->displayLocality) $sql .= 'AND i.occid IS NULL ';
-			$sql .= 'ORDER BY i.sortsequence LIMIT 100';
+			$sql .= 'ORDER BY i.sortsequence, i.sortOccurrence LIMIT 100';
 			/*
 			$sql = 'SELECT t.sciname, i.imgid, i.url, i.thumbnailurl, i.originalurl, i.caption, i.occid, IFNULL(i.photographer,CONCAT_WS(" ",u.firstname,u.lastname)) AS photographer '.
 				'FROM images i LEFT JOIN users u ON i.photographeruid = u.uid '.
@@ -227,13 +209,13 @@ class TaxonProfile extends Manager {
 			if(!$this->displayLocality) $sql .= 'AND i.occid IS NULL ';
 			$sql .= 'ORDER BY i.sortsequence LIMIT 100';
 			*/
-
 			//echo $sql;
 			$result = $this->conn->query($sql);
 			while($row = $result->fetch_object()){
 				$imgUrl = $row->url;
-				if($imgUrl == 'empty' && $row->originalurl) $imgUrl = $row->originalurl;
-				if($imgUrl == 'empty') continue;
+				if($imgUrl == 'empty') $imgUrl = '';
+				if(!$imgUrl && $row->originalurl) $imgUrl = $row->originalurl;
+				if(!$imgUrl) continue;
 				$this->imageArr[$row->imgid]['url'] = $imgUrl;
 				$this->imageArr[$row->imgid]['thumbnailurl'] = $row->thumbnailurl;
 				if($row->photographerLinked) $this->imageArr[$row->imgid]['photographer'] = $row->photographerLinked;
@@ -640,6 +622,12 @@ class TaxonProfile extends Manager {
 			$stmt->bind_param('is', $this->taxAuthId, $searchStr);
 		}
 		$stmt->execute();
+		$tid = 0;
+		$family = '';
+		$sciname = '';
+		$author = '';
+		$rankid = 0;
+		$parentTid = 0;
 		$stmt->bind_result($tid, $family, $sciname, $author, $rankid, $parentTid);
 		while($stmt->fetch()){
 			$retArr[$tid]['sciname'] = $sciname;
@@ -658,7 +646,7 @@ class TaxonProfile extends Manager {
 				'WHERE (e.taxauthid = '.$this->taxAuthId.') AND (ts.taxauthid = '.$this->taxAuthId.') AND (e.tid IN('.implode(array_keys($retArr),',').'))';
 			$rs2 = $this->conn->query($sql2);
 			while($r2 = $rs2->fetch_object()){
-				$retArr[$tid]['parent'][$parenttid] = array('sciname' => $r2->sciname, 'rankid' => $r2->rankid, 'directparenttid' => $r2->directparenttid);
+				$retArr[$tid]['parent'][$parentTid] = array('sciname' => $r2->sciname, 'rankid' => $r2->rankid, 'directparenttid' => $r2->directparenttid);
 			}
 			$rs2->free();
 		}
@@ -672,6 +660,8 @@ class TaxonProfile extends Manager {
 		$stmt = $this->conn->prepare($sql);
 		$stmt->bind_param('s', $testValue);
 		$stmt->execute();
+		$tid = 0;
+		$sciname = '';
 		$stmt->bind_result($tid, $sciname);
 		while($stmt->fetch()){
 			if($testValue != $sciname) $retArr[$tid] = $sciname;
@@ -680,58 +670,56 @@ class TaxonProfile extends Manager {
 		return $retArr;
 	}
 
-  /**
-   * Gets occurrence counts of taxon in portal, to use in taxon profile
-   * Searches for taxon and all its children
-   * Checks taxon rank; counts turned off by default for anything above genus
-   * $tid INTEGER taxon id
-   * $taxonRank INTEGER taxon rank according to taxonunits table
-   * $limitRank INTEGER
-   * $collids ARRAY of collids to include in search
-   */
-	public function getOccTaxonInDbCnt($limitRank = 170, $collidStr = 'all')
-  {
-    $count = -1;
-    if ($this->rankId >= $limitRank) {
-      //$sql = 'SELECT COUNT(o.occid) as cnt FROM omoccurrences o JOIN (SELECT DISTINCT e.tid, t.sciname FROM taxaenumtree e JOIN taxa t ON e.tid = t.tid WHERE parenttid = '.$this->tid.' OR e.tid = '.$this->tid.') AS parentAndChildren ON o.tidinterpreted = parentAndChildren.tid ';
-      $sql = 'SELECT COUNT(o.occid) as cnt
-		FROM omoccurrences o JOIN (SELECT DISTINCT ts.tid FROM taxaenumtree e JOIN taxa t ON e.tid = t.tid INNER JOIN taxstatus ts ON e.tid = ts.tidaccepted
-		WHERE e.parenttid = '.$this->tid.' OR e.tid = '.$this->tid.') AS taxa ON o.tidinterpreted = taxa.tid ';
-      if (preg_match('/^[,\d]+$/',$collidStr)) $sql .= 'AND o.collid IN('.$collidStr.')';
-      $result = $this->conn->query($sql);
-      while ($row = $result->fetch_object()){
-        $count = $row->cnt;
-      }
-      $result->free();
-    }
-    return $count;
-  }
+	/**
+	* Gets occurrence counts of taxon in portal, to use in taxon profile
+	* Searches for taxon and all its children
+	* Checks taxon rank; counts turned off by default for anything above genus
+	* $tid INTEGER taxon id
+	* $taxonRank INTEGER taxon rank according to taxonunits table
+	* $limitRank INTEGER
+	* $collids ARRAY of collids to include in search
+	*/
+	public function getOccTaxonInDbCnt($limitRank = 170, $collidStr = 'all'){
+		$count = -1;
+		if ($this->rankId >= $limitRank) {
+			//$sql = 'SELECT COUNT(o.occid) as cnt FROM omoccurrences o JOIN (SELECT DISTINCT e.tid, t.sciname FROM taxaenumtree e JOIN taxa t ON e.tid = t.tid WHERE parenttid = '.$this->tid.' OR e.tid = '.$this->tid.') AS parentAndChildren ON o.tidinterpreted = parentAndChildren.tid ';
+			$sql = 'SELECT COUNT(o.occid) as cnt
+				FROM omoccurrences o JOIN (SELECT DISTINCT ts.tid FROM taxaenumtree e JOIN taxa t ON e.tid = t.tid INNER JOIN taxstatus ts ON e.tid = ts.tidaccepted
+				WHERE e.parenttid = '.$this->tid.' OR e.tid = '.$this->tid.') AS taxa ON o.tidinterpreted = taxa.tid ';
+			if (preg_match('/^[,\d]+$/',$collidStr)) $sql .= 'AND o.collid IN('.$collidStr.')';
+			$result = $this->conn->query($sql);
+			while ($row = $result->fetch_object()){
+				$count = $row->cnt;
+			}
+			$result->free();
+		}
+		return $count;
+	}
 
-  /**
-   * Returns link for specimen search (by taxon) if number of occurrences
-   * is within declared limit
-   * $tid INTEGER taxon id
-   * $searchUrl STRING customizable in taxon profile page
-   * $limitOccs INTEGER max number of occurrences in a search
-   */
-  public function getSearchByTaxon($limitRank = 170, $collidStr = 'all', $limitOccs = 2000000)
-  {
-  	if($collidStr == 'neon') $collidStr = $this->getNeonCollidArr();
-  	$numOccs = $this->getOccTaxonInDbCnt($limitRank, $collidStr);
-  	$occMsg = '';
-    if ((1 <= $numOccs) && ($numOccs <= $limitOccs)) {
-      $occSrcUrl = '../collections/list.php?usethes=1&taxa='.$this->tid;
-      if($collidStr != 'all') $occSrcUrl .= '&db='.$collidStr;
-      $occMsg = '<a class="btn" href="'.$occSrcUrl.'" target="_blank">Explore '.number_format($numOccs).' occurrences</a>';
-    } elseif ($numOccs > $limitOccs) {
-      $occMsg = number_format($numOccs).' occurrences';
-    } elseif ($numOccs == 0) {
-      $occMsg = 'No occurrences found';
-    } elseif ($numOccs == -1) {
-      $occMsg = '';
-    }
-    return $occMsg;
-  }
+	/**
+	 * Returns link for specimen search (by taxon) if number of occurrences
+	 * is within declared limit
+	 * $tid INTEGER taxon id
+	 * $searchUrl STRING customizable in taxon profile page
+	 * $limitOccs INTEGER max number of occurrences in a search
+	 */
+	public function getSearchByTaxon($limitRank = 170, $collidStr = 'all', $limitOccs = 2000000){
+		if($collidStr == 'neon') $collidStr = $this->getNeonCollidArr();
+		$numOccs = $this->getOccTaxonInDbCnt($limitRank, $collidStr);
+		$occMsg = '';
+		if ((1 <= $numOccs) && ($numOccs <= $limitOccs)) {
+			$occSrcUrl = '../collections/list.php?usethes=1&taxa='.$this->tid;
+			if($collidStr != 'all') $occSrcUrl .= '&db='.$collidStr;
+			$occMsg = '<a class="btn" href="'.$occSrcUrl.'" target="_blank">Explore '.number_format($numOccs).' occurrences</a>';
+		} elseif ($numOccs > $limitOccs) {
+			$occMsg = number_format($numOccs).' occurrences';
+		} elseif ($numOccs == 0) {
+			$occMsg = 'No occurrences found';
+		} elseif ($numOccs == -1) {
+			$occMsg = '';
+		}
+		return $occMsg;
+	}
 
 	private function getNeonCollidArr(){
 		$retStr = array();

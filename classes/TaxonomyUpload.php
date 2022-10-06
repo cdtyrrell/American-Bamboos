@@ -10,6 +10,7 @@ class TaxonomyUpload{
 	private $uploadTargetPath;
 	private $taxAuthId = 1;
 	private $kingdomName;
+	private $kingdomTid;
 	private $taxonUnitArr = array();
 	private $statArr = array();
 	private $langArr = false;
@@ -197,13 +198,17 @@ class TaxonomyUpload{
 							foreach($sciArr as $sciKey => $sciValue){
 								if(!array_key_exists($sciKey, $inputArr) && $sciValue) $inputArr[$sciKey] = $sciValue;
 							}
+							if(isset($inputArr['unitind3']) && $inputArr['unitind3'] && isset($inputArr['unitname3']) && $inputArr['unitname3']){
+								if(stripos($inputArr['unitname3'], $inputArr['unitind3'].' ') === 0) $inputArr['unitname3'] = trim(substr($inputArr['unitname3'], strlen($inputArr['unitind3']) + 1));
+							}
 							unset($inputArr['identificationqualifier']);
 							if(isset($childParentArr[$inputArr['sciname']]['r']) && isset($inputArr['rankid']) && $childParentArr[$inputArr['sciname']]['r'] == $inputArr['rankid']) $childParentArr[$inputArr['sciname']]['s'] = 'skip';
 							$sql1 = ''; $sql2 = '';
 							foreach($inputArr as $k => $v){
 								$sql1 .= ','.$k;
 								$inValue = $this->cleanInStr($v);
-								$sql2 .= ','.($inValue?'"'.$inValue.'"':'NULL');
+								if($k == 'author') $sql2 .= ',"'.($inValue?$inValue:'').'"';
+								else $sql2 .= ','.($inValue?'"'.$inValue.'"':'NULL');
 							}
 							$sql = 'INSERT INTO uploadtaxa('.substr($sql1,1).') VALUES('.substr($sql2,1).')';
 							//echo "<div>".$sql."</div>";
@@ -361,17 +366,17 @@ class TaxonomyUpload{
 				}
 				unset($extraArr[$sourceId]);
 			}
-			$sql = "INSERT INTO uploadtaxa(SourceId,scinameinput,sciname,unitind1,unitname1,unitind2,unitname2,unitind3,".
-				"unitname3,SourceParentId,author,rankid,SourceAcceptedId,acceptance,vernacular,vernlang) ".
-				"VALUES (".$sourceId.',"'.$sciName.'","'.$sciName.'",'.
-				($tuArr[2]?'"'.$tuArr[2].'"':"NULL").",".
-				($tuArr[3]?'"'.$tuArr[3].'"':"NULL").",".
-				($tuArr[4]?'"'.$tuArr[4].'"':"NULL").",".
-				($tuArr[5]?'"'.$tuArr[5].'"':"NULL").",".
-				($unitInd3?'"'.$unitInd3.'"':"NULL").",".($unitName3?'"'.$unitName3.'"':"NULL").",".
-				($tuArr[18]?$tuArr[18]:"NULL").",".
-				($author?'"'.$author.'"':"NULL").",".
-				($tuArr[24]?$tuArr[24]:"NULL").",".
+			$sql = 'INSERT INTO uploadtaxa(SourceId,scinameinput,sciname,unitind1,unitname1,unitind2,unitname2,unitind3,'.
+				'unitname3,SourceParentId,author,rankid,SourceAcceptedId,acceptance,vernacular,vernlang) '.
+				'VALUES ('.$sourceId.',"'.$sciName.'","'.$sciName.'",'.
+				($tuArr[2]?'"'.$tuArr[2].'"':'NULL').','.
+				($tuArr[3]?'"'.$tuArr[3].'"':'NULL').','.
+				($tuArr[4]?'"'.$tuArr[4].'"':'NULL').','.
+				($tuArr[5]?'"'.$tuArr[5].'"':'NULL').','.
+				($unitInd3?'"'.$unitInd3.'"':'NULL').','.($unitName3?'"'.$unitName3.'"':'NULL').','.
+				($tuArr[18]?$tuArr[18]:'NULL').',"'.
+				($author?$author:'NULL').'",'.
+				($tuArr[24]?$tuArr[24]:'NULL').','.
 				($sourceAcceptedId?$sourceAcceptedId:'NULL').','.$acceptance.','.
 				($vernacular?'"'.$vernacular.'"':'NULL').','.
 				($vernlang?'"'.$vernlang.'"':'NULL').')';
@@ -399,7 +404,7 @@ class TaxonomyUpload{
 		$rs->free();
 		//Remove unaccepted, illegal homonyms
 		if($homonymArr){
-			$sql2 = 'DELETE FROM uploadtaxa WHERE (sciname IN("'.implode('","',$homonymArr).'")) AND (acceptance = 0) ';
+			$sql2 = 'DELETE FROM uploadtaxa WHERE (sciname IN("'.implode('','',$homonymArr).'")) AND (acceptance = 0) ';
 			$this->conn->query($sql2);
 		}
 	}
@@ -414,6 +419,11 @@ class TaxonomyUpload{
 	}
 
 	public function cleanUpload(){
+		if(!$this->kingdomTid){
+			$this->outputMsg('ABORT: kingdom identifier (TID) failed to populate (function: cleanUpload; kingdom: '.$this->kingdomName.')');
+			return false;
+		}
+
 		$sql = 'UPDATE uploadtaxa SET unitind3 = NULL WHERE unitind3 IS NOT NULL AND unitname3 IS NULL';
 		if(!$this->conn->query($sql)){
 			$this->outputMsg('ERROR: '.$this->conn->error,1);
@@ -556,8 +566,7 @@ class TaxonomyUpload{
 			$this->outputMsg('ERROR: '.$this->conn->error,1);
 		}
 
-		$sql = 'UPDATE uploadtaxa up INNER JOIN taxa t ON up.parentstr = t.sciname '.
-			'SET parenttid = t.tid WHERE (parenttid IS NULL) AND (t.kingdomname = "'.$this->kingdomName.'")';
+		$sql = 'UPDATE uploadtaxa up INNER JOIN taxa t ON up.parentstr = t.sciname SET parenttid = t.tid WHERE (parenttid IS NULL) AND (t.kingdomname = "'.$this->kingdomName.'")';
 		if(!$this->conn->query($sql)){
 			$this->outputMsg('ERROR: '.$this->conn->error,1);
 		}
@@ -699,23 +708,23 @@ class TaxonomyUpload{
 
 	public function transferUpload(){
 		$this->outputMsg('Starting data transfer...');
+		if(!$this->kingdomTid){
+			$this->outputMsg('ABORT: kingdom identifier (TID) failed to populate (function: transferUpload; kingdom: '.$this->kingdomName.')');
+			return false;
+		}
 		//Prime table with kingdoms that are not yet in table
 		$sql = 'INSERT INTO taxa(kingdomName, SciName, RankId, UnitInd1, UnitName1, UnitInd2, UnitName2, UnitInd3, UnitName3, Author, Source, Notes, modifiedUid, modifiedTimeStamp) '.
-			'SELECT DISTINCT "'.$this->kingdomName.'", SciName, RankId, UnitInd1, UnitName1, UnitInd2, UnitName2, UnitInd3, UnitName3, Author, Source, Notes, '.$GLOBALS['SYMB_UID'].' as uid, now() '.
+			'SELECT DISTINCT "'.$this->kingdomName.'", SciName, RankId, UnitInd1, UnitName1, UnitInd2, UnitName2, UnitInd3, UnitName3, IFNULL(Author,"") AS author, Source, Notes, '.$GLOBALS['SYMB_UID'].' as uid, now() '.
 			'FROM uploadtaxa '.
 			'WHERE (TID IS NULL) AND (rankid = 10)';
 		if($this->conn->query($sql)){
-			$sql = 'INSERT INTO taxstatus(tid, tidaccepted, taxauthid, parenttid) '.
-				'SELECT DISTINCT t.tid, t.tid, '.$this->taxAuthId.', t.tid '.
-				'FROM taxa t LEFT JOIN taxstatus ts ON t.tid = ts.tid '.
-				'WHERE (t.rankid = 10) AND (ts.tid IS NULL)';
+			$sql = 'INSERT INTO taxstatus(tid, tidaccepted, taxauthid, parenttid, modifiedUid) '.
+				'SELECT DISTINCT t.tid, t.tid, '.$this->taxAuthId.', t.tid, '.$GLOBALS['SYMB_UID'].' FROM taxa t LEFT JOIN taxstatus ts ON t.tid = ts.tid WHERE (t.rankid = 10) AND (ts.tid IS NULL)';
 			if(!$this->conn->query($sql)){
 				$this->outputMsg('ERROR: '.$this->conn->error,1);
 			}
 		}
-		else{
-			$this->outputMsg('ERROR: '.$this->conn->error,1);
-		}
+		else $this->outputMsg('ERROR: '.$this->conn->error,1);
 
 		//Loop through and transfer taxa to taxa table
 		$loopCnt = 0;
@@ -925,12 +934,11 @@ class TaxonomyUpload{
 		$rs = $this->conn->query('SHOW COLUMNS FROM uploadtaxa');
 		while($row = $rs->fetch_object()){
 			$field = strtolower($row->Field);
-			if(strtolower($field) != 'tid' && strtolower($field) != 'tidaccepted' && strtolower($field) != 'parenttid'){
+			if($field != 'tid' && $field != 'tidaccepted' && $field != 'parenttid'){
 				$targetArr[$field] = $field;
 			}
 		}
 		$rs->free();
-
 		return $targetArr;
 	}
 
@@ -1016,7 +1024,7 @@ class TaxonomyUpload{
 
 	public function getTaxonomicResourceList(){
 		$taArr = array('worms'=>'World Register of Marine Species','col'=>'Catalog of Life');
-		//$taArr = array('col'=>'Catalog of Life','worms'=>'World Register of Marine Species','tropicos'=>'TROPICOS','eol'=>'Encyclopedia of Life','IndexFungorum'=>'Index Fungorum');
+		$taArr = array('col'=>'Catalog of Life', 'worms'=>'World Register of Marine Species', 'bryonames' => 'The Bryophyte Nomenclator', 'fdex'=>'Index Fungorum via F-Dex', 'tropicos'=>'TROPICOS', 'eol'=>'Encyclopedia of Life');
 		if(!isset($GLOBALS['TAXONOMIC_AUTHORITIES'])) return $taArr;
 		return array_intersect_key($taArr,array_change_key_case($GLOBALS['TAXONOMIC_AUTHORITIES']));
 	}
@@ -1056,7 +1064,24 @@ class TaxonomyUpload{
 	}
 
 	public function setKingdomName($str){
-		if(preg_match('/^[a-zA-Z]+$/', $str)) $this->kingdomName = $str;
+		if(preg_match('/^[a-zA-Z]+$/', $str)){
+			$this->kingdomName = $str;
+			$sql = 'SELECT tid FROM taxa WHERE sciname = "'.$this->cleanInStr($this->kingdomName).'" AND rankid = 10';
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_object()){
+				$this->kingdomTid = $r->tid;
+			}
+			$rs->free();
+
+			//Batch populate NULL kingdomname values within taxa table
+			$sql = 'UPDATE IGNORE taxa t INNER JOIN taxaenumtree e ON t.tid = e.tid
+				INNER JOIN taxa k ON e.parenttid = k.tid
+				SET t.kingdomname = k.sciname
+				WHERE t.kingdomname IS NULL AND k.rankid = 10;';
+			if(!$this->conn->query($sql)){
+				$this->outputMsg('ERROR updating kingdomName within taxa table: '.$this->conn->error,1);
+			}
+		}
 	}
 
 	public function getStatArr(){

@@ -63,7 +63,7 @@ $georeferenceProtocol = filter_var($georeferenceProtocol, FILTER_SANITIZE_STRING
 $georeferenceVerificationStatus = filter_var($georeferenceVerificationStatus, FILTER_SANITIZE_STRING);
 
 if(!$georeferenceSources) $georeferenceSources = 'georef batch tool '.date('Y-m-d');
-if(!$georeferenceVerificationStatus) $georeferenceVerificationStatus = 'reviewed - high confidence';
+//if(!$georeferenceVerificationStatus) $georeferenceVerificationStatus = 'reviewed - high confidence';
 
 $geoManager = new OccurrenceGeorefTools();
 $activeCollArr = explode(',', $collid);
@@ -522,11 +522,11 @@ if($isEditor && $submitAction){
 											<b><?php echo $LANG['ELEVATION']; ?>:</b>
 										</td>
 										<td colspan="4">
-											<input name="minimumelevationinmeters" type="text" value="" style="width:50px;" /> <?php $LANG['TO']; ?>
-											<input name="maximumelevationinmeters" type="text" value="" style="width:50px;" /> <?php $LANG['METERS']; ?>
+											<input name="minimumelevationinmeters" type="text" value="" style="width:50px;" /> <?php echo $LANG['TO']; ?>
+											<input name="maximumelevationinmeters" type="text" value="" style="width:50px;" /> <?php echo $LANG['METERS']; ?>
 											<span style="margin-left:80px;">
-												<input type="text" value="" style="width:50px;" onchange="updateMinElev(this.value)" /> <?php $LANG['TO']; ?>
-												<input type="text" value="" style="width:50px;" onchange="updateMaxElev(this.value)" /> <?php $LANG['FEET']; ?>
+												<input type="text" value="" style="width:50px;" onchange="updateMinElev(this.value)" /> <?php echo $LANG['TO']; ?>
+												<input type="text" value="" style="width:50px;" onchange="updateMaxElev(this.value)" /> <?php echo $LANG['FEET']; ?>
 											</span>
 										</td>
 									</tr>
