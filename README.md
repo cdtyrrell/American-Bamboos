@@ -1,13 +1,10 @@
-This fork of the Symbiota code is actively being developed by the Biodiversity Knowledge Integration Center (BioKIC, https://github.com/BioKIC) development team at Arizona State University. 
-Even though BioKIC code developments are regularly pushed back to this repository, we recommend that you download/fork code directly from the 
-BioKIC/Symbiota repository (https://github.com/BioKIC/Symbiota) to ensure that you obtain the most recently code changes.   
 
-# Welcome to the Symbiota code repository
+# American Bamboos code repository
 
-### ABOUT THIS SOFTWARE
+### ABOUT THE PROJECT
 
-The Symbiota Software Project is building a library of webtools to aid biologists in establishing specimen based virtual floras and faunas. This project developed from the realization that complex, information rich biodiversity portals are best built through collaborative efforts between software developers, biologist, wildlife managers, and citizen scientist. The central premise of this open source software project is that through a partnership between software engineers and scientific community, higher quality and more publicly useful biodiversity portals can be built. An open source software framework allows the technicians to create the tools, thus freeing the biologist to concentrate their efforts on the curation of quality datasets. In this manor, we can create 
-something far greater than a single entity is capable of doing on their own.
+American Bamboos is dedicated to documenting and presenting information on the diversity and distribution of bamboo species native to the western hemisphere.
+
 
 More information about this project can be accessed through [https://symbiota.org](https://symbiota.org). 
 For documentation and user guides please visit [Symbiota Docs](https://symbiota.org/docs).
@@ -39,5 +36,6 @@ Symbiota has been generously funded by the National Science Foundation (DBI-0743
 ## INSTALLATION
 
 Please read the [INSTALL.md](docs/INSTALL.md) file for installation instructions.
+
 
 
