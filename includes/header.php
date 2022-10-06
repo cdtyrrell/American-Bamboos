@@ -38,10 +38,10 @@
 					<?php
 					if($USER_DISPLAY_NAME){
 						?>
-						<span style="">
-							Welcome <?php echo $USER_DISPLAY_NAME; ?>!
-						</span>
 						<div class="w3-dropdown-hover w3-hide-small w3-right">
+<!--             <span style="">
+							Welcome <?php echo $USER_DISPLAY_NAME; ?>!
+						</span> -->
 					    <button class="w3-button w3-padding-large" title="My Account">My Account</button>
 					    <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:100px">
 					      <a href="<?php echo $clientRoot; ?>/profile/viewprofile.php" class="w3-bar-item w3-button">Profile</a>
@@ -77,9 +77,11 @@
            <!-- <a href="<?php echo $clientRoot; ?>/collections/map/mapinterface.php" class="w3-bar-item w3-button w3-padding-large">Specimen Map Search</a>
            <a href="#" class="w3-bar-item w3-button w3-padding-large">Keys</a>
            <a href="<?php echo $clientRoot; ?>/imagelib/search.php" class="w3-bar-item w3-button w3-padding-large">Image Search</a> -->
+           <a href="<?php #echo $clientRoot; ?>/projects/about.php" class="w3-bar-item w3-button w3-padding-large">About</a>
+           
 
            <?php
-           if($userDisplayName){
+           if($USER_DISPLAY_NAME){
            ?>
              <a href="<?php echo $clientRoot; ?>/sitemap.php" class="w3-bar-item w3-button w3-padding-large">Site Menu</a>
              <a href="<?php echo $clientRoot; ?>/profile/viewprofile.php" class="w3-bar-item w3-button w3-padding-large">Profile</a>
