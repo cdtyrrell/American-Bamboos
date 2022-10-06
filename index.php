@@ -50,6 +50,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	       <br>
 
 	       <!-- Accordion -->
+<!--
 	       <div class="w3-card w3-round">
 	         <div class="w3-white">
 	           <button onclick="myFunction('Demo1')" class="w3-button w3-block w3-theme-l1 w3-left-align">Systematics</button>
@@ -87,6 +88,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	         </div>
 	       </div>
 	       <br>
+-->
 
 	       <!-- Interests -->
 	       <div class="w3-card w3-round w3-white w3-hide-small">
@@ -109,7 +111,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	       </div>
 	       <br>
 
-	       <!-- Alert Box -->
+	       <!-- Alert Box 
 	       <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
 	         <span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
 	           <i class="fa fa-remove"></i>
@@ -117,6 +119,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	         <p><strong>Hey!</strong></p>
 	         <p>This box can be closed.</p>
 	       </div>
+		   -->
 
 	     <!-- End Left Column -->
 	     </div>

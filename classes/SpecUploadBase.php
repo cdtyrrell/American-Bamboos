@@ -1476,7 +1476,7 @@ class SpecUploadBase extends SpecUpload{
 			$this->buildMaterialSampleJSON($recMap);
 			$sqlFragments = $this->getSqlFragments($recMap,$this->fieldMap);
 			if($sqlFragments){
-				$sql = 'INSERT INTO uploadspectemp(collid'.$sqlFragments['fieldstr'].') VALUES('.$this->collId.$sqlFragments['valuestr'].')';
+				$sql = 'INSERT IGNORE INTO uploadspectemp(collid'.$sqlFragments['fieldstr'].') VALUES('.$this->collId.$sqlFragments['valuestr'].')';
 				if($this->conn->query($sql)){
 					$this->transferCount++;
 					if($this->transferCount%1000 == 0) $this->outputMsg('<li style="margin-left:10px;">Count: '.$this->transferCount.'</li>');

@@ -28,6 +28,9 @@
   </div>
   <!-- Keys -->
   <!-- <a href="<?php #echo $clientRoot; ?>/ident/index.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Keys">Keys</a> -->
+  
+  <!-- About -->
+  <a href="<?php #echo $clientRoot; ?>/projects/about.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Keys">About</a>
 
 
 <!--			<div id="top_navbar">
