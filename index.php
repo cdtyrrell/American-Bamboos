@@ -89,8 +89,8 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	       <br>
 -->
 
-	       <!-- Interests -->
-	       <div class="w3-card w3-round w3-white w3-hide-small">
+	       <!-- Diversity -->
+<!--	       <div class="w3-card w3-round w3-white w3-hide-small">
 	         <div class="w3-container">
 	           <p>Diversity</p>
 	           <p>
@@ -109,6 +109,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	         </div>
 	       </div>
 	       <br>
+	-->
 
 	       <!-- Alert Box 
 	       <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
@@ -149,18 +150,19 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	         </div>
 	       </div>
 
-	       <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
+<!--	       <div class="w3-container w3-card w3-white w3-round w3-margin"><br>
 					 <div id="quicksearchdiv">
  						<form name="quicksearch" id="quicksearch" action="<?php echo $CLIENT_ROOT; ?>/taxa/index.php" method="get" onsubmit="return verifyQuickSearch(this);">
  							<div id="quicksearchtext" >
  							<?php echo (isset($LANG['QSEARCH_SEARCH'])?$LANG['QSEARCH_SEARCH']:'Taxon Search'); ?>
- 						</div>
+ 							</div>
  							<input id="taxa" type="text" name="taxon" />
  							<button name="formsubmit"  id="quicksearchbutton" type="submit" value="Search Terms">
  							<?php echo (isset($LANG['QSEARCH_SEARCH_BUTTON'])?$LANG['QSEARCH_SEARCH_BUTTON']:'Search'); ?>
- 						</button>
+ 							</button>
  						</form>
  					</div>
+-->
 	       </div>
 
 	     <!-- End Right Column -->
