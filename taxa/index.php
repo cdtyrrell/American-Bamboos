@@ -109,7 +109,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							if($taxonManager->isForwarded()){
 						 		echo '<span id="redirectedfrom"> ('.(isset($LANG['REDIRECT'])?$LANG['REDIRECT']:'redirected from').': <i>'.$taxonManager->getSubmittedValue('sciname').'</i> '.$taxonManager->getSubmittedValue('author').')</span>';
 						 	}
-						 	?>
+						?>
 						</div>
 						<?php
 						if($linkArr = $taxonManager->getLinkArr()){
