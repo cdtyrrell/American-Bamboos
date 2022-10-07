@@ -2,10 +2,10 @@
 </div>  <!-- this closes the "w3-page-container div that is created in header.php-->
 <footer class="w3-container w3-theme-d3 w3-padding-16 w3-center">
 	<p>
-		<a href="https://www.americanbamboos.org"><h5>www.americanbamboos.org</h5></a>
+	<a onClick="setLanguage({value:'en'})" href="<?php $_SERVER ?>?lang=en">English</a> &middot; <a onClick="setLanguage({value:'es'})" href="<?php $_SERVER ?>?lang=es">Español</a> &middot; <a onClick="setLanguage({value:'pt'})" href="<?php $_SERVER ?>?lang=pt">Português</a> 
 	</p>
 	<p>
-	<a onClick="setLanguage({value:'en'})" href="<?php $_SERVER ?>?lang=en">English</a> -- <a onClick="setLanguage({value:'es'})" href="<?php $_SERVER ?>?lang=es">Español</a> -- <a onClick="setLanguage({value:'pt'})" href="<?php $_SERVER ?>?lang=pt">Português</a> 
+		<a href="https://www.americanbamboos.org"><h5>www.americanbamboos.org</h5></a>
 	</p>
 </footer>
 
