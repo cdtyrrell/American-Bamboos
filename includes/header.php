@@ -34,7 +34,7 @@ else include_once($SERVER_ROOT.'/content/lang/header.'.$LANG_TAG.'.php');
   <!-- <a href="<?php #echo $clientRoot; ?>/ident/index.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Keys">Keys</a> -->
   
   <!-- About -->
-  <a href="<?php #echo $clientRoot; ?>/projects/about.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Keys"><?php echo $LANG['H_ABOUT']; ?></a>
+  <a href="<?php #echo $clientRoot; ?>/projects/people/tyrrell/index.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Keys"><?php echo $LANG['H_ABOUT']; ?></a>
 
 
 <!--			<div id="top_navbar">
@@ -83,7 +83,7 @@ else include_once($SERVER_ROOT.'/content/lang/header.'.$LANG_TAG.'.php');
            <!-- <a href="<?php echo $clientRoot; ?>/collections/map/mapinterface.php" class="w3-bar-item w3-button w3-padding-large">Specimen Map Search</a>
            <a href="#" class="w3-bar-item w3-button w3-padding-large">Keys</a>
            <a href="<?php echo $clientRoot; ?>/imagelib/search.php" class="w3-bar-item w3-button w3-padding-large">Image Search</a> -->
-           <a href="<?php #echo $clientRoot; ?>/projects/about.php" class="w3-bar-item w3-button w3-padding-large"><?php echo $LANG['H_ABOUT']; ?></a>
+           <a href="<?php #echo $clientRoot; ?>/projects/people/tyrrell/index.html" class="w3-bar-item w3-button w3-padding-large"><?php echo $LANG['H_ABOUT']; ?></a>
            
 
            <?php
