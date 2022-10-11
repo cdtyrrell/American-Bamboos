@@ -111,16 +111,6 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	       <br>
 	-->
 
-	       <!-- Alert Box 
-	       <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
-	         <span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
-	           <i class="fa fa-remove"></i>
-	         </span>
-	         <p><strong>Hey!</strong></p>
-	         <p>This box can be closed.</p>
-	       </div>
-		   -->
-
 	     <!-- End Left Column -->
 	     </div>
 
@@ -128,6 +118,18 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	     <div class="w3-col m9">
 	       <div class="w3-row-padding">
 	         <div class="w3-col m12">
+
+			 	<!-- Alert Box -->
+				<div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+					<span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
+					<i class="fa fa-remove"></i>
+					</span>
+					<p><strong><?php echo $LANG['PARDON']; ?></strong></p>
+					<p><?php echo $LANG['CHECK_BACK']; ?>
+					<div style="margin: 5px"><img src="https://img.shields.io/badge/<?php echo $LANG['LAST_UPDATE']; ?>-green.svg" /></div>
+					</p>
+				</div>
+
 	           <div class="w3-card w3-round w3-white">
 	             <div class="w3-container w3-padding">
 

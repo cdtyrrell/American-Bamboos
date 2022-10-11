@@ -5,12 +5,12 @@
 	<a onClick="setLanguage({value:'en'})" href="<?php $_SERVER ?>?lang=en">English</a> &middot; <a onClick="setLanguage({value:'es'})" href="<?php $_SERVER ?>?lang=es">Español</a> &middot; <a onClick="setLanguage({value:'pt'})" href="<?php $_SERVER ?>?lang=pt">Português</a> 
 	</p>
 	<p>
-		<a href="https://www.americanbamboos.org"><h5>www.americanbamboos.org</h5></a>
+		<a href="https://www.americanbamboos.org" class="w3-small"><h5>www.americanbamboos.org</h5></a>
 	</p>
 </footer>
 
 <footer class="w3-container w3-theme-d5 w3-center">
-  <p class="w3-tiny">American Bamboos is built upon the <a href="https://symbiota.org/docs/" target="_blank">Symbiota</a> platform, a project of the <a href="https://biokic.asu.edu" target="_blank">Biodiversity Knowledge Integration Center</a> of Arizona State University, and customized with theme elements from <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>, modified and maintained by <a href="https://github.com/cdtyrrell/American-Bamboos" target="_blank">Christopher D. Tyrrell</a></p>
+  <p class="w3-tiny"><?php echo $LANG['FOOTER']; ?></p>
 </footer>
 
 		<script>
