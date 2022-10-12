@@ -40,7 +40,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	      <!-- Profile -->
 	      <div class="w3-card w3-round w3-white">
 	        <div class="w3-container">
-	          <h4 class="w3-center"><?php echo $LANG['AMERICAN_BAMBOOS']; ?></h4>
+	          <h2 class="w3-center"><?php echo $LANG['AMERICAN_BAMBOOS']; ?></h2>
 	          <p class="w3-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Bamboo_DSCN2465.jpg/450px-Bamboo_DSCN2465.jpg" class="w3-rounded-rect" style="height:106px;width:106px" alt="image credit: Michele~commonswiki"></p>
 	          <hr>
 	          <p><?php echo $LANG['MISSION']; ?></p>
