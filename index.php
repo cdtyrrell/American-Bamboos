@@ -40,7 +40,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	      <!-- Profile -->
 	      <div class="w3-card w3-round w3-white">
 	        <div class="w3-container">
-	          <h4 class="w3-center"><?php echo $LANG['AMERICAN_BAMBOOS']; ?></h4>
+	          <h2 class="w3-center"><?php echo $LANG['AMERICAN_BAMBOOS']; ?></h2>
 	          <p class="w3-center"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Bamboo_DSCN2465.jpg/450px-Bamboo_DSCN2465.jpg" class="w3-rounded-rect" style="height:106px;width:106px" alt="image credit: Michele~commonswiki"></p>
 	          <hr>
 	          <p><?php echo $LANG['MISSION']; ?></p>
@@ -138,12 +138,12 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	               <hr class="w3-clear">
 	               <p><?php echo $LANG['WHAT_IS']; ?></p>
 	                 <div class="w3-row-padding" style="margin:0 -16px">
-	                   <div class="w3-half">
+	                   <!-- <div class="w3-half">
 	                     <img src="images/uploads/Chusquea_pohlii-cropped.jpg" style="width:100%" alt="Branch of Chusquea species" class="w3-margin-bottom">
 	                   </div>
 	                   <div class="w3-half">
 	                     <img src="images/uploads/Rhipidocladum_clarkiae-BraulioCarrillo.JPG" style="width:100%" alt="Tall bamboo" class="w3-margin-bottom">
-	                 </div>
+	                 </div> -->
 	               </div>
 	               <!-- <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom">More Info</button> -->
 

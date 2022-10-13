@@ -2355,18 +2355,18 @@ CREATE TABLE `omoccurrences` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `omoccurrencesfulltext_insert` AFTER INSERT ON `omoccurrences`
-FOR EACH ROW BEGIN
-  INSERT INTO omoccurrencesfulltext (
-    `occid`,
-    `recordedby`,
-    `locality`
-  ) VALUES (
-    NEW.`occid`,
-    NEW.`recordedby`,
-    NEW.`locality`
-  );
-END */;;
+-- /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `omoccurrencesfulltext_insert` AFTER INSERT ON `omoccurrences`
+-- FOR EACH ROW BEGIN
+--   INSERT INTO omoccurrencesfulltext (
+--     `occid`,
+--     `recordedby`,
+--     `locality`
+--   ) VALUES (
+--     NEW.`occid`,
+--     NEW.`recordedby`,
+--     NEW.`locality`
+--   );
+-- END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2381,13 +2381,13 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `omoccurrencesfulltext_update` AFTER UPDATE ON `omoccurrences`
-FOR EACH ROW BEGIN
-  UPDATE omoccurrencesfulltext SET
-    `recordedby` = NEW.`recordedby`,
-    `locality` = NEW.`locality`
-  WHERE `occid` = NEW.`occid`;
-END */;;
+-- /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `omoccurrencesfulltext_update` AFTER UPDATE ON `omoccurrences`
+-- FOR EACH ROW BEGIN
+--   UPDATE omoccurrencesfulltext SET
+--     `recordedby` = NEW.`recordedby`,
+--     `locality` = NEW.`locality`
+--   WHERE `occid` = NEW.`occid`;
+-- END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2402,10 +2402,10 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `omoccurrencesfulltext_delete` BEFORE DELETE ON `omoccurrences`
-FOR EACH ROW BEGIN
-  DELETE FROM omoccurrencesfulltext WHERE `occid` = OLD.`occid`;
-END */;;
+-- /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `omoccurrencesfulltext_delete` BEFORE DELETE ON `omoccurrences`
+-- FOR EACH ROW BEGIN
+--   DELETE FROM omoccurrencesfulltext WHERE `occid` = OLD.`occid`;
+-- END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2855,18 +2855,18 @@ CREATE TABLE `specprocessorrawlabels` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `specprocessorrawlabelsfulltext_insert` AFTER INSERT ON `specprocessorrawlabels`
-FOR EACH ROW BEGIN
-  INSERT INTO specprocessorrawlabelsfulltext (
-    `prlid`,
-    `imgid`,
-    `rawstr`
-  ) VALUES (
-    NEW.`prlid`,
-    NEW.`imgid`,
-    NEW.`rawstr`
-  );
-END */;;
+-- /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `specprocessorrawlabelsfulltext_insert` AFTER INSERT ON `specprocessorrawlabels`
+-- FOR EACH ROW BEGIN
+--   INSERT INTO specprocessorrawlabelsfulltext (
+--     `prlid`,
+--     `imgid`,
+--     `rawstr`
+--   ) VALUES (
+--     NEW.`prlid`,
+--     NEW.`imgid`,
+--     NEW.`rawstr`
+--   );
+-- END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2881,13 +2881,13 @@ DELIMITER ;
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `specprocessorrawlabelsfulltext_update` AFTER UPDATE ON `specprocessorrawlabels`
-FOR EACH ROW BEGIN
-  UPDATE specprocessorrawlabelsfulltext SET
-    `imgid` = NEW.`imgid`,
-    `rawstr` = NEW.`rawstr`
-  WHERE `prlid` = NEW.`prlid`;
-END */;;
+-- /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `specprocessorrawlabelsfulltext_update` AFTER UPDATE ON `specprocessorrawlabels`
+-- FOR EACH ROW BEGIN
+--   UPDATE specprocessorrawlabelsfulltext SET
+--     `imgid` = NEW.`imgid`,
+--     `rawstr` = NEW.`rawstr`
+--   WHERE `prlid` = NEW.`prlid`;
+-- END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;
@@ -2919,10 +2919,10 @@ CREATE TABLE `specprocessorrawlabelsfulltext` (
 /*!50003 SET @saved_sql_mode       = @@sql_mode */ ;
 /*!50003 SET sql_mode              = 'STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION' */ ;
 DELIMITER ;;
-/*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `specprocessorrawlabelsfulltext_delete` BEFORE DELETE ON `specprocessorrawlabelsfulltext`
-FOR EACH ROW BEGIN
-  DELETE FROM specprocessorrawlabelsfulltext WHERE `prlid` = OLD.`prlid`;
-END */;;
+-- /*!50003 CREATE*/ /*!50017 DEFINER=`root`@`localhost`*/ /*!50003 TRIGGER `specprocessorrawlabelsfulltext_delete` BEFORE DELETE ON `specprocessorrawlabelsfulltext`
+-- FOR EACH ROW BEGIN
+--   DELETE FROM specprocessorrawlabelsfulltext WHERE `prlid` = OLD.`prlid`;
+-- END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
 /*!50003 SET character_set_client  = @saved_cs_client */ ;

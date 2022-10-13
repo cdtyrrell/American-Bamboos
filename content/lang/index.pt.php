@@ -8,7 +8,7 @@ $LANG['PARDON'] = 'Por favor, perdoe nosso pólen!';
 $LANG['CHECK_BACK'] = 'Este site está em desenvolvimento ativo, por favor, volte para atualizações.';
 $LANG['LAST_UPDATE'] = 'Última Atualização-11 Out 2022';
 
-$LANG['AMERICAN_BAMBOOS'] = 'Bambus Nativos de <a href="https://en.wikipedia.org/wiki/Abya_Yala" target="_blank">Abya Yala</a>';
+$LANG['AMERICAN_BAMBOOS'] = 'Bambus Nativos <a href=""><span class="display">de Abya Yala</span><span class="definition">das Américas</span></a>';
 $LANG['MISSION'] = 'Dedicado a documentar e apresentar informações sobre a diversidade e distribuição de espécies de bambu nativas do Hemisfério Ocidental.';
 $LANG['WHAT_IS_H4'] = 'O que é um bambu?';
 $LANG['WHAT_IS'] = 'Os bambus (Poaceae: Bambusoideae) são gramíneas que evoluíram e se adaptaram aos habitats florestais (embora algumas espécies possam agora ser encontradas em ambientes mais abertos). Existem mais de 1.500 espécies de bambu em todo o mundo, cerca de um terço das quais são nativas do Hemisfério Ocidental, incluindo um gênero com três espécies (<i>Arundinaria</i>; "cana") que é nativa do que hoje é o sudeste dos Estados Unidos.';
