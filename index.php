@@ -138,12 +138,12 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	               <hr class="w3-clear">
 	               <p><?php echo $LANG['WHAT_IS']; ?></p>
 	                 <div class="w3-row-padding" style="margin:0 -16px">
-	                   <div class="w3-half">
+	                   <!-- <div class="w3-half">
 	                     <img src="images/uploads/Chusquea_pohlii-cropped.jpg" style="width:100%" alt="Branch of Chusquea species" class="w3-margin-bottom">
 	                   </div>
 	                   <div class="w3-half">
 	                     <img src="images/uploads/Rhipidocladum_clarkiae-BraulioCarrillo.JPG" style="width:100%" alt="Tall bamboo" class="w3-margin-bottom">
-	                 </div>
+	                 </div> -->
 	               </div>
 	               <!-- <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom">More Info</button> -->
 
