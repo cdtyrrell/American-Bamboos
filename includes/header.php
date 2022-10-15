@@ -34,7 +34,15 @@ else include_once($SERVER_ROOT.'/content/lang/header.'.$LANG_TAG.'.php');
   <!-- <a href="<?php #echo $clientRoot; ?>/ident/index.php" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Keys">Keys</a> -->
   
   <!-- About -->
-  <a href="<?php #echo $clientRoot; ?>/projects/people/tyrrell/index.html" class="w3-bar-item w3-button w3-hide-small w3-padding-large w3-hover-white" title="Keys"><?php echo $LANG['H_ABOUT']; ?></a>
+  <div class="w3-dropdown-hover w3-hide-small">
+    <button class="w3-button w3-padding-large" title="About"><?php echo $LANG['H_ABOUT']; ?></button>
+    <div class="w3-dropdown-content w3-card-4 w3-bar-block" style="width:150px">
+      <a href="<?php echo $clientRoot; ?>/projects/people/tyrrell/index.html" class="w3-bar-item w3-button"><?php echo $LANG['H_PEOPLE']; ?></a>
+      <!-- <a href="<?php echo $clientRoot; ?>/" class="w3-bar-item w3-button" ><?php echo $LANG['H_CITE']; ?></a> -->
+      <!-- <a href="<?php echo $clientRoot; ?>/imagelib/search.php" class="w3-bar-item w3-button">Images</a> -->
+    </div>
+  </div>
+
 
 
 <!--			<div id="top_navbar">
@@ -104,4 +112,5 @@ else include_once($SERVER_ROOT.'/content/lang/header.'.$LANG_TAG.'.php');
 
          </div>
   
+
 <div class="w3-container w3-content w3-page-content">

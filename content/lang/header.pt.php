@@ -14,6 +14,9 @@ $LANG['H_SPECIES'] = 'Espécies';
 $LANG['H_SPECIMENS'] = '';
 $LANG['H_MAP'] = 'Mapa';
 $LANG['H_TAXONOMIC_EXPLORER'] = 'Explorar Taxonomia';
+$LANG['H_PEOPLE'] = 'Pessoas';
+$LANG['H_CITE'] = 'Citação Recomendada';
+
 
 $LANG['H_IMAGES'] = 'Imagens';
 $LANG['H_IMAGE_BROWSER'] = 'Navegador de Imagens';
