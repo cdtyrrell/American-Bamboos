@@ -6,7 +6,7 @@ Language: Português do Brasil (Brazilian Portuguese)
 */
 $LANG['PARDON'] = 'Por favor, perdoe nosso pólen!';
 $LANG['CHECK_BACK'] = 'Este site está em desenvolvimento ativo, por favor, volte para atualizações.';
-$LANG['LAST_UPDATE'] = 'Última Atualização-11 Out 2022';
+$LANG['LAST_UPDATE'] = 'Última Atualização-18 Out 2022';
 
 $LANG['AMERICAN_BAMBOOS'] = 'Bambus Nativos <a href=""><span class="display">de Abya Yala</span><span class="definition">das Américas</span></a>';
 $LANG['MISSION'] = 'Dedicado a documentar e apresentar informações sobre a diversidade e distribuição de espécies de bambu nativas do Hemisfério Ocidental.';

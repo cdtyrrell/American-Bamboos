@@ -4,10 +4,6 @@
 /header_template.php
 /leftmenu.php
 /index_template.php
-content/lang/header.en.php
-content/lang/header.es.php
-content/lang/index.en.php
-content/lang/index.es.php
 includes/header_template.php
 includes/footer_template.php
 includes/head_template.php
@@ -28,5 +24,8 @@ css/.DS_Store
 .DS-Store
 css/.DS_Store
 
+.DS_Store
+.DS_Store
+.DS_Store
 .DS_Store
 .DS_Store

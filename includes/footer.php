@@ -2,15 +2,17 @@
 </div>  <!-- this closes the "w3-page-container div that is created in header.php-->
 <footer class="w3-container w3-theme-d3 w3-padding-16 w3-center">
 	<p>
-	<a onClick="setLanguage({value:'en'})" href="<?php $_SERVER ?>?lang=en">English</a> &middot; <a onClick="setLanguage({value:'es'})" href="<?php $_SERVER ?>?lang=es">Español</a> &middot; <a onClick="setLanguage({value:'pt'})" href="<?php $_SERVER ?>?lang=pt">Português</a> 
-	</p>
-	<p>
-		<a href="https://www.americanbamboos.org" class="w3-small"><h5>www.americanbamboos.org</h5></a>
+	<a onClick="setLanguage({value:'en'})" href="<?php $_SERVER ?>?lang=en">English</a> &middot; 
+	<a onClick="setLanguage({value:'es'})" href="<?php $_SERVER ?>?lang=es">Español</a> &middot; 
+	<a onClick="setLanguage({value:'pt'})" href="<?php $_SERVER ?>?lang=pt">Português</a><br>
+	<span class="w3-tiny"><?php echo $LANG['FOOTER']; ?></span>
 	</p>
 </footer>
 
 <footer class="w3-container w3-theme-d5 w3-center">
-  <p class="w3-tiny"><?php echo $LANG['FOOTER']; ?></p>
+	<p class="w3-small">
+		<b>Recommended citation:</b> Tyrrell, Christopher D. 2022. Native Bamboos of Abiayala/the Americas. Retrieved <?php echo date("j M Y") ?> from https://www.americanbamboos.org.
+	</p>
 </footer>
 
 		<script>
