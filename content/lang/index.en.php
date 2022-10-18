@@ -24,5 +24,4 @@ $LANG['SHOW_CAPTION'] = 'SHOW CAPTION';
 $LANG['IMAGE_BY'] = 'Image by';
 $LANG['COURTESY_OF'] = 'Courtesy of';
 
-$LANG['FOOTER'] = 'Native Bamboos of Abiayala is built upon the <a href="https://symbiota.org/" target="_blank">Symbiota</a> platform customized with theme elements from <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>; modified and maintained by <a href="https://github.com/cdtyrrell" target="_blank">Christopher D. Tyrrell</a>';
 ?>
