@@ -89,7 +89,7 @@ class OccurrenceMapManager extends OccurrenceManager {
 					$coordArr[$collName]["c"] = $color;
 				}
 			}
-			$statsManager->recordAccessEventByArr($occidArr, 'map');
+			//$statsManager->recordAccessEventByArr($occidArr, 'map');
 			if(array_key_exists('undefined',$coordArr)){
 				$coordArr['undefined']['c'] = $color;
 			}
@@ -145,7 +145,7 @@ class OccurrenceMapManager extends OccurrenceManager {
 				}
 			}
 			$rs->free();
-			$statsManager->recordAccessEventByArr($occidArr, 'map');
+			//$statsManager->recordAccessEventByArr($occidArr, 'map');
 		}
 		return $coordArr;
 	}
@@ -183,7 +183,7 @@ class OccurrenceMapManager extends OccurrenceManager {
 			//Set access statistics
 			if($retArr){
 				$statsManager = new OccurrenceAccessStats();
-				$statsManager->recordAccessEventByArr(array_keys($retArr),'list');
+				//$statsManager->recordAccessEventByArr(array_keys($retArr),'list');
 			}
 		}
 		return $retArr;
