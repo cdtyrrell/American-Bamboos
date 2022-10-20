@@ -68,11 +68,10 @@ if($SYMB_UID){
 	//if(!file_exists($cssPath)){
 	//	$cssPath = $CLIENT_ROOT.'/css/symb/taxa/speciesprofile.css?ver=2';
 	//}
-	?>
 	echo '<link href="'.$cssPath.'?ver='.$CSS_VERSION_LOCAL.'" type="text/css" rel="stylesheet" />';
 	echo '<link rel="stylesheet" type="text/css" href="'.$CSS_BASE_PATH.'/taxa/traitplot.css" />';
-	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
 	?>
+
 	<script src="../js/jquery.js" type="text/javascript"></script>
 	<script src="../js/jquery-ui.js" type="text/javascript"></script>
 	<script src="../js/symb/taxa.index.js?ver=202101" type="text/javascript"></script>
@@ -99,9 +98,9 @@ if($SYMB_UID){
 	        		<div class="w3-container">
 					<?php
 					if($isEditor){
-						//echo '<div id="editorDiv">';
-						//echo '<a href="profile/tpeditor.php?tid='.$taxonManager->getTid().'" title="'.(isset($LANG['EDIT_TAXON_DATA'])?$LANG['EDIT_TAXON_DATA']:'Edit Taxon Data').'">';
-						//echo '<img class="navIcon" src="../images/edit.png" /></a></div>';
+						echo '<div id="editorDiv" class="w3-right">';
+						echo '<a href="profile/tpeditor.php?tid='.$taxonManager->getTid().'" title="'.(isset($LANG['EDIT_TAXON_DATA'])?$LANG['EDIT_TAXON_DATA']:'Edit Taxon Data').'">';
+						echo '<img class="navIcon" src="../images/edit.png" /></a></div>';
 					}
 					?>
 
@@ -139,35 +138,9 @@ if($SYMB_UID){
 								echo '<div class="image" style="text-align:center;">';   //style="width:260px;height:260px;border-style:solid;margin-top:5px;margin-left:20px;text-align:center;"
 								echo '</div></div>';
 							}
-							//Map
-							$aUrl = ''; $gAnchor = '';
-							$url = '';
-							if(isset($MAP_THUMBNAILS) && $MAP_THUMBNAILS) $url = $taxonManager->getGoogleStaticMap();
-							//else $url = $CLIENT_ROOT.'/images/mappoint.png';
-							if($occurrenceModIsActive && $taxonManager->getDisplayLocality()){
-								$gAnchor = "openMapPopup('".$taxonManager->getTid()."',".$clid.")";
-							}
-							if($mapSrc = $taxonManager->getMapArr()){
-								$url = array_shift($mapSrc);
-								$aUrl = $url;
-							}
-							if($url){
-								echo '<div class="mapthumb w3-center">';
-								if($gAnchor){
-									echo '<a href="#" onclick="'.$gAnchor.';return false">';
-								}
-								elseif($aUrl){
-									echo '<a href="'.$aUrl.'">';
-								}
-								echo '<img src="'.$url.'" title="'.$taxonManager->getTaxonName().'" alt="'.$taxonManager->getTaxonName().'" />';
-								if($aUrl || $gAnchor) echo '</a>';
-								//if($gAnchor) echo '<br /><a href="#" onclick="'.$gAnchor.';return false">'.(isset($LANG['OPEN_MAP'])?$LANG['OPEN_MAP']:'Open Interactive Map').'</a>';
-								echo "</div>";
-							}
-							?>
 
-							<?php 
-								echo file_get_contents("americas.svg");
+							//Map
+							echo file_get_contents("americas.svg");
 							?>
 							<script type="text/javascript">
 								function colorMap(countryCode) {
