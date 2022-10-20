@@ -2,6 +2,7 @@
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/content/lang/taxa/index.'.$LANG_TAG.'.php');
 include_once($SERVER_ROOT.'/classes/TaxonProfile.php');
+include_once($SERVER_ROOT.'/taxa/graphics.php');
 Header('Content-Type: text/html; charset='.$CHARSET);
 
 
@@ -140,16 +141,23 @@ if($SYMB_UID){
 							}
 
 							//Map
+							echo '<div class="container">';
 							echo file_get_contents("americas.svg");
+							$countries = $taxonManager->getCountries();
 							?>
 							<script type="text/javascript">
 								function colorMap(countryCode) {
 									var svgpath = document.getElementById(countryCode);
 									svgpath.setAttribute("style", "fill:#537828");
 								}
-								var countries = <?php echo json_encode($taxonManager->getCountries()); ?>;
+								var countries = <?php echo json_encode($countries); ?>;
 								countries.forEach(colorMap);
 							</script>
+							<?php 
+								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countries) . '</span>';
+							?>
+							</div>
+
 							</div></div> <!-- close container, then card -->
 
 						</div>
@@ -157,7 +165,34 @@ if($SYMB_UID){
 
 					<!-- Right Column -->
 						<div class="w3-col m7">
-							
+						<div class="w3-row-padding">
+
+			 	<!-- Alert Box -->
+				 <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+					<span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
+					<i class="fa fa-remove"></i>
+					</span>
+					<p>Please Note: Data, maps and profiles are provided as-is and are dynamically generated from specimen records. Inaccuracies and misidentifications can affect data quality. If you notice or suspect an error, please notify the maintainer at tyrrell@mpm.edu. Thank you!
+					<div style="margin: 5px"><img src="https://img.shields.io/badge/Data Snapshot-5 Oct 2022-green.svg" /></div>
+					</p>
+				</div>
+
+						<div class="w3-card w3-round w3-white">
+	        			<div class="w3-container">
+
+							<div class="w3-half">
+								Other Data
+							</div>
+							<div class="w3-half">
+								<h4>Elevation Profile</h4>
+							<?php 
+							echo linearGraph(null, $taxonManager->getElevations(), "elev");
+							?>
+							</div>
+						</div>
+						</div>
+						<br>
+
 							<?php
 							echo $taxonManager->getDescriptionTabs();
 							?>
@@ -181,7 +216,7 @@ if($SYMB_UID){
 									</a>
 								</div>
 							</div>
-						</div>
+						</div></div>
 
 					<?php
 				} else {  //Ends the species check if

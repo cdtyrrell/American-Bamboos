@@ -467,6 +467,34 @@ class TaxonProfile extends Manager {
 		return $retStr;
 	}
 
+	//Elevation [CDT]
+	public function getElevations($tidStr = 0){
+		if(!$tidStr){
+			$tidArr = array($this->tid,$this->submittedArr['tid']);
+			if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
+			$tidStr = trim(implode(",",$tidArr),' ,');
+		}
+		if($tidStr){
+			$sql = 'SELECT (`minimumElevationInMeters` + COALESCE(`maximumElevationInMeters`,`minimumElevationInMeters`))/2 AS avgelev FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) AND `minimumElevationInMeters` IS NOT NULL';
+			$elevcount = $this->conn->query($sql);
+			$elevcountnonull = array(); //drop NULL values
+			foreach($elevcount as $e) {
+				if (!is_null($e['avgelev'])) array_push($elevcountnonull, $e['avgelev']);
+			} 
+			$elevcount->free();
+			$step = 500;
+			$elevhist = array_count_values(array_map(function($v) use ($step) { return (int) ceil(($v-$step/2) / $step) * $step;}, $elevcountnonull)); // bin the data for histogram
+			$elevprof = range(0, 4000, $step); // Add any needed zeros to complete 0-4000m elevation profile
+			$missinglevels = array_diff($elevprof, array_keys($elevhist));
+			$missing = array_fill_keys($missinglevels, 0);
+			$elevhist = $elevhist + $missing;
+			krsort($elevhist); // linearGraph() draws from the top down, so reverse sort
+			$elevhist = array_values($elevhist);
+		}
+		return $elevhist;
+	}
+
+
 	//Taxon Link functions
 	private function setLinkArr(){
 		if($this->linkArr === false && $this->tid){
