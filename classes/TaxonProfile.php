@@ -234,6 +234,24 @@ class TaxonProfile extends Manager {
 	}
 
 	//Map functions
+	public function getCountries($tidStr = 0){
+		$countries = array();
+		if(!$tidStr){
+			$tidArr = array($this->tid,$this->submittedArr['tid']);
+			if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
+			$tidStr = trim(implode(",",$tidArr),' ,');
+		}
+		if($tidStr){
+			$sql = 'SELECT DISTINCT countryCode FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.'))';
+			$result = $this->conn->query($sql);
+			foreach($result as $e) {
+				if (!is_null($e['countryCode'])) array_push($countries, $e['countryCode']);
+			}
+			$result->free();
+		}
+		return $countries;
+	}
+
 	public function getMapArr($tidStr = 0){
 		$maps = Array();
 		if(!$tidStr){

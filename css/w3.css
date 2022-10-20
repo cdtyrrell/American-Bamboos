@@ -10,7 +10,24 @@ a:hover .definition {
     display: inline;
 }
 
+#taxon, #sciname {
+    font-size: xx-large;
+}
 
+#sciname {
+    font-style: italic;
+}
+
+#author {
+    font-size: smaller;
+}
+
+.ab-bar{
+    background-color: black;
+    font-size: xx-small;
+    font-weight: bold;
+    color: white;
+}
 
 /* W3.CSS 4.15 December 2020 by Jan Egil and Borge Refsnes */
 html{box-sizing:border-box}*,*:before,*:after{box-sizing:inherit}
