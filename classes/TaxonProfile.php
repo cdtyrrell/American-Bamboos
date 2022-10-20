@@ -494,6 +494,36 @@ class TaxonProfile extends Manager {
 		return $elevhist;
 	}
 
+	//Gatherings[CDT]
+	public function getGatherings($tidStr = 0){
+		if(!$tidStr){
+			$tidArr = array($this->tid,$this->submittedArr['tid']);
+			if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
+			$tidStr = trim(implode(",",$tidArr),' ,');
+		}
+		if($tidStr){
+			$gatherings = '';
+			$country = '';
+			$state = '';
+			$sql = 'SELECT DISTINCT `country`,`stateProvince`,`recordedBy`,`eventDate`,`recordNumber` FROM `omoccurrences` WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) ORDER BY `country`,`stateProvince`,`recordedBy`,`eventDate`';
+			$result = $this->conn->query($sql);
+			while($r = $result->fetch_object()){
+				if($country != $r->country) {
+					$country = $r->country;
+					$gatherings .= '. <b>' . strtoupper($country) . ':</b> ';
+				}
+				if($state != $r->stateProvince) {
+					$state = $r->stateProvince;
+					$gatherings .= '<i>' . $state . '</i>, ';
+				}
+				$gatherings .= $r->recordedBy . ' ' . $r->recordNumber . ' [' . $r->eventDate . '], ';
+			}
+			trim($gatherings, ',');
+			$result->free();
+		}
+		return $gatherings;
+	}
+	
 
 	//Taxon Link functions
 	private function setLinkArr(){

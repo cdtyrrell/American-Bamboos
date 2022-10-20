@@ -180,15 +180,20 @@ if($SYMB_UID){
 						<div class="w3-card w3-round w3-white">
 	        			<div class="w3-container">
 
-							<div class="w3-half">
-								Other Data
-							</div>
-							<div class="w3-half">
+							<div class="w3-third w3-center">
 								<h4>Elevation Profile</h4>
 							<?php 
 							echo linearGraph(null, $taxonManager->getElevations(), "elev");
 							?>
 							</div>
+							<div class="w3-twothirds">
+							<p class="w3-tiny">Specimens Referenced: 
+							<?php echo $taxonManager->getGatherings(); ?>
+							</p> 
+							</div>
+							<!-- <div class="w3-third">
+								&nbsp;
+							</div> -->
 						</div>
 						</div>
 						<br>
