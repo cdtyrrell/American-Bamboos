@@ -162,7 +162,7 @@ class TaxonProfile extends Manager {
 			echo '<div class="tptnimg"><a href="#" onclick="openPopup(\''.$imgAnchor.'\');return false;">';
 			$titleStr = $imgObj['caption'];
 			if($imgObj['sciname'] != $this->taxonName) $titleStr .= ' (linked from '.$imgObj['sciname'].')';
-			echo '<img src="'.$imgUrl.'" title="'.$titleStr.'" alt="'.$this->taxonName.' image" />';
+			echo '<img style="width:49.9%" src="'.$imgUrl.'" title="'.$titleStr.'" alt="'.$this->taxonName.' image" />';
 			/*
 			if($length) echo '<img src="'.$imgUrl.'" title="'.$imgObj['caption'].'" alt="'.$spDisplay.' image" />';
 			//else echo '<img class="delayedimg" src="" delayedsrc="'.$imgUrl.'" />';
@@ -233,7 +233,9 @@ class TaxonProfile extends Manager {
 		return count($this->imageArr);
 	}
 
-	//Map functions
+	//Map functions 
+	
+	//Countries [CDT]
 	public function getCountries($tidStr = 0){
 		$countries = array();
 		if(!$tidStr){
@@ -242,7 +244,7 @@ class TaxonProfile extends Manager {
 			$tidStr = trim(implode(",",$tidArr),' ,');
 		}
 		if($tidStr){
-			$sql = 'SELECT DISTINCT countryCode FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.'))';
+			$sql = 'SELECT DISTINCT countryCode FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) ORDER BY countryCode';
 			$result = $this->conn->query($sql);
 			foreach($result as $e) {
 				if (!is_null($e['countryCode'])) array_push($countries, $e['countryCode']);
@@ -516,7 +518,7 @@ class TaxonProfile extends Manager {
 					$state = $r->stateProvince;
 					$gatherings .= '<i>' . $state . '</i>, ';
 				}
-				$gatherings .= $r->recordedBy . ' ' . $r->recordNumber . ' [' . $r->eventDate . '], ';
+				$gatherings .= '<a href="../collections/listtabledisplay.php?country='.urlencode($country).'&state='.urlencode($state).'&collector='.urlencode($r->recordedBy).'&collnum='.urlencode($r->recordNumber).'&eventdate1='.urlencode($r->eventDate).'&taxa='.urlencode($this->taxonName).'&usethes=1">' . $r->recordedBy . ' ' . $r->recordNumber . '</a> [' . $r->eventDate . '], ';
 			}
 			trim($gatherings, ',');
 			$result->free();

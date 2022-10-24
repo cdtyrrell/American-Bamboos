@@ -1,11 +1,17 @@
 <?php
 
 function rescale_norm($arr) {
-	$arrmax = max($arr);
-	$arrmin = min($arr);
-	foreach ($arr as $n) {
-		$newval = ($n - $arrmin) / ($arrmax - $arrmin);
-		$newarr[] = $newval;
+	if(is_array($arr)) {
+		$arrmax = max($arr);
+		$arrmin = min($arr);
+		foreach ($arr as $n) {
+			if($arrmax == $arrmin){
+				$newval = ($n - $arrmin);
+			} else {
+				$newval = ($n - $arrmin) / ($arrmax - $arrmin);
+			}
+			$newarr[] = $newval;
+		}
 	}
 	return $newarr;
 }
@@ -122,7 +128,7 @@ function linearGraph($data_line, $data_area, $type) {
 				$linecode .= $scaled_line[$i] . ' ' . $i * $grid_dist;
 			}
 			if ($i < count($scaled_area) - 1) $datacode .= ' L';
-			if ($i < count($scaled_line) - 1) $linecode .= ' L';
+			//if ($i < count($scaled_line) - 1) $linecode .= ' L';
 		}
 	}
 	if($type == "elev") $datacode .= 'L' . ($short_len-1) . ' ' . $long_len;

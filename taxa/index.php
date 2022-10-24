@@ -134,14 +134,8 @@ if($SYMB_UID){
 						echo '</div>';
 					}
 
-							if(!$taxonManager->echoImages(0,1,0)){
-								echo '<div class="w3-col m12">';
-								echo '<div class="image" style="text-align:center;">';   //style="width:260px;height:260px;border-style:solid;margin-top:5px;margin-left:20px;text-align:center;"
-								echo '</div></div>';
-							}
-
 							//Map
-							echo '<div class="container">';
+							echo '<div class="container w3-center">';
 							echo file_get_contents("americas.svg");
 							$countries = $taxonManager->getCountries();
 							?>
@@ -157,6 +151,14 @@ if($SYMB_UID){
 								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countries) . '</span>';
 							?>
 							</div>
+
+							<?php
+							if(!$taxonManager->echoImages(0,1,0)){
+								echo '<div class="w3-col m12">';
+								echo '<div class="image" style="text-align:center;">';   //style="width:260px;height:260px;border-style:solid;margin-top:5px;margin-left:20px;text-align:center;"
+								echo '</div></div>';
+							}
+							?>
 
 							</div></div> <!-- close container, then card -->
 
@@ -187,13 +189,17 @@ if($SYMB_UID){
 							?>
 							</div>
 							<div class="w3-twothirds">
+								&nbsp;
+								<script type="text/javascript">
+									<?php include_once($SERVER_ROOT.'/taxa/prec.js'); ?>
+									console.log(prec.get(344).keys());
+								</script>
+							</div>
+							<div class="w3-col m12">
 							<p class="w3-tiny">Specimens Referenced: 
 							<?php echo $taxonManager->getGatherings(); ?>
 							</p> 
 							</div>
-							<!-- <div class="w3-third">
-								&nbsp;
-							</div> -->
 						</div>
 						</div>
 						<br>
