@@ -43,14 +43,15 @@ function linearGraph($data_line, $data_area, $type) {
 		$grid_num = 10;
 		$long_len = 200;
 		$short_len = 60;
-		$bg_fill = "#d3d3d3";
-		$bg_stroke = "#ffffff";
+		$bg_fill = "#F8FBF4";
+		$bg_stroke = "#70A236";
 		$fg_fill = "#0099ff";
-		$fg_stroke = "#002e4d";
+		$fg_stroke = "#537828";
 		$fg_opacity = 0.5;
 		$legend = array("F","M","A","M","J","J","A","S","O","N");
 		$font_size = "0.5em";
-		$font_color = "#002e4d";
+		$font_color = "#000000";
+		$horiz = TRUE;
 	}
 	
 	if($type == "temp") {
@@ -65,6 +66,7 @@ function linearGraph($data_line, $data_area, $type) {
 		$legend = array("F","M","A","M","J","J","A","S","O","N");
 		$font_size = "0.5em";
 		$font_color = "#800000";
+		$horiz = TRUE;
 	}	
 	
 	$grid_dist = round($long_len / ($grid_num + 1), 1);
@@ -107,7 +109,7 @@ function linearGraph($data_line, $data_area, $type) {
 	$scaled_line = rescale($normal_line, $text_inset * 3, $short_len - 1);
 	$datacode = $linecode = '<path d="M';
 	if ($horiz) {
-		for ($i = 0; $i < count($scaled_area); $i++) {
+		for ($i = 0; $i < count($scaled_line); $i++) {
 			if ($i > ($grid_num + 1)) { 
 				$yvar = ((($grid_num + 2) - ($i - ($grid_num + 2))) - 1) * $grid_dist;
 				$datacode .= $yvar . ' ' . $scaled_area[$i];
@@ -128,7 +130,7 @@ function linearGraph($data_line, $data_area, $type) {
 				$linecode .= $scaled_line[$i] . ' ' . $i * $grid_dist;
 			}
 			if ($i < count($scaled_area) - 1) $datacode .= ' L';
-			//if ($i < count($scaled_line) - 1) $linecode .= ' L';
+			if ($i < count($scaled_line) - 1) $linecode .= ' L';
 		}
 	}
 	if($type == "elev") $datacode .= 'L' . ($short_len-1) . ' ' . $long_len;

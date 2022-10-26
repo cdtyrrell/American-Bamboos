@@ -235,14 +235,17 @@ class TaxonProfile extends Manager {
 
 	//Map functions 
 	
+	private function getTidStr(){
+		$tidArr = array($this->tid,$this->submittedArr['tid']);
+		if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
+		$tidStr = trim(implode(",",$tidArr),' ,');
+		return $tidStr;
+	}
+
 	//Countries [CDT]
 	public function getCountries($tidStr = 0){
 		$countries = array();
-		if(!$tidStr){
-			$tidArr = array($this->tid,$this->submittedArr['tid']);
-			if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
-			$tidStr = trim(implode(",",$tidArr),' ,');
-		}
+		if(!$tidStr) $tidStr = $this->getTidStr();
 		if($tidStr){
 			$sql = 'SELECT DISTINCT countryCode FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) ORDER BY countryCode';
 			$result = $this->conn->query($sql);
@@ -252,6 +255,86 @@ class TaxonProfile extends Manager {
 			$result->free();
 		}
 		return $countries;
+	}
+
+	//WCCoordCodes[CDT]
+	public function getCoordCodes($tidStr = 0){
+		if(!$tidStr) $tidStr = $this->getTidStr();
+		if($tidStr){
+			$coordcodes = array();
+			$sql = 'SELECT DecimalLatitude AS declat, DecimalLongitude AS declng FROM omoccurrences WHERE (tidinterpreted IN ('.$tidStr.')) AND DecimalLatitude IS NOT NULL';
+			$result = $this->conn->query($sql);
+			foreach($result as $e) {
+				$latcode = $e['declat'];
+				$loncode = $e['declng'];
+				// WARNING! This next bit is specific to Latin America/American Bamboos
+				if($latcode < 0) {
+					$latcode = $latcode * -1;
+					$latcode += 100;
+				}
+				if($loncode > -30) continue;
+				$loncode = $loncode * -1;
+
+				$latcode = floor($latcode) . floor(($e['declat'] - floor($e['declat'])) * 6);
+				$loncode = floor($loncode) . floor(($e['declng'] - floor($e['declng'])) * 6);
+				array_push($coordcodes, $loncode.$latcode);
+			}
+			$result->free();
+		}
+		return $coordcodes;
+	}
+
+	public function getPrec($tidStr = 0) {
+		include 'WC2110mPrec.php';
+		$coordCodes = $this->getCoordCodes();
+		$coordPrecs = array();
+		foreach($coordCodes as $code) {
+			$coordPrecs[] = $prec[$code];
+			// if (typeof precArr === 'undefined') {
+			// 	console.log('coordinate code '+item+' not found');
+			// } else {
+			// 	coordPrecs.push(prec.get(item));
+			// }
+		}
+		//transpose
+		$coordPrecs_t = array();
+		foreach ($coordPrecs as $key => $subarr) {
+			foreach ($subarr as $subkey => $subvalue) {
+				$coordPrecs_t[$subkey][$key] = $subvalue;
+			}
+		}
+		$precArr = array();
+		foreach($coordPrecs_t as $month) {
+			$precArr[] = round(array_sum($month) / count($month), 1);
+		}
+		return $precArr;
+	}
+
+	public function getSrad($tidStr = 0) {
+		include 'WC2110mSrad.php';
+		$coordCodes = $this->getCoordCodes();
+		$coordPrecs = array();
+		foreach($coordCodes as $code) {
+			var_dump($code);
+			$coordPrecs[] = $srad[$code];
+			// if (typeof precArr === 'undefined') {
+			// 	console.log('coordinate code '+item+' not found');
+			// } else {
+			// 	coordPrecs.push(prec.get(item));
+			// }
+		}
+		//transpose
+		$coordPrecs_t = array();
+		foreach ($coordPrecs as $key => $subarr) {
+			foreach ($subarr as $subkey => $subvalue) {
+				$coordPrecs_t[$subkey][$key] = $subvalue;
+			}
+		}
+		$precArr = array();
+		foreach($coordPrecs_t as $month) {
+			$precArr[] = round(array_sum($month) / count($month), 1);
+		}
+		return $precArr;
 	}
 
 	public function getMapArr($tidStr = 0){

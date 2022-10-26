@@ -189,11 +189,14 @@ if($SYMB_UID){
 							?>
 							</div>
 							<div class="w3-twothirds">
-								&nbsp;
-								<script type="text/javascript">
-									<?php include_once($SERVER_ROOT.'/taxa/prec.js'); ?>
-									console.log(prec.get(344).keys());
-								</script>
+								<h4>Average Precipitation</h4>
+								<?php
+									echo linearGraph($taxonManager->getPrec(), null, "precip");
+								?>
+								<h4>Solar Radiation</h4>
+								<?php
+									echo linearGraph($taxonManager->getSrad(), null, "precip");
+								?>
 							</div>
 							<div class="w3-col m12">
 							<p class="w3-tiny">Specimens Referenced: 
