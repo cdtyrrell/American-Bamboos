@@ -21,6 +21,7 @@ class TaxonProfile extends Manager {
 	private $imageArr;
 	private $sppArray;
 	private $linkArr = false;
+	private $coordCodeArr = array();
 
 	private $displayLocality = 1;
 
@@ -258,7 +259,7 @@ class TaxonProfile extends Manager {
 	}
 
 	//WCCoordCodes[CDT]
-	public function getCoordCodes($tidStr = 0){
+	private function getCoordCodes($tidStr = 0){
 		if(!$tidStr) $tidStr = $this->getTidStr();
 		if($tidStr){
 			$coordcodes = array();
@@ -281,15 +282,15 @@ class TaxonProfile extends Manager {
 			}
 			$result->free();
 		}
-		return $coordcodes;
+		$this->$coordCodeArr = $coordcodes;
 	}
 
-	public function getPrec($tidStr = 0) {
-		include 'WC2110mPrec.php';
+	public function getWC($wcvar, $tidStr = 0) {
+		include 'WC2110m-'.strtolower($wcvar).'.php';
 		$coordCodes = $this->getCoordCodes();
 		$coordPrecs = array();
 		foreach($coordCodes as $code) {
-			$coordPrecs[] = $prec[$code];
+			$coordPrecs[] = $wcData[$code];
 			// if (typeof precArr === 'undefined') {
 			// 	console.log('coordinate code '+item+' not found');
 			// } else {
@@ -311,12 +312,11 @@ class TaxonProfile extends Manager {
 	}
 
 	public function getSrad($tidStr = 0) {
-		include 'WC2110mSrad.php';
+		include 'WC2110m-srad.php';
 		$coordCodes = $this->getCoordCodes();
 		$coordPrecs = array();
 		foreach($coordCodes as $code) {
-			var_dump($code);
-			$coordPrecs[] = $srad[$code];
+			$coordPrecs[] = $wcData[$code];
 			// if (typeof precArr === 'undefined') {
 			// 	console.log('coordinate code '+item+' not found');
 			// } else {
@@ -599,7 +599,7 @@ class TaxonProfile extends Manager {
 				}
 				if($state != $r->stateProvince) {
 					$state = $r->stateProvince;
-					$gatherings .= '<i>' . $state . '</i>, ';
+					$gatherings .= '---<i>' . $state . '</i>, ';
 				}
 				$gatherings .= '<a href="../collections/listtabledisplay.php?country='.urlencode($country).'&state='.urlencode($state).'&collector='.urlencode($r->recordedBy).'&collnum='.urlencode($r->recordNumber).'&eventdate1='.urlencode($r->eventDate).'&taxa='.urlencode($this->taxonName).'&usethes=1">' . $r->recordedBy . ' ' . $r->recordNumber . '</a> [' . $r->eventDate . '], ';
 			}

@@ -131,11 +131,12 @@ if($SYMB_UID){
 						}
 						echo '<div id="synonymDiv" title="'.(isset($LANG['SYNONYMS'])?$LANG['SYNONYMS']:'Synonyms').'">';
 						echo $synStr;
-						echo '</div>';
+						echo '</div><hr>';
 					}
 
 							//Map
-							echo '<div class="container w3-center">';
+							echo '<div class="container w3-center">
+							<h4 class="w3-left">Distribution</h4>';
 							echo file_get_contents("americas.svg");
 							$countries = $taxonManager->getCountries();
 							?>
@@ -181,22 +182,33 @@ if($SYMB_UID){
 
 						<div class="w3-card w3-round w3-white">
 	        			<div class="w3-container">
-
-							<div class="w3-third w3-center">
-								<h4>Elevation Profile</h4>
+<h4>Habitat</h4>
+							<div class="w3-quarter w3-center">
+								<h5>Elevation Profile</h5>
 							<?php 
 							echo linearGraph(null, $taxonManager->getElevations(), "elev");
 							?>
 							</div>
-							<div class="w3-twothirds">
-								<h4>Average Precipitation</h4>
+							<div class="w3-quarter w3-center">
+								<h5>Average Precipitation</h5>
 								<?php
-									echo linearGraph($taxonManager->getPrec(), null, "precip");
+									echo linearGraph($taxonManager->getWC('prec'), null, "precip");
 								?>
-								<h4>Solar Radiation</h4>
+								<h5>Average Temperature</h5>
 								<?php
-									echo linearGraph($taxonManager->getSrad(), null, "precip");
+									echo linearGraph($taxonManager->getWC('tavg'), null, "precip");
 								?>
+							</div>
+							<div class="w3-quarter w3-center">
+							<h5>Humidity</h5>
+							<h5>Wind Speed</h5>
+							</div>
+							<div class="w3-quarter w3-center">
+							<h5>Solar Radiation</h5>
+								<?php
+									echo linearGraph($taxonManager->getWC('srad'), null, "precip");
+								?>
+							<h5>Soil Type?</h5>
 							</div>
 							<div class="w3-col m12">
 							<p class="w3-tiny">Specimens Referenced: 
