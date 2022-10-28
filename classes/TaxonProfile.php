@@ -282,33 +282,78 @@ class TaxonProfile extends Manager {
 			}
 			$result->free();
 		}
-		$this->$coordCodeArr = $coordcodes;
+		$this->coordCodeArr = $coordcodes;
 	}
 
-	public function getWC($wcvar, $tidStr = 0) {
-		include 'WC2110m-'.strtolower($wcvar).'.php';
-		$coordCodes = $this->getCoordCodes();
-		$coordPrecs = array();
-		foreach($coordCodes as $code) {
-			$coordPrecs[] = $wcData[$code];
+	private function transpose2DArray($arr) {
+		$tarr = array();
+		foreach ($arr as $key => $subarr) {
+			foreach ($subarr as $subkey => $subvalue) {
+				$tarr[$subkey][$key] = $subvalue;
+			}
+		}
+		return $tarr;
+	}
+
+	public function getWC() {
+		$this->getCoordCodes();
+		$tavgRes = array();
+		$precRes = array();
+		$vaprRes = array();
+		$windRes = array();
+		$sradRes = array();
+		$sql = 'SELECT tavg, prec, vapr, wind, srad, bio FROM wc2110mvars WHERE coordCode IN ('.implode(',',$this->coordCodeArr).')';
+		$result = $this->conn->query($sql);
+		foreach($result as $e) {
+			$tavgRes[] = explode("|",$e['tavg']);
+			$precRes[] = explode("|",$e['prec']);
+			$vaprRes[] = explode("|",$e['vapr']);
+			$windRes[] = explode("|",$e['wind']);
+			$sradRes[] = explode("|",$e['srad']);
 			// if (typeof precArr === 'undefined') {
 			// 	console.log('coordinate code '+item+' not found');
 			// } else {
 			// 	coordPrecs.push(prec.get(item));
 			// }
 		}
-		//transpose
-		$coordPrecs_t = array();
-		foreach ($coordPrecs as $key => $subarr) {
-			foreach ($subarr as $subkey => $subvalue) {
-				$coordPrecs_t[$subkey][$key] = $subvalue;
-			}
+		$tavgRes = $this->transpose2DArray($tavgRes);
+		$precRes = $this->transpose2DArray($precRes);
+		$vaprRes = $this->transpose2DArray($vaprRes);
+		$windRes = $this->transpose2DArray($windRes);
+		$sradRes = $this->transpose2DArray($sradRes);
+		$bioRes = $this->transpose2DArray($windRes);
+		$wcArr = $tmpArr = array();
+		foreach($tavgRes as $month) {
+			$tmpArr[] = round(array_sum($month) / count($month), 1);
 		}
-		$precArr = array();
-		foreach($coordPrecs_t as $month) {
-			$precArr[] = round(array_sum($month) / count($month), 1);
+		$wcArr['tavg'] = $tmpArr;
+		$tmpArr = array();
+		foreach($precRes as $month) {
+			$tmpArr[] = round(array_sum($month) / count($month), 1);
 		}
-		return $precArr;
+		$wcArr['prec'] = $tmpArr;
+		$tmpArr = array();
+		foreach($vaprRes as $month) {
+			$tmpArr[] = round(array_sum($month) / count($month), 1);
+		}
+		$wcArr['vapr'] = $tmpArr;
+		$tmpArr = array();
+		foreach($windRes as $month) {
+			$tmpArr[] = round(array_sum($month) / count($month), 1);
+		}
+		$wcArr['wind'] = $tmpArr;
+		$tmpArr = array();
+		foreach($sradRes as $month) {
+			$tmpArr[] = round(array_sum($month) / count($month), 1);
+		}
+		$wcArr['srad'] = $tmpArr;
+		$tmpArr = array();
+		foreach($bioRes as $month) {
+			$tmpArr[] = round(array_sum($month) / count($month), 1);
+		}
+		$wcArr['bio'] = $tmpArr;
+
+		return $wcArr;
 	}
 
 	public function getSrad($tidStr = 0) {

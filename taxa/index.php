@@ -192,22 +192,29 @@ if($SYMB_UID){
 							<div class="w3-quarter w3-center">
 								<h5>Average Precipitation</h5>
 								<?php
-									echo linearGraph($taxonManager->getWC('prec'), null, "precip");
+									$wcdata = $taxonManager->getWC();
+									echo linearGraph($wcdata['prec'], null, "precip");
 								?>
 								<h5>Average Temperature</h5>
 								<?php
-									echo linearGraph($taxonManager->getWC('tavg'), null, "precip");
+									echo linearGraph($wcdata['tavg'], null, "precip");
 								?>
 							</div>
 							<div class="w3-quarter w3-center">
 							<h5>Humidity</h5>
+								<?php
+									echo linearGraph($wcdata['vapr'], null, "precip");
+								?>
+							<h5>Solar Radiation</h5>
+								<?php
+									echo linearGraph($wcdata['srad'], null, "precip");
+								?>
 							<h5>Wind Speed</h5>
 							</div>
 							<div class="w3-quarter w3-center">
-							<h5>Solar Radiation</h5>
-								<?php
-									echo linearGraph($taxonManager->getWC('srad'), null, "precip");
-								?>
+							<?php
+								echo linearGraph($wcdata['wind'], null, "precip");
+							?>
 							<h5>Soil Type?</h5>
 							</div>
 							<div class="w3-col m12">

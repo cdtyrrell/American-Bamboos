@@ -24,7 +24,7 @@ function rescale($arr, $min, $max, $prec = 1) {
 	return $newarr;
 }
 
-function linearGraph($data_line, $data_area, $type) {
+function linearGraph($mid_line, $data_area, $type) {
 	if($type == "elev") {
 		$grid_num = 7;
 		$long_len = 200;
@@ -105,7 +105,7 @@ function linearGraph($data_line, $data_area, $type) {
 	
 	$normal_area = rescale_norm($data_area);
 	$scaled_area = rescale($normal_area, $text_inset * 3, $short_len - 1);
-	$normal_line = rescale_norm($data_line);
+	$normal_line = rescale_norm($mid_line);
 	$scaled_line = rescale($normal_line, $text_inset * 3, $short_len - 1);
 	$datacode = $linecode = '<path d="M';
 	if ($horiz) {
@@ -138,7 +138,7 @@ function linearGraph($data_line, $data_area, $type) {
 		$datacode .= ' Z" fill="' . $fg_fill . '" style="opacity:' . $fg_opacity . ';"/>';
 		$code .= $datacode;
 	}
-	if (is_array($data_line)) {
+	if (is_array($mid_line)) {
 		$linecode .= '" fill="none" stroke-width="2" stroke="' . $fg_stroke . '"/>';
 		$code .= $linecode;
 	}
@@ -146,7 +146,7 @@ function linearGraph($data_line, $data_area, $type) {
 	return($code);
 }
 
-function rangeGraph($data_line, $data_area, $type, $grid_num = 2, $long_len, $short_len, $fg_stroke, $fg_fill, $fg_opacity, $bg_stroke, $bg_fill, $horiz = TRUE, $legend, $font_size, $font_color) {
+function rangeGraph($mid_line, $data_area, $type, $grid_num = 2, $long_len, $short_len, $fg_stroke, $fg_fill, $fg_opacity, $bg_stroke, $bg_fill, $horiz = TRUE, $legend, $font_size, $font_color) {
 	if($type == "elev") {
 		$grid_num = 7;
 		$long_len = 200;
