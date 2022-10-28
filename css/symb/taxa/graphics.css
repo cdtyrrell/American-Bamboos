@@ -52,3 +52,47 @@
     stroke:#800000;
     stroke-width:2;
 }
+
+.gauge-area.srad {
+    fill:#ffd700;
+    opacity:0.5;
+}
+
+.gauge-line.srad {
+    fill:none;
+    stroke:#d4af37;
+    stroke-width:2;
+}
+
+.gauge-area.vapr {
+    fill:#9955ee;
+    opacity:0.5;
+}
+
+.gauge-line.vapr {
+    fill:none;
+    stroke:#331177;
+    stroke-width:2;
+}
+
+.gauge-area.wind {
+    fill:#f99f38;
+    opacity:0.5;
+}
+
+.gauge-line.wind {
+    fill:none;
+    stroke:#ff7417;
+    stroke-width:2;
+}
+
+.gauge-area.bio {
+    fill:#000;
+    opacity:0.5;
+}
+
+.gauge-line.bio {
+    fill:none;
+    stroke:#fff;
+    stroke-width:2;
+}

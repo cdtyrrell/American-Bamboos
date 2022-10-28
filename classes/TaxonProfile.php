@@ -245,17 +245,18 @@ class TaxonProfile extends Manager {
 
 	//Countries [CDT]
 	public function getCountries($tidStr = 0){
-		$countries = array();
+		$countries = $codes = array();
 		if(!$tidStr) $tidStr = $this->getTidStr();
 		if($tidStr){
-			$sql = 'SELECT DISTINCT countryCode FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) ORDER BY countryCode';
+			$sql = 'SELECT DISTINCT countryCode, country FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) AND countryCode IS NOT NULL ORDER BY country';
 			$result = $this->conn->query($sql);
 			foreach($result as $e) {
-				if (!is_null($e['countryCode'])) array_push($countries, $e['countryCode']);
+				if (!is_null($e['country'])) array_push($countries, $e['country']);
+				array_push($codes, $e['countryCode']);
 			}
 			$result->free();
 		}
-		return $countries;
+		return array('name'=>$countries, 'code'=>$codes);
 	}
 
 	//WCCoordCodes[CDT]

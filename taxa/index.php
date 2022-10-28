@@ -107,11 +107,6 @@ if($SYMB_UID){
 					?>
 
 					<div id="scinameDiv" class="w3-col m12 w3-center">
-						<?php
-						if($taxonManager->isForwarded()){
-							echo '<span class="w3-tiny w3-opacity w3-right"> ['.(isset($LANG['REDIRECT'])?$LANG['REDIRECT']:'redirected from').': <i>'.$taxonManager->getSubmittedValue('sciname').'</i> '.$taxonManager->getSubmittedValue('author').']</span><br>';
-						}
-						?>
 						<span id="<?php echo ($taxonManager->getRankId() > 179?'sciname':'taxon'); ?>">
 						<?php echo$taxonManager->getTaxonName(); ?>
 						</span>
@@ -130,16 +125,21 @@ if($SYMB_UID){
 							}
 							$synStr = trim($synStr,', ').'</span>';
 						}
-						echo '<div id="synonymDiv" title="'.(isset($LANG['SYNONYMS'])?$LANG['SYNONYMS']:'Synonyms').'">';
+						echo '<div class="w3-col m12" id="synonymDiv" title="'.(isset($LANG['SYNONYMS'])?$LANG['SYNONYMS']:'Synonyms').'">';
+						if($taxonManager->isForwarded()){
+							echo '<span class="w3-tiny w3-opacity w3-right"> ['.(isset($LANG['REDIRECT'])?$LANG['REDIRECT']:'redirected from').': <i>'.$taxonManager->getSubmittedValue('sciname').'</i> '.$taxonManager->getSubmittedValue('author').']</span><br>';
+						}
 						echo $synStr;
-						echo '</div><hr>';
+						echo '</div>';
 					}
 
 							//Map
-							echo '<div class="container w3-center">
+							echo '<div class="w3-container w3-center">
+							<hr>
 							<h4 class="w3-left">Distribution</h4>';
 							echo file_get_contents("americas.svg");
-							$countries = $taxonManager->getCountries();
+							$countryinfo = $taxonManager->getCountries();
+							$countries = $countryinfo['code'];
 							?>
 							<script type="text/javascript">
 								function colorMap(countryCode) {
@@ -150,7 +150,7 @@ if($SYMB_UID){
 								countries.forEach(colorMap);
 							</script>
 							<?php 
-								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countries) . '</span>';
+								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countryinfo['name']) . '</span>';
 							?>
 							</div>
 
@@ -183,15 +183,15 @@ if($SYMB_UID){
 
 						<div class="w3-card w3-round w3-white">
 	        			<div class="w3-container">
-<h4>Habitat</h4>
+							<h4>Habitat</h4>
 							<div class="w3-third w3-center">
 								<h5>Elevation Profile</h5>
-							<?php 
-							echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations(), array("3500","","2500","","1500","","500"), "elev", FALSE);
-							?>
+								<?php 
+								echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations(), array("3500","","2500","","1500","","500"), "elev", FALSE);
+								?>
 							</div>
 							<div class="w3-third w3-center">
-								<h5>Average Precipitation</h5>
+								<h5>Precipitation Profile</h5>
 								<?php
 									$wcdata = $taxonManager->getWC();
 									$calendarlegend = array("F","M","A","M","J","J","A","S","O","N");
@@ -200,29 +200,29 @@ if($SYMB_UID){
 									//var_dump($wcdata['prec-max']);
 									echo linearGraph($wcdata['prec-avg'], $wcdata['prec-min'], $wcdata['prec-max'], $calendarlegend, "prec");
 								?>
-								<h5>Average Temperature</h5>
+								<h5>Temperature Profile</h5>
 								<?php
 									echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp");
 								?>
 							</div>
 							<div class="w3-third w3-center">
-							<h5>Average Humidity</h5>
+								<h5>Humidity Profile</h5>
+									<?php
+										echo linearGraph($wcdata['vapr-avg'], $wcdata['vapr-min'], $wcdata['vapr-max'], $calendarlegend, "vapr");
+									?>
+								<h5>Solar Radiation Profile</h5>
+									<?php
+										echo linearGraph($wcdata['srad-avg'], $wcdata['srad-min'], $wcdata['srad-max'], $calendarlegend, "srad");
+									?>
+								<h5>Wind Speed Profile</h5>
 								<?php
-									echo linearGraph($wcdata['vapr-avg'], $wcdata['vapr-min'], $wcdata['vapr-max'], $calendarlegend, "vapr");
+									echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
 								?>
-							<h5>Average Solar Radiation</h5>
-								<?php
-									echo linearGraph($wcdata['srad-avg'], $wcdata['srad-min'], $wcdata['srad-max'], $calendarlegend, "srad");
-								?>
-							<h5>Average Wind Speed</h5>
-							<?php
-								echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
-							?>
 							</div>
 							<div class="w3-col m12">
-							<p class="w3-tiny">Specimens Referenced: 
-							<?php echo $taxonManager->getGatherings(); ?>
-							</p> 
+								<p class="w3-tiny">Specimens Referenced: 
+								<?php echo $taxonManager->getGatherings(); ?>
+								</p> 
 							</div>
 						</div>
 						</div>

@@ -28,14 +28,21 @@ function rescale($arr, $min = null, $max = null, $prec = 1) {
 			}
 			$newarr[] = $newval;
 		}
+	} else {
+		$newval = ($arr - $min) / ($max - $min);
+		$newarr = $newval;
 	}
 	return $newarr;
 }
 
 function resize($arr, $min, $max, $prec = 1) {
-	foreach ($arr as $n) {
-		$newval = abs(1-$n) * ($max - $min) + $min;
-		$newarr[] = round($newval, $prec);
+	if(is_array($arr)) {
+		foreach ($arr as $n) {
+			$newval = abs(1-$n) * ($max - $min) + $min;
+			$newarr[] = round($newval, $prec);
+		}
+	} else {
+		$newarr = round($arr * ($max - $min) + $min, $prec);
 	}
 	return $newarr;
 }
@@ -130,6 +137,70 @@ function linearGraph($mid_line, $area_lower, $area_upper, $legend='', $id='', $h
 		$code .= $linecode;
 	}
 	$code .= '</svg>';
+	return($code);
+}
+
+function boxGauge($mid_line, $area_lower, $area_upper, $min, $max, $upper_line=null, $lower_line=null, $legend='', $id='', $horiz=TRUE, $long_len=200, $short_len=60) {
+
+	$grid_num = count($legend);
+
+	//Set the background grid lines
+	$grid_dist = round($long_len / ($grid_num + 1), 1);
+	if($horiz) {
+		$width = $long_len;
+		$height = $short_len;
+		$path_d = 'M' . $grid_dist .' 0 V' . $short_len;
+		for ($i = 2; $i <= $grid_num; $i++) {
+			$path_d .= ' M' . $i * $grid_dist .' 0 V' . $short_len;
+		}
+	} else {
+		$width = $short_len;
+		$height = $long_len;
+		$path_d = 'M0 ' . $grid_dist .' H' . $short_len;
+		for ($i = 2; $i <= $grid_num; $i++) {
+			$path_d .= ' M0 ' . $i * $grid_dist .' H' . $short_len;
+		}
+	}
+	//Set graph panel
+	$corner_radius = round(0.1 * $short_len, 0);
+	$text_inset = round(0.75 * $corner_radius, 0);
+	$code = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' . $width . '" height="' . $height . '" id="'.$id.'"><rect class="gauge-bg '.$id.'" x="0" y="0" rx="'. $corner_radius . '" ry="'. $corner_radius . '" width="'. $width . '" height="'. $height . '"/><path class="gauge-grid '.$id.'" d="' . $path_d . '" />';
+	//Set legend text
+	if(is_array($legend)) {
+		if($horiz) {
+			$legendcode = '<text class="gauge-legend-horizontal '.$id.'" text-anchor="middle" y="1em" x="' . $grid_dist . '">' . $legend[0] . '</text>';
+			for ($i = 1; $i < count($legend); $i++) {
+				$legendcode .= '<text class="gauge-legend-horizontal '.$id.'" text-anchor="middle" y="1em" x="' . ($i+1) * $grid_dist . '">' . $legend[$i] . '</text>';
+			}
+		} else {
+			$legendcode = '<text class="gauge-legend-vertical '.$id.'" alignment-baseline="middle" x="' . $text_inset . '" y="' . $grid_dist . '">' . $legend[0] . '</text>';
+			for ($i = 1; $i < count($legend); $i++) {
+				$legendcode .= '<text class="gauge-legend-vertical '.$id.'" alignment-baseline="middle" x="' . $text_inset . '" y="' . ($i+1) * $grid_dist . '">' . $legend[$i] . '</text>';
+			}
+		}
+		$code .= $legendcode;
+	}
+	//Data series
+	$mid = rescale($mid_line, $min, $max);
+	$right = rescale($area_upper, $min, $max);
+	$left = rescale($area_lower, $min, $max);
+
+	$mid = resize($mid, 0, $long_len - 1);
+	$right = resize($right, 0, $long_len - 1);
+	$left = resize($left, 0, $long_len - 1);
+
+	$boxwidth = $right - $left;
+
+	$datacode = '<rect class="gauge-area '.$id.'"';
+	$linecode = '<path class="gauge-line '.$id.'" d="M';
+	if ($horiz) {
+		$linecode .= $mid . ' 0 V' . $height . '" />';
+		$datacode .= 'x="' . $left . '" y="0" width="'. $boxwidth . '" height="'. $height . '"/>';
+	} else {
+		$linecode .= '0 ' . $mid . ' H' . $width . '" />';
+		$datacode .= 'x="0" y="' . $left . '" width="'. $width . '" height="'. $boxwidth . '"/>';
+	}
+	$code .= $datacode . $linecode . '</svg>';
 	return($code);
 }
 
