@@ -133,7 +133,7 @@ class OccurrenceDownload{
 			$result = $this->conn->query($sql,MYSQLI_USE_RESULT);
 			if($result){
 				$statsManager = new OccurrenceAccessStats();
-				$occurAccessID = $statsManager->insertAccessEvent('download', substr($sql, strpos($sql, 'WHERE ')));
+				//$occurAccessID = $statsManager->insertAccessEvent('download', substr($sql, strpos($sql, 'WHERE ')));
 				$outputHeader = true;
 				while($row = $result->fetch_assoc()){
 					if($outputHeader){
@@ -156,7 +156,7 @@ class OccurrenceDownload{
 					}
 					//Set access statistics
 					if($this->isPublicDownload){
-						if($this->schemaType != 'checklist') if(array_key_exists('occid',$row)) $statsManager->insertAccessOccurrence($occurAccessID, $row['occid']);
+						if($this->schemaType != 'checklist') if(array_key_exists('occid',$row)) //$statsManager->insertAccessOccurrence($occurAccessID, $row['occid']);
 					}
 					$recCnt++;
 				}

@@ -1628,7 +1628,7 @@ class DwcArchiverCore extends Manager{
 			$statsManager = new OccurrenceAccessStats();
 			$sqlFrag = substr($sql, strpos($sql, 'WHERE '));
 			if($p = strpos($sqlFrag, 'LIMIT ')) $sqlFrag = substr($sqlFrag, 0, $p);
-			$occurAccessID = $statsManager->insertAccessEvent('download', $sqlFrag);
+			//$occurAccessID = $statsManager->insertAccessEvent('download', $sqlFrag);
 			$batchOccidArr = array();
 			while ($r = $rs->fetch_assoc()) {
 				if(!isset($this->collArr[$r['collID']])){
@@ -1748,7 +1748,7 @@ class DwcArchiverCore extends Manager{
 				if ($this->isPublicDownload) {
 					if ($this->schemaType == 'dwc' || $this->schemaType == 'symbiota') {
 						//Don't count if dl is backup, GeoLocate transfer, or pensoft
-						$statsManager->insertAccessOccurrence($occurAccessID, $r['occid']);
+						//$statsManager->insertAccessOccurrence($occurAccessID, $r['occid']);
 					}
 				}
 			}

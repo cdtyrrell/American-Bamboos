@@ -41,7 +41,7 @@ class OccurrenceAccessStats extends Manager{
 
 	public function recordAccessEvent($occid, $accessType){
 		$status = false;
-		if(isset($GLOBALS['STORE_STATISTICS'])){
+/* 		if(isset($GLOBALS['STORE_STATISTICS'])){
 			if(is_numeric($occid)){
 				$this->verboseMode = 1;
 				$this->setLogFH($this->logPath);
@@ -49,7 +49,7 @@ class OccurrenceAccessStats extends Manager{
 					$status = $this->insertAccessOccurrence($occurAccessID,$occid);
 				}
 			}
-		}
+		} */
 		return $status;
 	}
 

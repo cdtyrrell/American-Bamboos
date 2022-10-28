@@ -28,14 +28,14 @@ if($SYMB_UID){
 	echo '<ul>';
 	$occNum = $taxonManager->getOccTaxonInDbCnt();
 	if($occNum > -1){
-		$occMsg = number_format($occNum).' '.(isset($LANG['OCCURRENCES'])?'occurrences':'');
+		$occMsg = number_format($occNum).' '.(isset($LANG['OCCURRENCES'])?'specimens':'');
 		if($occNum){
 			$occHref = '../collections/list.php?usethes=1&taxa='.$tid;
 			$occMsg = '<a class="btn" href="'.$occHref.'" target="_blank">'.$occMsg.'</a>';
 		}
 		echo '<li>'.$occMsg.'</li>';
 	}
-	echo '<li><a href="taxonomy/taxonomydynamicdisplay.php?target='.$tid.'" target="_blank">Taxonomic Tree</a></li>';
+	echo '<li><a href="taxonomy/taxonomydynamicdisplay.php?target='.$tid.'" target="_blank">View in Taxonomic Tree</a></li>';
 	echo '</ul>';
 	//TODO: list other internal resources such as Taxon Traits, etc
 

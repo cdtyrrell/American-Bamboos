@@ -145,7 +145,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	                     <img src="images/uploads/Rhipidocladum_clarkiae-BraulioCarrillo.JPG" style="width:100%" alt="Tall bamboo" class="w3-margin-bottom">
 	                 </div> -->
 	               </div>
-	               <!-- <button type="button" class="w3-button w3-theme-d2 w3-margin-bottom">More Info</button> -->
+					<button type="button" class="w3-button w3-theme-d2 w3-margin-bottom" onclick="location.href='/projects/bamboos/index.php'">More Info</button>
 
 	             </div>
 	           </div>

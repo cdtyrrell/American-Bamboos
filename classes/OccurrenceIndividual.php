@@ -174,8 +174,8 @@ class OccurrenceIndividual extends Manager{
 			//Set access statistics
 			$accessType = 'view';
 			if(in_array($this->displayFormat,array('json','xml','rdf','turtle'))) $accessType = 'api'.strtoupper($this->displayFormat);
-			$statsManager = new OccurrenceAccessStats();
-			$statsManager->recordAccessEvent($this->occid, $accessType);
+			//$statsManager = new OccurrenceAccessStats();
+			//$statsManager->recordAccessEvent($this->occid, $accessType);
 			return true;
 		}
 		else{
@@ -813,7 +813,7 @@ class OccurrenceIndividual extends Manager{
 
 	public function getAccessStats(){
 		$retArr = Array();
-		if(isset($GLOBALS['STORE_STATISTICS'])){
+/* 		if(isset($GLOBALS['STORE_STATISTICS'])){
 			$sql = 'SELECT year(s.accessdate) as accessdate, s.accesstype, s.cnt
 				FROM omoccuraccesssummary s INNER JOIN omoccuraccesssummarylink l ON s.oasid = l.oasid
 				WHERE (l.occid = '.$this->occid.') GROUP BY s.accessdate, s.accesstype';
@@ -823,7 +823,7 @@ class OccurrenceIndividual extends Manager{
 				$retArr[$r->accessdate][$r->accesstype] = $r->cnt;
 			}
 			$rs->free();
-		}
+		} */
 		return $retArr;
 	}
 

@@ -23,5 +23,4 @@ $LANG['SHOW_CAPTION'] = 'MOSTRAR T&Iacute;TULO';
 $LANG['IMAGE_BY'] = 'Imagem por';
 $LANG['COURTESY_OF'] = 'Cortesia de';
 
-$LANG['FOOTER'] = 'Os Bambus Nativos de Abya Yala são construídos sobre a plataforma <a href="https://symbiota.org/" target="_blank">Symbiota</a> personalizada com elementos temáticos de <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>; modificado e mantido por <a href="https://github.com/cdtyrrell" target="_blank">Christopher D. Tyrrell</a>';
 ?>

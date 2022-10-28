@@ -1,5 +1,5 @@
-<!-- Footer -->
 </div>  <!-- this closes the "w3-page-container div that is created in header.php-->
+<!-- Footer -->
 <footer class="w3-container w3-theme-d3 w3-padding-16 w3-center">
 	<p>
 	<a onClick="setLanguage({value:'en'})" href="<?php $_SERVER ?>?lang=en">English</a> &middot; 
@@ -14,7 +14,6 @@
 		<b>Recommended citation:</b> Tyrrell, Christopher D. 2022. Native Bamboos of Abiayala/the Americas. Retrieved <?php echo date("j M Y") ?> from https://www.americanbamboos.org.
 	</p>
 </footer>
-
 		<script>
 		// Accordion
 		function myFunction(id) {

@@ -11,7 +11,7 @@ $LANG['H_SEARCH'] = 'Pesquisar';
 $LANG['H_BROWSE'] = 'Explorar';
 $LANG['H_COLLECTIONS'] = 'Coleções';
 $LANG['H_SPECIES'] = 'Espécies';
-$LANG['H_SPECIMENS'] = '';
+$LANG['H_SPECIMENS'] = 'Espécimes';
 $LANG['H_MAP'] = 'Mapa';
 $LANG['H_TAXONOMIC_EXPLORER'] = 'Explorar Taxonomia';
 $LANG['H_PEOPLE'] = 'Pessoas';
@@ -49,4 +49,7 @@ $LANG['H_PROFILE'] = 'Perfil';
 $LANG['H_LOGOUT'] = 'Finalizar Sessão';
 $LANG['H_LOGIN'] = 'Iniciar Sessão';
 $LANG['H_NEW_ACCOUNT'] = 'Nova Conta';
+
+$LANG['FOOTER'] = 'Os Bambus Nativos de Abya Yala são construídos sobre a plataforma <a href="https://symbiota.org/" target="_blank">Symbiota</a> personalizada com elementos temáticos de <a href="https://www.w3schools.com/w3css/default.asp" target="_blank">w3.css</a>; modificado e mantido por <a href="https://github.com/cdtyrrell" target="_blank">Christopher D. Tyrrell</a>';
+
 ?>

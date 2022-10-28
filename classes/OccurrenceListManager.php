@@ -16,7 +16,7 @@ class OccurrenceListManager extends OccurrenceManager{
 	}
 
 	public function getSpecimenMap($pageRequest,$cntPerPage){
-		$retArr = Array();
+		$retArr = array();
 		$isSecuredReader = false;
 		if($GLOBALS['USER_RIGHTS']){
 			if($GLOBALS['IS_ADMIN'] || array_key_exists('CollAdmin', $GLOBALS['USER_RIGHTS']) || array_key_exists('RareSppAdmin', $GLOBALS['USER_RIGHTS']) || array_key_exists('RareSppReadAll', $GLOBALS['USER_RIGHTS'])){
@@ -104,8 +104,8 @@ class OccurrenceListManager extends OccurrenceManager{
 		}
 		if($occArr){
 			$this->setImages($occArr,$retArr);
-			$statsManager = new OccurrenceAccessStats();
-			$statsManager->recordAccessEventByArr($occArr,'list');
+			//$statsManager = new OccurrenceAccessStats();
+			//$statsManager->recordAccessEventByArr($occArr,'list');
 		}
 		return $retArr;
 	}

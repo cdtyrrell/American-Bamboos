@@ -21,6 +21,7 @@ class TaxonProfile extends Manager {
 	private $imageArr;
 	private $sppArray;
 	private $linkArr = false;
+	private $coordCodeArr = array();
 
 	private $displayLocality = 1;
 
@@ -162,7 +163,7 @@ class TaxonProfile extends Manager {
 			echo '<div class="tptnimg"><a href="#" onclick="openPopup(\''.$imgAnchor.'\');return false;">';
 			$titleStr = $imgObj['caption'];
 			if($imgObj['sciname'] != $this->taxonName) $titleStr .= ' (linked from '.$imgObj['sciname'].')';
-			echo '<img src="'.$imgUrl.'" title="'.$titleStr.'" alt="'.$this->taxonName.' image" />';
+			echo '<img style="width:49.9%" src="'.$imgUrl.'" title="'.$titleStr.'" alt="'.$this->taxonName.' image" />';
 			/*
 			if($length) echo '<img src="'.$imgUrl.'" title="'.$imgObj['caption'].'" alt="'.$spDisplay.' image" />';
 			//else echo '<img class="delayedimg" src="" delayedsrc="'.$imgUrl.'" />';
@@ -233,7 +234,129 @@ class TaxonProfile extends Manager {
 		return count($this->imageArr);
 	}
 
-	//Map functions
+	//Map functions 
+	
+	private function getTidStr(){
+		$tidArr = array($this->tid,$this->submittedArr['tid']);
+		if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
+		$tidStr = trim(implode(",",$tidArr),' ,');
+		return $tidStr;
+	}
+
+	//Countries [CDT]
+	public function getCountries($tidStr = 0){
+		$countries = $codes = array();
+		if(!$tidStr) $tidStr = $this->getTidStr();
+		if($tidStr){
+			$sql = 'SELECT DISTINCT countryCode, country FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) AND countryCode IS NOT NULL ORDER BY country';
+			$result = $this->conn->query($sql);
+			foreach($result as $e) {
+				if (!is_null($e['country'])) array_push($countries, $e['country']);
+				array_push($codes, $e['countryCode']);
+			}
+			$result->free();
+		}
+		return array('name'=>$countries, 'code'=>$codes);
+	}
+
+	//WCCoordCodes[CDT]
+	private function getCoordCodes($tidStr = 0){
+		if(!$tidStr) $tidStr = $this->getTidStr();
+		if($tidStr){
+			$coordcodes = array();
+			$sql = 'SELECT DecimalLatitude AS declat, DecimalLongitude AS declng FROM omoccurrences WHERE (tidinterpreted IN ('.$tidStr.')) AND DecimalLatitude IS NOT NULL';
+			$result = $this->conn->query($sql);
+			foreach($result as $e) {
+				$latcode = $e['declat'];
+				$loncode = $e['declng'];
+				// WARNING! This next bit is specific to Latin America/American Bamboos
+				if($latcode < 0) {
+					$latcode = $latcode * -1;
+					$latcode += 100;
+				}
+				if($loncode > -30) continue;
+				$loncode = $loncode * -1;
+
+				$latcode = floor($latcode) . floor(($e['declat'] - floor($e['declat'])) * 6);
+				$loncode = floor($loncode) . floor(($e['declng'] - floor($e['declng'])) * 6);
+				array_push($coordcodes, $loncode.$latcode);
+			}
+			$result->free();
+		}
+		$this->coordCodeArr = $coordcodes;
+	}
+
+	private function transpose2DArray($arr) {
+		$tarr = array();
+		foreach ($arr as $key => $subarr) {
+			foreach ($subarr as $subkey => $subvalue) {
+				$tarr[$subkey][$key] = $subvalue;
+			}
+		}
+		return $tarr;
+	}
+
+	private function summarystats($arr) {
+		$minArr = $avgArr = $maxArr = array();
+		foreach($arr as $elem) {
+			$minArr[] = min($elem);
+			$avgArr[] = round(array_sum($elem) / count($elem), 1);
+			$maxArr[] = max($elem);
+		}
+		return array($minArr, $avgArr, $maxArr);
+	}
+
+	public function getWC() {
+		$this->getCoordCodes();
+		$tavgRes = array();
+		$precRes = array();
+		$vaprRes = array();
+		$windRes = array();
+		$sradRes = array();
+		$sql = 'SELECT tavg, prec, vapr, wind, srad, bio FROM wc2110mvars WHERE coordCode IN ('.implode(',',$this->coordCodeArr).')';
+		$result = $this->conn->query($sql);
+		foreach($result as $e) {
+			$tavgRes[] = explode("|",$e['tavg']);
+			$precRes[] = explode("|",$e['prec']);
+			$vaprRes[] = explode("|",$e['vapr']);
+			$windRes[] = explode("|",$e['wind']);
+			$sradRes[] = explode("|",$e['srad']);
+		}
+		$tavgRes = $this->transpose2DArray($tavgRes);
+		$precRes = $this->transpose2DArray($precRes);
+		$vaprRes = $this->transpose2DArray($vaprRes);
+		$windRes = $this->transpose2DArray($windRes);
+		$sradRes = $this->transpose2DArray($sradRes);
+		$bioRes = $this->transpose2DArray($windRes);
+		$wcArr = array();
+		$tmpArr = $this->summarystats($tavgRes);
+		$wcArr['tavg-min'] = $tmpArr[0];
+		$wcArr['tavg-avg'] = $tmpArr[1];
+		$wcArr['tavg-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($precRes);
+		$wcArr['prec-min'] = $tmpArr[0];
+		$wcArr['prec-avg'] = $tmpArr[1];
+		$wcArr['prec-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($vaprRes);
+		$wcArr['vapr-min'] = $tmpArr[0];
+		$wcArr['vapr-avg'] = $tmpArr[1];
+		$wcArr['vapr-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($windRes);
+		$wcArr['wind-min'] = $tmpArr[0];
+		$wcArr['wind-avg'] = $tmpArr[1];
+		$wcArr['wind-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($sradRes);
+		$wcArr['srad-min'] = $tmpArr[0];
+		$wcArr['srad-avg'] = $tmpArr[1];
+		$wcArr['srad-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($bioRes);
+		$wcArr['bio-min'] = $tmpArr[0];
+		$wcArr['bio-avg'] = $tmpArr[1];
+		$wcArr['bio-max'] = $tmpArr[2];
+
+		return $wcArr;
+	}
+
 	public function getMapArr($tidStr = 0){
 		$maps = Array();
 		if(!$tidStr){
@@ -448,6 +571,60 @@ class TaxonProfile extends Manager {
 		}
 		return $retStr;
 	}
+
+	//Elevation [CDT]
+	public function getElevations($tidStr = 0){
+		if(!$tidStr) $tidStr = $this->getTidStr();
+		if($tidStr){
+			$sql = 'SELECT (`minimumElevationInMeters` + COALESCE(`maximumElevationInMeters`,`minimumElevationInMeters`))/2 AS avgelev FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) AND `minimumElevationInMeters` IS NOT NULL';
+			$elevcount = $this->conn->query($sql);
+			$elevcountnonull = array(); //in case any NULLs sneak in
+			foreach($elevcount as $e) {
+				if (!is_null($e['avgelev'])) array_push($elevcountnonull, $e['avgelev']);
+			} 
+			$elevcount->free();
+			$step = 500;
+			$elevhist = array_count_values(array_map(function($v) use ($step) { return (int) ceil(($v-$step/2) / $step) * $step;}, $elevcountnonull)); // bin the data for histogram
+			$elevprof = range(0, 4000, $step); // Add any needed zeros to complete 0-4000m elevation profile
+			$missinglevels = array_diff($elevprof, array_keys($elevhist));
+			$missing = array_fill_keys($missinglevels, 0);
+			$elevhist = $elevhist + $missing;
+			krsort($elevhist); // linearGraph() draws from the top down, so reverse sort
+			$elevhist = array_values($elevhist);
+		}
+		return $elevhist;
+	}
+
+	//Gatherings[CDT]
+	public function getGatherings($tidStr = 0){
+		if(!$tidStr){
+			$tidArr = array($this->tid,$this->submittedArr['tid']);
+			if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
+			$tidStr = trim(implode(",",$tidArr),' ,');
+		}
+		if($tidStr){
+			$gatherings = '';
+			$country = '';
+			$state = '';
+			$sql = 'SELECT DISTINCT `country`,`stateProvince`,`recordedBy`,`eventDate`,`recordNumber` FROM `omoccurrences` WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) ORDER BY `country`,`stateProvince`,`recordedBy`,`eventDate`';
+			$result = $this->conn->query($sql);
+			while($r = $result->fetch_object()){
+				if($country != $r->country) {
+					$country = $r->country;
+					$gatherings .= '. <b>' . strtoupper($country) . ':</b> ';
+				}
+				if($state != $r->stateProvince) {
+					$state = $r->stateProvince;
+					$gatherings .= '---<i>' . $state . '</i>, ';
+				}
+				$gatherings .= '<a href="../collections/listtabledisplay.php?country='.urlencode($country).'&state='.urlencode($state).'&collector='.urlencode($r->recordedBy).'&collnum='.urlencode($r->recordNumber).'&eventdate1='.urlencode($r->eventDate).'&taxa='.urlencode($this->taxonName).'&usethes=1">' . $r->recordedBy . ' ' . $r->recordNumber . '</a> [' . $r->eventDate . '], ';
+			}
+			trim($gatherings, ',');
+			$result->free();
+		}
+		return $gatherings;
+	}
+	
 
 	//Taxon Link functions
 	private function setLinkArr(){
