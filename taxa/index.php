@@ -71,6 +71,7 @@ if($SYMB_UID){
 	//}
 	echo '<link href="'.$cssPath.'?ver='.$CSS_VERSION_LOCAL.'" type="text/css" rel="stylesheet" />';
 	echo '<link rel="stylesheet" type="text/css" href="'.$CSS_BASE_PATH.'/taxa/traitplot.css" />';
+	echo '<link rel="stylesheet" type="text/css" href="'.$CSS_BASE_PATH.'/taxa/graphics.css" />';
 	?>
 
 	<script src="../js/jquery.js" type="text/javascript"></script>
@@ -209,9 +210,9 @@ if($SYMB_UID){
 								<?php
 									echo linearGraph($wcdata['srad'], null, "precip");
 								?>
-							<h5>Wind Speed</h5>
 							</div>
 							<div class="w3-quarter w3-center">
+							<h5>Wind Speed</h5>
 							<?php
 								echo linearGraph($wcdata['wind'], null, "precip");
 							?>

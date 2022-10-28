@@ -24,7 +24,7 @@ function rescale($arr, $min, $max, $prec = 1) {
 	return $newarr;
 }
 
-function linearGraph($mid_line, $data_area, $type) {
+function linearGraph($mid_line, $data_area, $type, $id='') {
 	if($type == "elev") {
 		$grid_num = 7;
 		$long_len = 200;
@@ -87,17 +87,17 @@ function linearGraph($mid_line, $data_area, $type) {
 	}
 	$corner_radius = round(0.1 * $short_len, 0);
 	$text_inset = round(0.75 * $corner_radius, 0);
-	$code = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' . $width . '" height="' . $height . '"><rect x="0" y="0" rx="'. $corner_radius . '" ry="'. $corner_radius . '" width="'. $width . '" height="'. $height . '" fill="'. $bg_fill . '"/><path d="' . $path_d . '" fill="none" stroke="' . $bg_stroke . '" stroke-width="0.5"/>';
+	$code = '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="' . $width . '" height="' . $height . '" id="'.$id.'"><rect class="gauge-bg" x="0" y="0" rx="'. $corner_radius . '" ry="'. $corner_radius . '" width="'. $width . '" height="'. $height . '"/><path class="gauge-grid" d="' . $path_d . '" />';
 	if(is_array($legend)) {
 		if($horiz) {
-			$legendcode = '<text text-anchor="middle" y="1em" x="' . $grid_dist . '" style="font: ' . $font_size . ' sans-serif;" fill="' . $font_color . '">' . $legend[0] . '</text>';
+			$legendcode = '<text class="gauge-legend-horizontal" text-anchor="middle" y="1em" x="' . $grid_dist . '">' . $legend[0] . '</text>';
 			for ($i = 1; $i < count($legend); $i++) {
-				$legendcode .= '<text text-anchor="middle" y="1em" x="' . ($i+1) * $grid_dist . '" style="font: ' . $font_size . ' sans-serif;" fill="' . $font_color . '">' . $legend[$i] . '</text>';
+				$legendcode .= '<text class="gauge-legend-horizontal" text-anchor="middle" y="1em" x="' . ($i+1) * $grid_dist . '">' . $legend[$i] . '</text>';
 			}
 		} else {
-			$legendcode = '<text alignment-baseline="middle" x="' . $text_inset . '" y="' . $grid_dist . '" style="font: ' . $font_size . ' sans-serif;" fill="' . $font_color . '">' . $legend[0] . '</text>';
+			$legendcode = '<text class="gauge-legend-vertical" alignment-baseline="middle" x="' . $text_inset . '" y="' . $grid_dist . '">' . $legend[0] . '</text>';
 			for ($i = 1; $i < count($legend); $i++) {
-				$legendcode .= '<text alignment-baseline="middle" x="' . $text_inset . '" y="' . ($i+1) * $grid_dist . '" style="font: ' . $font_size . ' sans-serif;" fill="' . $font_color . '">' . $legend[$i] . '</text>';
+				$legendcode .= '<text class="gauge-legend-vertical" alignment-baseline="middle" x="' . $text_inset . '" y="' . ($i+1) * $grid_dist . '">' . $legend[$i] . '</text>';
 			}
 		}
 		$code .= $legendcode;
@@ -135,11 +135,11 @@ function linearGraph($mid_line, $data_area, $type) {
 	}
 	if($type == "elev") $datacode .= 'L' . ($short_len-1) . ' ' . $long_len;
 	if (is_array($data_area)) {
-		$datacode .= ' Z" fill="' . $fg_fill . '" style="opacity:' . $fg_opacity . ';"/>';
+		$datacode .= ' Z" class="gauge-area"/>';
 		$code .= $datacode;
 	}
 	if (is_array($mid_line)) {
-		$linecode .= '" fill="none" stroke-width="2" stroke="' . $fg_stroke . '"/>';
+		$linecode .= '" class="gauge-line"/>';
 		$code .= $linecode;
 	}
 	$code .= '</svg>';

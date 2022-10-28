@@ -1,0 +1,32 @@
+.gauge-bg {
+    fill:#F8FBF4;
+}
+
+.gauge-grid {
+    fill:none;
+    stroke:#70A236;
+    stroke-width:0.5;
+}
+
+.gauge-area {
+    fill:#537828;
+    opacity:0.8;
+}
+
+.gauge-line {
+    fill:none;
+    stroke:#537828;
+    stroke-width:2;
+}
+
+.gauge-legend-horizontal {
+    font-size:0.5em;
+    fill:#000000;
+    font-family: sans-serif;
+}
+
+.gauge-legend-vertical {
+    font-size:0.5em;
+    fill:#000000;
+    font-family: sans-serif;
+}
