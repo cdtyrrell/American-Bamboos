@@ -295,6 +295,16 @@ class TaxonProfile extends Manager {
 		return $tarr;
 	}
 
+	private function summarystats($arr) {
+		$minArr = $avgArr = $maxArr = array();
+		foreach($arr as $elem) {
+			$minArr[] = min($elem);
+			$avgArr[] = round(array_sum($elem) / count($elem), 1);
+			$maxArr[] = max($elem);
+		}
+		return array($minArr, $avgArr, $maxArr);
+	}
+
 	public function getWC() {
 		$this->getCoordCodes();
 		$tavgRes = array();
@@ -310,11 +320,6 @@ class TaxonProfile extends Manager {
 			$vaprRes[] = explode("|",$e['vapr']);
 			$windRes[] = explode("|",$e['wind']);
 			$sradRes[] = explode("|",$e['srad']);
-			// if (typeof precArr === 'undefined') {
-			// 	console.log('coordinate code '+item+' not found');
-			// } else {
-			// 	coordPrecs.push(prec.get(item));
-			// }
 		}
 		$tavgRes = $this->transpose2DArray($tavgRes);
 		$precRes = $this->transpose2DArray($precRes);
@@ -322,64 +327,33 @@ class TaxonProfile extends Manager {
 		$windRes = $this->transpose2DArray($windRes);
 		$sradRes = $this->transpose2DArray($sradRes);
 		$bioRes = $this->transpose2DArray($windRes);
-		$wcArr = $tmpArr = array();
-		foreach($tavgRes as $month) {
-			$tmpArr[] = round(array_sum($month) / count($month), 1);
-		}
-		$wcArr['tavg'] = $tmpArr;
-		$tmpArr = array();
-		foreach($precRes as $month) {
-			$tmpArr[] = round(array_sum($month) / count($month), 1);
-		}
-		$wcArr['prec'] = $tmpArr;
-		$tmpArr = array();
-		foreach($vaprRes as $month) {
-			$tmpArr[] = round(array_sum($month) / count($month), 1);
-		}
-		$wcArr['vapr'] = $tmpArr;
-		$tmpArr = array();
-		foreach($windRes as $month) {
-			$tmpArr[] = round(array_sum($month) / count($month), 1);
-		}
-		$wcArr['wind'] = $tmpArr;
-		$tmpArr = array();
-		foreach($sradRes as $month) {
-			$tmpArr[] = round(array_sum($month) / count($month), 1);
-		}
-		$wcArr['srad'] = $tmpArr;
-		$tmpArr = array();
-		foreach($bioRes as $month) {
-			$tmpArr[] = round(array_sum($month) / count($month), 1);
-		}
-		$wcArr['bio'] = $tmpArr;
+		$wcArr = array();
+		$tmpArr = $this->summarystats($tavgRes);
+		$wcArr['tavg-min'] = $tmpArr[0];
+		$wcArr['tavg-avg'] = $tmpArr[1];
+		$wcArr['tavg-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($precRes);
+		$wcArr['prec-min'] = $tmpArr[0];
+		$wcArr['prec-avg'] = $tmpArr[1];
+		$wcArr['prec-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($vaprRes);
+		$wcArr['vapr-min'] = $tmpArr[0];
+		$wcArr['vapr-avg'] = $tmpArr[1];
+		$wcArr['vapr-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($windRes);
+		$wcArr['wind-min'] = $tmpArr[0];
+		$wcArr['wind-avg'] = $tmpArr[1];
+		$wcArr['wind-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($sradRes);
+		$wcArr['srad-min'] = $tmpArr[0];
+		$wcArr['srad-avg'] = $tmpArr[1];
+		$wcArr['srad-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($bioRes);
+		$wcArr['bio-min'] = $tmpArr[0];
+		$wcArr['bio-avg'] = $tmpArr[1];
+		$wcArr['bio-max'] = $tmpArr[2];
 
 		return $wcArr;
-	}
-
-	public function getSrad($tidStr = 0) {
-		include 'WC2110m-srad.php';
-		$coordCodes = $this->getCoordCodes();
-		$coordPrecs = array();
-		foreach($coordCodes as $code) {
-			$coordPrecs[] = $wcData[$code];
-			// if (typeof precArr === 'undefined') {
-			// 	console.log('coordinate code '+item+' not found');
-			// } else {
-			// 	coordPrecs.push(prec.get(item));
-			// }
-		}
-		//transpose
-		$coordPrecs_t = array();
-		foreach ($coordPrecs as $key => $subarr) {
-			foreach ($subarr as $subkey => $subvalue) {
-				$coordPrecs_t[$subkey][$key] = $subvalue;
-			}
-		}
-		$precArr = array();
-		foreach($coordPrecs_t as $month) {
-			$precArr[] = round(array_sum($month) / count($month), 1);
-		}
-		return $precArr;
 	}
 
 	public function getMapArr($tidStr = 0){
@@ -599,15 +573,11 @@ class TaxonProfile extends Manager {
 
 	//Elevation [CDT]
 	public function getElevations($tidStr = 0){
-		if(!$tidStr){
-			$tidArr = array($this->tid,$this->submittedArr['tid']);
-			if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
-			$tidStr = trim(implode(",",$tidArr),' ,');
-		}
+		if(!$tidStr) $tidStr = $this->getTidStr();
 		if($tidStr){
 			$sql = 'SELECT (`minimumElevationInMeters` + COALESCE(`maximumElevationInMeters`,`minimumElevationInMeters`))/2 AS avgelev FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) AND `minimumElevationInMeters` IS NOT NULL';
 			$elevcount = $this->conn->query($sql);
-			$elevcountnonull = array(); //drop NULL values
+			$elevcountnonull = array(); //in case any NULLs sneak in
 			foreach($elevcount as $e) {
 				if (!is_null($e['avgelev'])) array_push($elevcountnonull, $e['avgelev']);
 			} 

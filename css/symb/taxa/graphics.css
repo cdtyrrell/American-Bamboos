@@ -1,10 +1,10 @@
 .gauge-bg {
-    fill:#F8FBF4;
+    fill:#cbcbcb/*#F8FBF4;*/
 }
 
 .gauge-grid {
     fill:none;
-    stroke:#70A236;
+    stroke:#ffffff; /*#70A236;*/
     stroke-width:0.5;
 }
 
@@ -29,4 +29,26 @@
     font-size:0.5em;
     fill:#000000;
     font-family: sans-serif;
+}
+
+.gauge-area.prec {
+    fill:#0099ff;
+    opacity:0.5;
+}
+
+.gauge-line.prec {
+    fill:none;
+    stroke:#002e4d;
+    stroke-width:2;
+}
+
+.gauge-area.temp {
+    fill:#ff5050;
+    opacity:0.5;
+}
+
+.gauge-line.temp {
+    fill:none;
+    stroke:#800000;
+    stroke-width:2;
 }

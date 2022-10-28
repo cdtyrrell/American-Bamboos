@@ -184,39 +184,40 @@ if($SYMB_UID){
 						<div class="w3-card w3-round w3-white">
 	        			<div class="w3-container">
 <h4>Habitat</h4>
-							<div class="w3-quarter w3-center">
+							<div class="w3-third w3-center">
 								<h5>Elevation Profile</h5>
 							<?php 
-							echo linearGraph(null, $taxonManager->getElevations(), "elev");
+							echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations(), array("3500","","2500","","1500","","500"), "elev", FALSE);
 							?>
 							</div>
-							<div class="w3-quarter w3-center">
+							<div class="w3-third w3-center">
 								<h5>Average Precipitation</h5>
 								<?php
 									$wcdata = $taxonManager->getWC();
-									echo linearGraph($wcdata['prec'], null, "precip");
+									$calendarlegend = array("F","M","A","M","J","J","A","S","O","N");
+									//var_dump($wcdata['prec-avg']);
+									//var_dump($wcdata['prec-min']);
+									//var_dump($wcdata['prec-max']);
+									echo linearGraph($wcdata['prec-avg'], $wcdata['prec-min'], $wcdata['prec-max'], $calendarlegend, "prec");
 								?>
 								<h5>Average Temperature</h5>
 								<?php
-									echo linearGraph($wcdata['tavg'], null, "precip");
+									echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp");
 								?>
 							</div>
-							<div class="w3-quarter w3-center">
-							<h5>Humidity</h5>
+							<div class="w3-third w3-center">
+							<h5>Average Humidity</h5>
 								<?php
-									echo linearGraph($wcdata['vapr'], null, "precip");
+									echo linearGraph($wcdata['vapr-avg'], $wcdata['vapr-min'], $wcdata['vapr-max'], $calendarlegend, "vapr");
 								?>
-							<h5>Solar Radiation</h5>
+							<h5>Average Solar Radiation</h5>
 								<?php
-									echo linearGraph($wcdata['srad'], null, "precip");
+									echo linearGraph($wcdata['srad-avg'], $wcdata['srad-min'], $wcdata['srad-max'], $calendarlegend, "srad");
 								?>
-							</div>
-							<div class="w3-quarter w3-center">
-							<h5>Wind Speed</h5>
+							<h5>Average Wind Speed</h5>
 							<?php
-								echo linearGraph($wcdata['wind'], null, "precip");
+								echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
 							?>
-							<h5>Soil Type?</h5>
 							</div>
 							<div class="w3-col m12">
 							<p class="w3-tiny">Specimens Referenced: 
