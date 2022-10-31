@@ -112,7 +112,7 @@ function linearGraph($mid_line, $area_lower, $area_upper, $legend='', $id='', $h
 				$linecode .= $i * $grid_dist . ' ' . $scaled_line[$i];
 			}
 			if ($i < count($scaled_area) - 1) $datacode .= ' L';
-			if ($i < count($scaled_line) - 1) $linecode .= ' L';
+			if (is_array($scaled_line)) if ($i < count($scaled_line) - 1) $linecode .= ' L';
 		}	
 	} else {
 		for ($i = 0; $i < count($scaled_area); $i++) {
@@ -124,7 +124,7 @@ function linearGraph($mid_line, $area_lower, $area_upper, $legend='', $id='', $h
 				$linecode .= $scaled_line[$i] . ' ' . $i * $grid_dist;
 			}
 			if ($i < count($scaled_area) - 1) $datacode .= ' L';
-			if ($i < count($scaled_line) - 1) $linecode .= ' L';
+			if (is_array($scaled_line)) if ($i < count($scaled_line) - 1) $linecode .= ' L';
 		}
 	}
 	if($type == "elev") $datacode .= 'L' . ($short_len-1) . ' ' . $long_len;
