@@ -321,13 +321,14 @@ class TaxonProfile extends Manager {
 			$vaprRes[] = explode("|",$e['vapr']);
 			$windRes[] = explode("|",$e['wind']);
 			$sradRes[] = explode("|",$e['srad']);
+			$bioRes[] = explode("|",$e['bio']);
 		}
 		$tavgRes = $this->transpose2DArray($tavgRes);
 		$precRes = $this->transpose2DArray($precRes);
 		$vaprRes = $this->transpose2DArray($vaprRes);
 		$windRes = $this->transpose2DArray($windRes);
 		$sradRes = $this->transpose2DArray($sradRes);
-		$bioRes = $this->transpose2DArray($windRes);
+		$bioRes = $this->transpose2DArray($bioRes);
 		$wcArr = array();
 		$tmpArr = $this->summarystats($tavgRes);
 		$wcArr['tavg-min'] = $tmpArr[0];
@@ -610,16 +611,17 @@ class TaxonProfile extends Manager {
 			$result = $this->conn->query($sql);
 			while($r = $result->fetch_object()){
 				if($country != $r->country) {
+					$gatherings = trim($gatherings, ', ');
 					$country = $r->country;
-					$gatherings .= '. <b>' . strtoupper($country) . ':</b> ';
+					$gatherings .= '. <b>' . strtoupper($country) . '</b> ';
 				}
 				if($state != $r->stateProvince) {
 					$state = $r->stateProvince;
-					$gatherings .= '---<i>' . $state . '</i>, ';
+					$gatherings .= '---<i>' . $state . '</i>: ';
 				}
 				$gatherings .= '<a href="../collections/listtabledisplay.php?country='.urlencode($country).'&state='.urlencode($state).'&collector='.urlencode($r->recordedBy).'&collnum='.urlencode($r->recordNumber).'&eventdate1='.urlencode($r->eventDate).'&taxa='.urlencode($this->taxonName).'&usethes=1">' . $r->recordedBy . ' ' . $r->recordNumber . '</a> [' . $r->eventDate . '], ';
 			}
-			trim($gatherings, ',');
+			$gatherings = trim($gatherings, ', ');
 			$result->free();
 		}
 		return $gatherings;
