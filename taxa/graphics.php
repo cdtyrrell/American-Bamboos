@@ -21,7 +21,7 @@ function rescale($arr, $min = null, $max = null, $prec = 1) {
 		if(is_null($min)) $min = min($arr);
 		if(is_null($max)) $max = max($arr);
 		foreach ($arr as $n) {
-			if($max == $amin){
+			if($max == $min){
 				$newval = ($n - $min);
 			} else {
 				$newval = ($n - $min) / ($max - $min);
@@ -29,7 +29,11 @@ function rescale($arr, $min = null, $max = null, $prec = 1) {
 			$newarr[] = $newval;
 		}
 	} else {
-		$newval = ($arr - $min) / ($max - $min);
+		if(($max - $min) == 0){
+			$newval = ($arr - $min);
+		} else {
+			$newval = ($arr - $min) / ($max - $min);
+		}
 		$newarr = $newval;
 	}
 	return $newarr;
@@ -108,8 +112,8 @@ function linearGraph($mid_line, $area_lower, $area_upper, $legend='', $id='', $h
 				$yvar = ((($grid_num + 2) - ($i - ($grid_num + 2))) - 1) * $grid_dist;
 				$datacode .= $yvar . ' ' . $scaled_area[$i];
 			} else {
-				$datacode .= $i * $grid_dist . ' ' . $scaled_area[$i];
-				$linecode .= $i * $grid_dist . ' ' . $scaled_line[$i];
+				if (is_array($scaled_area)) $datacode .= $i * $grid_dist . ' ' . $scaled_area[$i];
+				if (is_array($scaled_line))$linecode .= $i * $grid_dist . ' ' . $scaled_line[$i];
 			}
 			if ($i < count($scaled_area) - 1) $datacode .= ' L';
 			if (is_array($scaled_line)) if ($i < count($scaled_line) - 1) $linecode .= ' L';
@@ -120,8 +124,8 @@ function linearGraph($mid_line, $area_lower, $area_upper, $legend='', $id='', $h
 				$yvar = ((($grid_num + 2) - ($i - ($grid_num + 2))) - 1) * $grid_dist;
 				$datacode .= $scaled_area[$i] . ' ' . $yvar;
 			} else {
-				$datacode .= $scaled_area[$i] . ' ' . $i * $grid_dist;
-				$linecode .= $scaled_line[$i] . ' ' . $i * $grid_dist;
+				if (is_array($scaled_area)) $datacode .= $scaled_area[$i] . ' ' . $i * $grid_dist;
+				if (is_array($scaled_line)) $linecode .= $scaled_line[$i] . ' ' . $i * $grid_dist;
 			}
 			if ($i < count($scaled_area) - 1) $datacode .= ' L';
 			if (is_array($scaled_line)) if ($i < count($scaled_line) - 1) $linecode .= ' L';

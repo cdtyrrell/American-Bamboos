@@ -24,7 +24,7 @@ if(!is_numeric($taxAuthId)) $taxAuthId = 1;
 if(!is_numeric($clid)) $clid = 0;
 if(!is_numeric($pid)) $pid = '';
 $lang = filter_var($lang,FILTER_SANITIZE_STRING);
-if(!is_numeric($taxaLimit)) $taxaLimit = 50;
+if(!is_numeric($taxaLimit)) $taxaLimit = 100;
 if(!is_numeric($page)) $page = 0;
 
 $taxonManager = new TaxonProfile();
@@ -372,6 +372,7 @@ if($SYMB_UID){
 						<div class="w3-row-padding">
 								<?php
 								//echo $taxonManager->getDescriptionTabs();
+								$taxaLimit = 1000;
 								if($sppArr = $taxonManager->getSppArray($page, $taxaLimit, $pid, $clid)){
 									$cnt = 1;
 									$calendarlegend = array("F","M","A","M","J","J","A","S","O","N");
@@ -382,17 +383,17 @@ if($SYMB_UID){
 											echo "<p><a href='index.php?tid=".$subArr["tid"]."&taxauthid=".$taxAuthId."&clid=".$clid."'>";
 											echo "<i>".$sciNameKey."</i></a></p>\n";
 											//echo '<h5>Precipitation Profile</h5>';
-											$wcdata = $taxonManager->getWC($subArr["tid"]);
-											echo linearGraph($wcdata['prec-avg'], $wcdata['prec-min'], $wcdata['prec-max'], $calendarlegend, "prec", TRUE, 150, 30);
+											//$wcdata = $taxonManager->getWC($subArr["tid"]);
+											//echo linearGraph($wcdata['prec-avg'], $wcdata['prec-min'], $wcdata['prec-max'], $calendarlegend, "prec", TRUE, 150, 30);
 											//echo '<h5>Temperature Profile</h5>';
-											echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp", TRUE, 150, 30);
+											//echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp", TRUE, 150, 30);
 										echo '</div>';
 										echo '<div class="w3-quarter w3-center" ><br>';
 										echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations($subArr["tid"]), array("3500","","2500","","1500","","500"), "elev", FALSE, 100, 30);
 										echo '</div>';
 										echo "</div><br></div>";
 										$cnt++;
-										if($cnt > $taxaLimit) break;
+										//if($cnt > $taxaLimit) break;
 									}
 								}
 								?>
