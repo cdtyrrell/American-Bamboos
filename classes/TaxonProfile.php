@@ -248,7 +248,7 @@ class TaxonProfile extends Manager {
 		$countries = $codes = array();
 		if(!$tidStr) $tidStr = $this->getTidStr();
 		if($tidStr){
-			$sql = 'SELECT DISTINCT countryCode, country FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) AND countryCode IS NOT NULL ORDER BY country';
+			$sql = 'SELECT DISTINCT countryCode, country FROM omoccurrences WHERE tidinterpreted IN ('.$tidStr.') AND countryCode IS NOT NULL ORDER BY country';
 			$result = $this->conn->query($sql);
 			foreach($result as $e) {
 				if (!is_null($e['country'])) array_push($countries, $e['country']);
@@ -306,8 +306,9 @@ class TaxonProfile extends Manager {
 		return array($minArr, $avgArr, $maxArr);
 	}
 
-	public function getWC() {
-		$this->getCoordCodes();
+	public function getWC($tidStr = 0) {
+		if(!$tidStr) $tidStr = $this->getTidStr();
+		$this->getCoordCodes($tidStr);
 		$tavgRes = array();
 		$precRes = array();
 		$vaprRes = array();
@@ -598,16 +599,12 @@ class TaxonProfile extends Manager {
 
 	//Gatherings[CDT]
 	public function getGatherings($tidStr = 0){
-		if(!$tidStr){
-			$tidArr = array($this->tid,$this->submittedArr['tid']);
-			if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
-			$tidStr = trim(implode(",",$tidArr),' ,');
-		}
+		if(!$tidStr) $tidStr = $this->getTidStr();
 		if($tidStr){
 			$gatherings = '';
 			$country = '';
 			$state = '';
-			$sql = 'SELECT DISTINCT `country`,`stateProvince`,`recordedBy`,`eventDate`,`recordNumber` FROM `omoccurrences` WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) ORDER BY `country`,`stateProvince`,`recordedBy`,`eventDate`';
+			$sql = 'SELECT DISTINCT `country`,`stateProvince`,`recordedBy`,`eventDate`,`recordNumber` FROM `omoccurrences` WHERE tidinterpreted IN ('.$tidStr.') ORDER BY `country`,`stateProvince`,`recordedBy`,`eventDate`';
 			$result = $this->conn->query($sql);
 			while($r = $result->fetch_object()){
 				if($country != $r->country) {
