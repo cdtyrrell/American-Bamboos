@@ -3,6 +3,7 @@ include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/content/lang/taxa/index.'.$LANG_TAG.'.php');
 include_once($SERVER_ROOT.'/classes/TaxonProfile.php');
 include_once($SERVER_ROOT.'/taxa/graphics.php');
+include('americas.php');
 Header('Content-Type: text/html; charset='.$CHARSET);
 
 
@@ -78,6 +79,18 @@ if($SYMB_UID){
 	<script src="../js/jquery-ui.js" type="text/javascript"></script>
 	<script src="../js/symb/taxa.index.js?ver=202101" type="text/javascript"></script>
 	<script src="../js/symb/taxa.editor.js?ver=202101" type="text/javascript"></script>
+	<script type="text/javascript">
+		function colorMap(countryCode) {
+			try {
+				var svgpath = document.getElementById(countryCode);
+				svgpath.setAttribute("style", "fill:#537828");
+			}
+			catch {
+				console.log("SVG path "+countryCode+" does not exist.")
+			}
+		}
+	</script>
+
 	<style type="text/css">
 		.resource-title{ font-weight: bold; }
 	</style>
@@ -94,7 +107,7 @@ if($SYMB_UID){
 		if($taxonManager->getTaxonName()){
 			if(count($taxonManager->getAcceptedArr()) == 1){
 				$taxonRank = $taxonManager->getRankId();
-				if($taxonRank > 180){  // i.e., above genus
+				if($taxonRank > 210){  // i.e., above genus
 					?>
 					<div class="w3-card w3-round w3-white">
 	        		<div class="w3-container">
@@ -137,20 +150,18 @@ if($SYMB_UID){
 							echo '<div class="w3-container w3-center">
 							<hr>
 							<h4 class="w3-left">Distribution</h4>';
-							echo file_get_contents("americas.svg");
+							//echo file_get_contents("americas.svg");
+							echo emitAmericasSVG($taxonManager->getTid());
 							$countryinfo = $taxonManager->getCountries();
-							$countries = $countryinfo['code'];
+							$countries = str_replace(' ', '-', $countryinfo);
+							$countries = preg_filter('/^/', $taxonManager->getTid(), $countries);
 							?>
 							<script type="text/javascript">
-								function colorMap(countryCode) {
-									var svgpath = document.getElementById(countryCode);
-									svgpath.setAttribute("style", "fill:#537828");
-								}
 								var countries = <?php echo json_encode($countries); ?>;
 								countries.forEach(colorMap);
 							</script>
 							<?php 
-								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countryinfo['name']) . '</span>';
+								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countryinfo) . '</span>';
 							?>
 							</div>
 
@@ -329,14 +340,7 @@ if($SYMB_UID){
 							// $countryinfo = $taxonManager->getCountries();
 							// $countries = $countryinfo['code'];
 							?>
-							<script type="text/javascript">
-								function colorMap(countryCode) {
-									var svgpath = document.getElementById(countryCode);
-									svgpath.setAttribute("style", "fill:#537828");
-								}
-								var countries = <?php echo json_encode($countries); ?>;
-								countries.forEach(colorMap);
-							</script>
+
 							<?php 
 								//echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countryinfo['name']) . '</span>';
 							?>
@@ -376,12 +380,20 @@ if($SYMB_UID){
 								if($sppArr = $taxonManager->getSppArray($page, $taxaLimit, $pid, $clid)){
 									$cnt = 1;
 									$calendarlegend = array("F","M","A","M","J","J","A","S","O","N");
+									$countrymapdata = array();
 									foreach($sppArr as $sciNameKey => $subArr){
-										echo "<div class='w3-col m3'>";
-										echo '<div class="w3-card w3-round w3-white w3-container">';
-										echo '<div class="w3-threequarter w3-center">';
+										?>
+										<div class="w3-col m3">
+										<div class="w3-card w3-round w3-white w3-container">
+										<div class="w3-threequarter w3-center">
+											<?php
 											echo "<p><a href='index.php?tid=".$subArr["tid"]."&taxauthid=".$taxAuthId."&clid=".$clid."'>";
 											echo "<i>".$sciNameKey."</i></a></p>\n";
+											echo emitAmericasSVG($subArr["tid"]);
+											$countries = $taxonManager->getCountries($subArr["tid"]);
+											$countries = str_replace(' ', '-', $countries);
+											$countries = preg_filter('/^/', $subArr["tid"], $countries);
+											$countrymapdata = array_merge($countrymapdata, $countries);
 											//echo '<h5>Precipitation Profile</h5>';
 											//$wcdata = $taxonManager->getWC($subArr["tid"]);
 											//echo linearGraph($wcdata['prec-avg'], $wcdata['prec-min'], $wcdata['prec-max'], $calendarlegend, "prec", TRUE, 150, 30);
@@ -397,8 +409,10 @@ if($SYMB_UID){
 									}
 								}
 								?>
-							<!-- </div> -->
-							<!-- </div> -->
+								<script type="text/javascript">
+									var countries = <?php echo json_encode($countrymapdata); ?>;
+									countries.forEach(colorMap);
+								</script>
 						</div>
 		<?php
 				}
