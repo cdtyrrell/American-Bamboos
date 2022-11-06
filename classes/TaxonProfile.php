@@ -612,17 +612,19 @@ class TaxonProfile extends Manager {
 			$result = $this->conn->query($sql);
 			while($r = $result->fetch_object()){
 				if($country != $r->country) {
-					$gatherings = trim($gatherings, ', ');
+					$gatherings = trim($gatherings, '; ');
 					$country = $r->country;
-					$gatherings .= '. <b>' . strtoupper($country) . '</b> ';
+					$gatherings .= '. <b>' . $country . '</b>';
+					if($state == '') $gatherings .= '. ';
 				}
 				if($state != $r->stateProvince) {
+					$gatherings = trim($gatherings, '; ');
 					$state = $r->stateProvince;
-					$gatherings .= '---<i>' . $state . '</i>: ';
+					$gatherings .= '. ---' . mb_strtoupper($state, 'UTF-8') . ': ';
 				}
-				$gatherings .= '<a href="../collections/listtabledisplay.php?country='.urlencode($country).'&state='.urlencode($state).'&collector='.urlencode($r->recordedBy).'&collnum='.urlencode($r->recordNumber).'&eventdate1='.urlencode($r->eventDate).'&taxa='.urlencode($this->taxonName).'&usethes=1">' . $r->recordedBy . ' ' . $r->recordNumber . '</a> [' . $r->eventDate . '], ';
+				$gatherings .= '<a href="../collections/listtabledisplay.php?country='.urlencode($country).'&state='.urlencode($state).'&collector='.urlencode($r->recordedBy).'&collnum='.urlencode($r->recordNumber).'&eventdate1='.urlencode($r->eventDate).'&taxa='.urlencode($this->taxonName).'&usethes=1">' . $r->recordedBy . ' ' . $r->recordNumber . '</a> [' . $r->eventDate . ']; ';
 			}
-			$gatherings = trim($gatherings, ', ');
+			$gatherings = trim($gatherings, '; ');
 			$result->free();
 		}
 		return $gatherings;

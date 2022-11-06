@@ -1,0 +1,16 @@
+gen; Arundo; 1753
+gen; Calamagrostis; 1763
+gen; Arundinaria; 1803
+gen; Arthrostylidium; 1839
+gen; Tibisia; 2018
+new; Arundo farcta; 1775; Aubl.
+comb; Arundo farcta; 1791; Aubl.; Calamagrostis farcta; (Aubl.) G.F.Gmel.
+syn; Calamagrostis farcta; 1800?;; Arundo farcta
+new; Arthrostylidium capillifolium; 1862; Griseb.
+type; Arthrostylidium capillifolium; 1862; HT:Wright 738
+comb; Arthrostylidium capillifolium; 1903;; Arundinaria capillifolia; (Griseb.) Hack.
+syn; Arundinaria capillifolia; 1909;; Arthrostylidium capillifolium
+type; Arundo farcta; 1987; LT:[unpub. illustration] in Plumier, “Botanicon Americanum seu historia plantarum in Americanis insulis nascentium”, manuscript 5, plate 92 (Muséum d’Histoire Naturelle, Bibliothèque Centrale, Paris !)
+syn; Arthrostylidium capillifolium; 1987;; Arthrostylidium farctum
+comb; Arundo farcta; 1987;; Arthrostylidium farctum; (Aubl.) Soderstr. & Lourteig
+comb; Arthrostylidium farctum; 2018; (Aubl.) Soderstr. & Lourteig; Tibisia farcta; (Aubl.) Tyrrell et al.

@@ -1,0 +1,12 @@
+gen; Arundinaria; 1803
+new; Arundinaria parviflora; 1835
+type; Arundinaria parviflora; 1835; HT: Riedel 189
+gen; Arthrostylidium; 1839
+new; Arthrostylidium trinii; 1839
+comb; Arthrostylidium trinii; 1880;; Arundinaria trinii
+new; Arthrostylidium angustiflorum; 1913
+gen; Rhipidocladum; 1973
+comb; Arundinaria parviflora; 1973;; Rhipidocladum parviflorum
+syn; Arundinaria trinii; 1973;; Rhipidocladum parviflorum
+comb; Arthrostylidium angustiflorum; 1973;; Rhipidocladum angustiflorum;
+syn; Rhipidocladum angustiflorum; 2008;; Rhipidocladum parviflorum
