@@ -152,8 +152,8 @@ if($SYMB_UID){
 							echo '<div class="w3-container w3-center">
 							<hr>
 							<h4 class="w3-left">Distribution</h4>';
-							//echo file_get_contents("americas.svg");
-							echo emitAmericasSVG($taxonManager->getTid());
+							echo emitCountrySVG('Mexico');
+							//echo emitAmericasSVG($taxonManager->getTid());
 							$countryinfo = $taxonManager->getCountries();
 							$countries = str_replace(' ', '-', $countryinfo);
 							$countries = preg_filter('/^/', $taxonManager->getTid(), $countries);

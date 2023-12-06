@@ -1,5 +1,18 @@
 <?php
-function emitAmericasSVG($tid=0) {
+
+function emitCountrySVG($country = '')
+{
+    if($country)
+    {
+        $country = strtolower(trim($country));
+        $country = str_replace(' ', '_', $country);
+        $svgStr = file_get_contents("svg/".$country.".svg");
+        return $svgStr;
+    }
+}
+
+function emitAmericasSVG($tid=0)
+{
     if(!$tid) { $tid = ''; }
     $svgStr = '<?xml version="1.0" encoding="utf-8"?>
     <!-- Generator: Adobe Illustrator 21.1.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
