@@ -102,7 +102,7 @@ if($SYMB_UID){
 	<!-- Start Page Grid -->
 	<div class="w3-row">
     	<!-- Left Column -->
-    	<div class="w3-col m5">
+    	<div class="w3-col m7">
 	    <div class="w3-row-padding">
 
 		<?php
@@ -152,15 +152,19 @@ if($SYMB_UID){
 							echo '<div class="w3-container w3-center">
 							<hr>
 							<h4 class="w3-left">Distribution</h4>';
-							echo emitCountrySVG('Mexico');
+							echo emitCountrySVG($countryValue);
 							//echo emitAmericasSVG($taxonManager->getTid());
 							$countryinfo = $taxonManager->getCountries();
 							$countries = str_replace(' ', '-', $countryinfo);
 							$countries = preg_filter('/^/', $taxonManager->getTid(), $countries);
 							?>
+							<textarea id="bboxvalues"></textarea>
 							<script type="text/javascript">
 								var countries = <?php echo json_encode($countries); ?>;
 								countries.forEach(colorMap);
+								mapelem = document.getElementById("countryMap").getBBox();
+								txtelem = document.getElementById("bboxvalues");
+								txtelem.innerHTML = "x: " + mapelem.x.toFixed(2) + ", w: " + mapelem.width.toFixed(2) + ", y: " + mapelem.y.toFixed(2) + ", h: " + mapelem.height.toFixed(2);
 							</script>
 							<?php 
 								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countryinfo) . '</span>';
@@ -181,7 +185,7 @@ if($SYMB_UID){
 					</div>
 
 					<!-- Right Column -->
-						<div class="w3-col m7">
+						<div class="w3-col m5">
 						<div class="w3-row-padding">
 
 			 	<!-- Alert Box -->
@@ -190,48 +194,13 @@ if($SYMB_UID){
 					<i class="fa fa-remove"></i>
 					</span>
 					<p>Please Note: Data, maps and profiles are provided as-is and are dynamically generated from specimen records. Inaccuracies and misidentifications can affect data quality. If you notice or suspect an error, please notify the maintainer at tyrrell@mpm.edu. Thank you!
-					<div style="margin: 5px"><img src="https://img.shields.io/badge/Data Snapshot-5 Oct 2022-green.svg" /></div>
+					<div style="margin: 5px"><img src="https://img.shields.io/badge/Data Snapshot-DEV ENV-green.svg" /></div>
 					</p>
 				</div>
 
 						<div class="w3-card w3-round w3-white">
 	        			<div class="w3-container">
 							<h4>Habitat</h4>
-							<div class="w3-third w3-center">
-								<h5>Elevation Profile</h5>
-								<?php 
-								echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations(), array("3500","","2500","","1500","","500"), "elev", FALSE);
-								?>
-							</div>
-							<div class="w3-third w3-center">
-								<h5>Precipitation Profile</h5>
-								<?php
-									$wcdata = $taxonManager->getWC();
-									$calendarlegend = array("F","M","A","M","J","J","A","S","O","N");
-									//var_dump($wcdata['prec-avg']);
-									//var_dump($wcdata['prec-min']);
-									//var_dump($wcdata['prec-max']);
-									echo linearGraph($wcdata['prec-avg'], $wcdata['prec-min'], $wcdata['prec-max'], $calendarlegend, "prec");
-								?>
-								<h5>Temperature Profile</h5>
-								<?php
-									echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp");
-								?>
-							</div>
-							<div class="w3-third w3-center">
-								<h5>Humidity Profile</h5>
-									<?php
-										echo linearGraph($wcdata['vapr-avg'], $wcdata['vapr-min'], $wcdata['vapr-max'], $calendarlegend, "vapr");
-									?>
-								<h5>Solar Radiation Profile</h5>
-									<?php
-										echo linearGraph($wcdata['srad-avg'], $wcdata['srad-min'], $wcdata['srad-max'], $calendarlegend, "srad");
-									?>
-								<h5>Wind Speed Profile</h5>
-								<?php
-									echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
-								?>
-							</div>
 							<div class="w3-col m12">
 								<?php
 									$habdesc = "<i>".$taxonManager->getTaxonName()."</i> is ";
@@ -283,14 +252,6 @@ if($SYMB_UID){
 						</div>
 						<br>
 
-							<?php
-							echo $taxonManager->getDescriptionTabs();
-							?>
-							<div id="img-div" style="height:300px;overflow:hidden;">
-								<?php
-								$taxonManager->echoImages(1);
-								?>
-							</div>
 							<?php
 							$imgCnt = $taxonManager->getImageCount();
 							$tabText = (isset($LANG['TOTAL_IMAGES'])?$LANG['TOTAL_IMAGES']:'Total Images');
@@ -360,7 +321,7 @@ if($SYMB_UID){
 					</div>
 
 					<!-- Right Column -->
-						<div class="w3-col m7">
+						<div class="w3-col m5">
 						<div class="w3-row-padding">
 							<!-- Alert Box -->
 							 <div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
