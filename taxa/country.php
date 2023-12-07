@@ -162,7 +162,7 @@ if($SYMB_UID){
 							<script type="text/javascript">
 								var countries = <?php echo json_encode($countries); ?>;
 								countries.forEach(colorMap);
-								mapelem = document.getElementById("countryMap").getBBox();
+								mapelem = document.getElementById("countryMap");
 								txtelem = document.getElementById("bboxvalues");
 								txtelem.innerHTML = "x: " + mapelem.x.toFixed(2) + ", w: " + mapelem.width.toFixed(2) + ", y: " + mapelem.y.toFixed(2) + ", h: " + mapelem.height.toFixed(2);
 							</script>
