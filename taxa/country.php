@@ -82,6 +82,7 @@ if($SYMB_UID){
 	<script src="../js/symb/taxa.index.js?ver=202101" type="text/javascript"></script>
 	<script src="../js/symb/taxa.editor.js?ver=202101" type="text/javascript"></script>
 	<script type="text/javascript">
+		const countryName = '<?php echo $countryValue; ?>';
 		function colorMap(countryCode) {
 			try {
 				var svgpath = document.getElementById(countryCode);
@@ -166,6 +167,7 @@ if($SYMB_UID){
 								txtelem = document.getElementById("bboxvalues");
 								txtelem.innerHTML = "x: " + mapelem.x.toFixed(2) + ", w: " + mapelem.width.toFixed(2) + ", y: " + mapelem.y.toFixed(2) + ", h: " + mapelem.height.toFixed(2);
 							</script>
+							<script src="../js/symb/taxa.country.js"></script>
 							<?php 
 								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countryinfo) . '</span>';
 							?>

@@ -6,8 +6,8 @@ function emitCountrySVG($country = '')
     {
         $country = strtolower(trim($country));
         $country = str_replace(' ', '_', $country);
-        $svgStr = '<img style="height:100%; width:auto;" src="svg/'.$country.'.svg">';
-        //file_get_contents("svg/".$country.".svg");
+        //$svgStr = '<img style="height:100%; width:auto;" src="svg/'.$country.'.svg">';
+        $svgStr = file_get_contents("svg/".$country.".svg");
         return $svgStr;
     }
 }
