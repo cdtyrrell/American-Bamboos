@@ -2,4 +2,17 @@
 Place your CSS customizations here.
 This stylesheet is defined last and will override all previously loaded sheets. You may reference variables defined in variables.css 
  */
- 
+
+#sciname { 
+    font-family: "Open Sans", sans-serif;;
+	color: #000000;
+    font-size: xx-large;
+	font-style: italic;
+}
+
+#author { 
+    font-family: "Open Sans", sans-serif;;
+	color: #999999;
+    font-size: smaller;
+	font-style: normal;
+}
