@@ -12,6 +12,7 @@ class TaxonProfile extends Manager {
 	private $taxonFamily;
 	private $acceptance = true;
 	private $forwarded = false;
+	private $lastUpdate;
 
 	protected $acceptedArr = array();
 	protected $synonymArr = array();
@@ -137,6 +138,19 @@ class TaxonProfile extends Manager {
 			$rs->free();
 		}
 		return $retArr;
+	}
+
+	//Last Update [CDT]
+	public function getLastUpdate(){
+		if(!$this->lastUpdate){
+			if($this->getTidStr()){
+				$sql = 'SELECT MAX(`dateLastModified`) AS updated FROM `omoccurrences` WHERE `tidinterpreted` IN ('.$tidStr.')';
+				$result = $this->conn->query($sql);
+				$this->lastUpdate = date_format($result['updated'],"Y-m-d");
+				$result->free();
+			}
+		}
+		return $this->lastUpdate;
 	}
 
 	//Images functions

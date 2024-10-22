@@ -210,6 +210,15 @@ include($SERVER_ROOT.'/includes/header.php');
 						?>
 					</td>
 					<td class="desc">
+						<!-- Alert Box -->
+						<div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+							<span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
+							<i class="fa fa-remove"></i>
+							</span>
+							<p>Please Note: Data, maps and profiles are provided as-is and are dynamically generated from specimen records. Inaccuracies and misidentifications can affect data quality. If you notice or suspect an error, please notify the maintainer at tyrrell@mpm.edu. Thank you!
+							<div style="margin: 5px"><img src="https://img.shields.io/badge/Data Snapshot-21 Oct 2024-green.svg" /></div>
+						</p>
+						</div>
 						<?php
 						echo $taxonManager->getDescriptionTabs();
 						?>
