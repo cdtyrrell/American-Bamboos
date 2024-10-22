@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT . '/classes/TaxonProfile.php');
+include_once($SERVER_ROOT.'/taxa/graphics.php');
+include('americas.php');
 Header('Content-Type: text/html; charset=' . $CHARSET);
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT . '/content/lang/taxa/index.' . $LANG_TAG . '.php'))
 	include_once($SERVER_ROOT . '/content/lang/taxa/index.' . $LANG_TAG . '.php');
@@ -68,6 +70,7 @@ if($SYMB_UID){
 	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	<script src="../js/symb/taxa.index.js?ver=202101" type="text/javascript"></script>
 	<script src="../js/symb/taxa.editor.js?ver=202101" type="text/javascript"></script>
+	<script src="../js/symb/taxa.svgmap.js?ver=202410" type="text/javascript"></script>
 	<style type="text/css">
 		.resource-title{ font-weight: bold; }
 	</style>
@@ -171,8 +174,29 @@ include($SERVER_ROOT.'/includes/header.php');
 							echo $synStr;
 							echo ']</div>';
 						}
+						?>
 
-						if(!$taxonManager->echoImages(0,1,0)){
+						<!-- Map -->
+						<div class="w3-container w3-center">
+							<hr>
+							<h4 class="w3-left">Distribution</h4>
+							<?php
+								$countryinfo = $taxonManager->getCountries();
+								echo emitAmericasSVG($taxonManager->getTid());
+								$countries = str_replace(' ', '-', $countryinfo);
+								$countries = preg_filter('/^/', $taxonManager->getTid(), $countries);
+							?>
+							<script type="text/javascript">
+								var countries = <?php echo json_encode($countries); ?>;
+								countries.forEach(colorMap);
+							</script>
+							<?php 
+								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countryinfo) . '</span>';
+							?>
+						</div>
+
+						<?php
+/* 						if(!$taxonManager->echoImages(0,1,0)){
 							echo '<div class="image" style="width:260px;height:260px;border-style:solid;margin-top:5px;margin-left:20px;text-align:center;">';
 							if($isEditor){
 								echo '<a href="profile/tpeditor.php?category=imageadd&tid=' . htmlspecialchars($taxonManager->getTid(), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '"><b>' . htmlspecialchars($LANG['ADD_IMAGE'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</b></a>';
@@ -181,7 +205,8 @@ include($SERVER_ROOT.'/includes/header.php');
 								echo $LANG['IMAGE_NOT_AVAILABLE'];
 							}
 							echo '</div>';
-						}
+						} 
+*/
 						?>
 					</td>
 					<td class="desc">

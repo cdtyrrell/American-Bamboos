@@ -234,6 +234,136 @@ class TaxonProfile extends Manager {
 	}
 
 	//Map functions
+	private function getTidStr(){
+		$tidArr = array($this->tid,$this->submittedArr['tid']);
+		if($this->synonymArr) $tidArr = array_merge($tidArr,array_keys($this->synonymArr));
+		$tidStr = trim(implode(",",$tidArr),' ,');
+		return $tidStr;
+	}
+
+	//Countries [CDT]
+	public function getCountries($tidStr = 0){
+		$countries = array();
+		if(!$tidStr) {
+			$tidStr = $this->getTidStr();
+			$codeprefix = $this->tid;
+		} else {
+			$codeprefix = $tidStr;
+		}
+		if($tidStr){
+			$sql = 'SELECT DISTINCT country FROM omoccurrences WHERE tidinterpreted IN ('.$tidStr.') AND country IS NOT NULL ORDER BY country';
+			$result = $this->conn->query($sql);
+			foreach($result as $e) {
+				array_push($countries, $e['country']);
+			}
+			$result->free();
+		}
+		return $countries;
+	}
+
+	//WCCoordCodes[CDT]
+	private function getCoordCodes($tidStr = 0){
+		if(!$tidStr) $tidStr = $this->getTidStr();
+		if($tidStr){
+			$coordcodes = array();
+			$sql = 'SELECT DecimalLatitude AS declat, DecimalLongitude AS declng FROM omoccurrences WHERE (tidinterpreted IN ('.$tidStr.')) AND DecimalLatitude IS NOT NULL';
+			$result = $this->conn->query($sql);
+			foreach($result as $e) {
+				$latcode = $e['declat'];
+				$loncode = $e['declng'];
+				// WARNING! This next bit is specific to Latin America/American Bamboos
+				if($latcode < 0) {
+					$latcode = $latcode * -1;
+					$latcode += 100;
+				}
+				if($loncode > -30) continue;
+				$loncode = $loncode * -1;
+
+				$latcode = floor($latcode) . floor(($e['declat'] - floor($e['declat'])) * 6);
+				$loncode = floor($loncode) . floor(($e['declng'] - floor($e['declng'])) * 6);
+				array_push($coordcodes, $loncode.$latcode);
+			}
+			$result->free();
+		}
+		$this->coordCodeArr = $coordcodes;
+	}
+
+	// [CDT]
+	private function transpose2DArray($arr) {
+		$tarr = array();
+		foreach ($arr as $key => $subarr) {
+			foreach ($subarr as $subkey => $subvalue) {
+				$tarr[$subkey][$key] = $subvalue;
+			}
+		}
+		return $tarr;
+	}
+
+	// [CDT]
+	private function summarystats($arr) {
+		$minArr = $avgArr = $maxArr = array();
+		foreach($arr as $elem) {
+			$minArr[] = min($elem);
+			$avgArr[] = round(array_sum($elem) / count($elem), 1);
+			$maxArr[] = max($elem);
+		}
+		return array($minArr, $avgArr, $maxArr);
+	}
+
+	//WorldClim extractor [CDT]
+	public function getWC($tidStr = 0) {
+		if(!$tidStr) $tidStr = $this->getTidStr();
+		$this->getCoordCodes($tidStr);
+		$tavgRes = array();
+		$precRes = array();
+		$vaprRes = array();
+		$windRes = array();
+		$sradRes = array();
+		$sql = 'SELECT tavg, prec, vapr, wind, srad, bio FROM wc2110mvars WHERE coordCode IN ('.implode(',',$this->coordCodeArr).')';
+		$result = $this->conn->query($sql);
+		foreach($result as $e) {
+			$tavgRes[] = explode("|",$e['tavg']);
+			$precRes[] = explode("|",$e['prec']);
+			$vaprRes[] = explode("|",$e['vapr']);
+			$windRes[] = explode("|",$e['wind']);
+			$sradRes[] = explode("|",$e['srad']);
+			$bioRes[] = explode("|",$e['bio']);
+		}
+		$tavgRes = $this->transpose2DArray($tavgRes);
+		$precRes = $this->transpose2DArray($precRes);
+		$vaprRes = $this->transpose2DArray($vaprRes);
+		$windRes = $this->transpose2DArray($windRes);
+		$sradRes = $this->transpose2DArray($sradRes);
+		$bioRes = $this->transpose2DArray($bioRes);
+		$wcArr = array();
+		$tmpArr = $this->summarystats($tavgRes);
+		$wcArr['tavg-min'] = $tmpArr[0];
+		$wcArr['tavg-avg'] = $tmpArr[1];
+		$wcArr['tavg-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($precRes);
+		$wcArr['prec-min'] = $tmpArr[0];
+		$wcArr['prec-avg'] = $tmpArr[1];
+		$wcArr['prec-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($vaprRes);
+		$wcArr['vapr-min'] = $tmpArr[0];
+		$wcArr['vapr-avg'] = $tmpArr[1];
+		$wcArr['vapr-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($windRes);
+		$wcArr['wind-min'] = $tmpArr[0];
+		$wcArr['wind-avg'] = $tmpArr[1];
+		$wcArr['wind-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($sradRes);
+		$wcArr['srad-min'] = $tmpArr[0];
+		$wcArr['srad-avg'] = $tmpArr[1];
+		$wcArr['srad-max'] = $tmpArr[2];
+		$tmpArr = $this->summarystats($bioRes);
+		$wcArr['bio-min'] = $tmpArr[0];
+		$wcArr['bio-avg'] = $tmpArr[1];
+		$wcArr['bio-max'] = $tmpArr[2];
+
+		return $wcArr;
+	}
+
 	public function getMapArr($tidStr = 0){
 		$maps = Array();
 		if(!$tidStr){
