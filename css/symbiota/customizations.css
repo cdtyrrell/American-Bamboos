@@ -24,7 +24,7 @@ This stylesheet is defined last and will override all previously loaded sheets. 
 .dashpanel {
     border-radius: 4px; 
     padding: 16px;
-    margin: 8px;
+    margin-left: 16px;
     box-shadow: black 0px 2px 5px 0px;
 }
 
