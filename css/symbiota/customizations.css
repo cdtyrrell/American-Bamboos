@@ -16,3 +16,121 @@ This stylesheet is defined last and will override all previously loaded sheets. 
     font-size: smaller;
 	font-style: normal;
 }
+
+.font-tiny {
+    font-size: small;
+}
+
+.dashboard {
+    content:"";
+    display:table;
+    clear:both;
+    padding:0.01em;
+}
+
+.dashpanel {
+    float:left;
+    width:33.33333%;
+    padding:0 8px;
+    text-align:center!important;
+    display:inline-block;
+}
+
+.gauge-bg {
+    fill:#cbcbcb; /*#F8FBF4;*/
+}
+
+.gauge-grid {
+    fill:none;
+    stroke:#ffffff; /*#70A236;*/
+    stroke-width:0.5;
+}
+
+.gauge-area {
+    fill:#537828;
+    opacity:0.8;
+}
+
+.gauge-line {
+    fill:none;
+    stroke:#537828;
+    stroke-width:2;
+}
+
+.gauge-legend-horizontal {
+    font-size:0.5em;
+    fill:#000000;
+    font-family: sans-serif;
+}
+
+.gauge-legend-vertical {
+    font-size:0.5em;
+    fill:#000000;
+    font-family: sans-serif;
+}
+
+.gauge-area.prec {
+    fill:#0099ff;
+    opacity:0.5;
+}
+
+.gauge-line.prec {
+    fill:none;
+    stroke:#002e4d;
+    stroke-width:2;
+}
+
+.gauge-area.temp {
+    fill:#ff5050;
+    opacity:0.5;
+}
+
+.gauge-line.temp {
+    fill:none;
+    stroke:#800000;
+    stroke-width:2;
+}
+
+.gauge-area.srad {
+    fill:#ffd700;
+    opacity:0.5;
+}
+
+.gauge-line.srad {
+    fill:none;
+    stroke:#d4af37;
+    stroke-width:2;
+}
+
+.gauge-area.vapr {
+    fill:#9955ee;
+    opacity:0.5;
+}
+
+.gauge-line.vapr {
+    fill:none;
+    stroke:#331177;
+    stroke-width:2;
+}
+
+.gauge-area.wind {
+    fill:#f99f38;
+    opacity:0.5;
+}
+
+.gauge-line.wind {
+    fill:none;
+    stroke:#ff7417;
+    stroke-width:2;
+}
+
+.gauge-area.bio {
+    fill:#000;
+    opacity:0.5;
+}
+
+.gauge-line.bio {
+    fill:none;
+    stroke:#fff;
+    stroke-width:2;
+}

@@ -594,6 +594,56 @@ class TaxonProfile extends Manager {
 		return $retStr;
 	}
 
+	//Elevation [CDT]
+	public function getElevations($tidStr = 0){
+		if(!$tidStr) $tidStr = $this->getTidStr();
+		if($tidStr){
+			$sql = 'SELECT (`minimumElevationInMeters` + COALESCE(`maximumElevationInMeters`,`minimumElevationInMeters`))/2 AS avgelev FROM omoccurrences WHERE sciname IN (SELECT `SciName` FROM `taxa` WHERE tid IN ('.$tidStr.')) AND `minimumElevationInMeters` IS NOT NULL';
+			$elevcount = $this->conn->query($sql);
+			$elevcountnonull = array(); //in case any NULLs sneak in
+			foreach($elevcount as $e) {
+				if (!is_null($e['avgelev'])) array_push($elevcountnonull, $e['avgelev']);
+			} 
+			$elevcount->free();
+			$step = 500;
+			$elevhist = array_count_values(array_map(function($v) use ($step) { return (int) ceil(($v-$step/2) / $step) * $step;}, $elevcountnonull)); // bin the data for histogram
+			$elevprof = range(0, 4000, $step); // Add any needed zeros to complete 0-4000m elevation profile
+			$missinglevels = array_diff($elevprof, array_keys($elevhist));
+			$missing = array_fill_keys($missinglevels, 0);
+			$elevhist = $elevhist + $missing;
+			krsort($elevhist); // linearGraph() draws from the top down, so reverse sort
+			$elevhist = array_values($elevhist);
+		}
+		return $elevhist;
+	}
+
+	//Gatherings[CDT]
+	public function getGatherings($tidStr = 0){
+		if(!$tidStr) $tidStr = $this->getTidStr();
+		if($tidStr){
+			$gatherings = '';
+			$country = '';
+			$state = '';
+			$sql = 'SELECT DISTINCT `country`,`stateProvince`,`recordedBy`,`eventDate`,`recordNumber` FROM `omoccurrences` WHERE tidinterpreted IN ('.$tidStr.') ORDER BY `country`,`stateProvince`,`recordedBy`,`eventDate`';
+			$result = $this->conn->query($sql);
+			while($r = $result->fetch_object()){
+				if($country != $r->country) {
+					$gatherings = trim($gatherings, ', ');
+					$country = $r->country;
+					$gatherings .= '. <b>' . strtoupper($country) . '</b> ';
+				}
+				if($state != $r->stateProvince) {
+					$state = $r->stateProvince;
+					$gatherings .= '---<i>' . $state . '</i>: ';
+				}
+				$gatherings .= '<a href="../collections/listtabledisplay.php?country='.urlencode($country).'&state='.urlencode($state).'&collector='.urlencode($r->recordedBy).'&collnum='.urlencode($r->recordNumber).'&eventdate1='.urlencode($r->eventDate).'&taxa='.urlencode($this->taxonName).'&usethes=1">' . $r->recordedBy . ' ' . $r->recordNumber . '</a> [' . $r->eventDate . '], ';
+			}
+			$gatherings = trim($gatherings, ', ');
+			$result->free();
+		}
+		return $gatherings;
+	}
+
 	//Taxon Link functions
 	private function setLinkArr(){
 		if($this->linkArr === false && $this->tid){

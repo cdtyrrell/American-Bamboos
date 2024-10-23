@@ -177,9 +177,9 @@ include($SERVER_ROOT.'/includes/header.php');
 						?>
 
 						<!-- Map -->
-						<div class="w3-container w3-center">
+						<!-- <div class=""> -->
 							<hr>
-							<h4 class="w3-left">Distribution</h4>
+							<h4 class="">Distribution</h4>
 							<?php
 								$countryinfo = $taxonManager->getCountries();
 								echo emitAmericasSVG($taxonManager->getTid());
@@ -191,10 +191,48 @@ include($SERVER_ROOT.'/includes/header.php');
 								countries.forEach(colorMap);
 							</script>
 							<?php 
-								echo '<span class="w3-small">Reportedly collected from: ' . implode(', ', $countryinfo) . '</span>';
+								echo '<span class="font-tiny">Reportedly collected from: ' . implode(', ', $countryinfo) . '</span>';
 							?>
-						</div>
+						<!-- </div> -->
 
+						<?php
+							//Map
+							$aUrl = ''; $gAnchor = '';
+							$url = '';
+							if(isset($MAP_THUMBNAILS) && $MAP_THUMBNAILS) $url = $taxonManager->getGoogleStaticMap();
+							else $url = $CLIENT_ROOT.'/images/mappoint.png';
+							if($OCCURRENCE_MOD_IS_ACTIVE && $taxonManager->getDisplayLocality()){
+								$gAnchor = "openMapPopup('" . $taxonManager->getTid() . "'," . ($clid ? $clid:0) . ','. (!empty($GOOGLE_MAP_KEY) ? 'false' : 'true') . ")";
+							}
+							if($mapSrc = $taxonManager->getMapArr()){
+								$url = array_shift($mapSrc);
+								$aUrl = $url;
+							}
+							if($url){
+								echo '<div class="">';
+								if($gAnchor){
+									echo '<a href="#" onclick="' . $gAnchor . ';return false">';
+								}
+								elseif($aUrl){
+									echo '<a href="' . htmlspecialchars($aUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">';
+								}
+								echo '<img src="' . $url . '" title="' . $taxonManager->getTaxonName() . '" alt="' . $taxonManager->getTaxonName() . '" />';
+								if($aUrl || $gAnchor) echo '</a>';
+								if($gAnchor) echo '<br /><a href="#" onclick="'.$gAnchor.';return false">' . $LANG['OPEN_MAP'] . '</a>';
+								echo "</div>";
+							}
+							$taxonManager->echoImages(1);
+							?>
+
+						<!-- Alert Box -->
+						<div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
+							<span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
+							<i class="fa fa-remove"></i>
+							</span>
+							<p>Please Note: Data, maps and profiles are provided as-is and are dynamically generated from specimen records. Inaccuracies and misidentifications can affect data quality. If you notice or suspect an error, please notify the maintainer at tyrrell@mpm.edu. Thank you!
+							<div style="margin: 5px"><img src="https://img.shields.io/badge/Data Snapshot-21 Oct 2024-green.svg" /></div>
+						</p>
+						</div>
 						<?php
 /* 						if(!$taxonManager->echoImages(0,1,0)){
 							echo '<div class="image" style="width:260px;height:260px;border-style:solid;margin-top:5px;margin-left:20px;text-align:center;">';
@@ -210,15 +248,98 @@ include($SERVER_ROOT.'/includes/header.php');
 						?>
 					</td>
 					<td class="desc">
-						<!-- Alert Box -->
-						<div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
-							<span onclick="this.parentElement.style.display='none'" class="w3-button w3-theme-l3 w3-display-topright">
-							<i class="fa fa-remove"></i>
-							</span>
-							<p>Please Note: Data, maps and profiles are provided as-is and are dynamically generated from specimen records. Inaccuracies and misidentifications can affect data quality. If you notice or suspect an error, please notify the maintainer at tyrrell@mpm.edu. Thank you!
-							<div style="margin: 5px"><img src="https://img.shields.io/badge/Data Snapshot-21 Oct 2024-green.svg" /></div>
-						</p>
+						<!-- Dashboard -->
+	        			<div class="dashboard">
+							<h4>Habitat</h4>
+							<div class="dashpanel">
+								<h5>Elevation Profile</h5>
+								<?php 
+								echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations(), array("3500","","2500","","1500","","500"), "elev", FALSE);
+								?>
+							</div>
+							<div class="dashpanel">
+								<h5>Precipitation Profile</h5>
+								<?php
+									$wcdata = $taxonManager->getWC();
+									$calendarlegend = array("F","M","A","M","J","J","A","S","O","N");
+									//var_dump($wcdata['prec-avg']);
+									//var_dump($wcdata['prec-min']);
+									//var_dump($wcdata['prec-max']);
+									echo linearGraph($wcdata['prec-avg'], $wcdata['prec-min'], $wcdata['prec-max'], $calendarlegend, "prec");
+								?>
+								<h5>Temperature Profile</h5>
+								<?php
+									echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp");
+								?>
+							</div>
+							<div class="dashpanel">
+								<h5>Humidity Profile</h5>
+									<?php
+										echo linearGraph($wcdata['vapr-avg'], $wcdata['vapr-min'], $wcdata['vapr-max'], $calendarlegend, "vapr");
+									?>
+								<h5>Solar Radiation Profile</h5>
+									<?php
+										echo linearGraph($wcdata['srad-avg'], $wcdata['srad-min'], $wcdata['srad-max'], $calendarlegend, "srad");
+									?>
+								<h5>Wind Speed Profile</h5>
+								<?php
+									echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
+								?>
+							</div>
+							<div class="w3-col m12">
+								<?php
+									$habdesc = "<i>".$taxonManager->getTaxonName()."</i> is ";
+									if ($wcdata['bio-avg'][0]) {
+										$habdesc .= "known from localities with an annual mean temperature of ".round($wcdata['bio-avg'][0],1)."&deg;C";
+										if ($wcdata['bio-avg'][11]) $habdesc .= " and precipitation of ".round($wcdata['bio-avg'][11],0)." mm";
+										$habdesc .= ".";
+									} elseif ($wcdata['bio-avg'][11]) {
+										$habdesc .= "known from localities with an annual mean precipitation of ".round($wcdata['bio-avg'][11],0)." mm.";
+									} else { $habdesc .= "not known from any georeferenced localities or the localities lack mean annual temperature or precipitation data."; }
+
+									if($wcdata['bio-avg'][3]) {
+										if($wcdata['bio-avg'][3] < 100) {
+											$tadv = "relatively little";
+										} elseif ($wcdata['bio-avg'][3] > 200) {
+											$tadv = "considerable";
+										} else {
+											$tadv = "moderate";
+										}
+										$habdesc .= " Temperatures show ".$tadv." seasonality (standard deviation ~".round($wcdata['bio-avg'][3],1)."), varying from ".round($wcdata['bio-avg'][4],1)."&deg;C in the warmest month to ".round($wcdata['bio-avg'][5],1)."&deg;C in the coolest (isothermality ratio ~".round($wcdata['bio-avg'][2],1).").";
+									}
+
+									if($wcdata['bio-avg'][14]) {
+										if($wcdata['bio-avg'][14] < 30) {
+											$padv = "relatively little";
+										} elseif ($wcdata['bio-avg'][14] > 50) {
+											$padv = "considerable";
+										} else {
+											$padv = "moderate";
+										}
+										$habdesc .= " Precipitation shows ".$padv." seasonality (coefficient of variation ~".round($wcdata['bio-avg'][14],1)."), varying from ".round($wcdata['bio-max'][12],0)." mm in the wettest month to ".round($wcdata['bio-min'][13],0)." mm in the driest.";
+									}
+
+									if($wcdata['bio-max'][15]){
+										$habdesc .= " The mean temperatures of the wettest (totaling ".round($wcdata['bio-max'][15],0)." mm) and driest (totaling ".round($wcdata['bio-min'][16],0)." mm) quarters being ".round($wcdata['bio-avg'][7],1)."&deg;C and ".round($wcdata['bio-avg'][8],1)."&deg;C, respectively, and the mean precipitation of the warmest (".round($wcdata['bio-max'][9],1)."&deg;C) and coolest (".round($wcdata['bio-min'][10],1)."&deg;C) quarters being ".round($wcdata['bio-avg'][17],0)." mm and ".round($wcdata['bio-avg'][18],0)." mm, respectively.";
+									}
+
+									echo $habdesc;
+								?>
+								<p>Tables and figures are dynamically generated by intersecting georeferenced herbarium specimen localities with 10 minute resolution <a href="http://www.worldclim.com/version2" target="_blank">WorldClim v2.1</a> variables (Fick and Hijmans 2017). The above data are subject to change as specimens and geocoordinates are added, removed or altered.</p>
+								<p class="font-tiny">Fick, S.E. and R.J. Hijmans, 2017. Worldclim 2: New 1-km spatial resolution climate surfaces for global land areas. International Journal of Climatology 37(12), 4302–4315. <a href="https://doi.org/10.1002/joc.5086" target="_blank">doi:10.1002/joc.5086</a></p>
+								<hr>
+
+								<p class="font-tiny">Specimens Referenced: 
+								<?php echo $taxonManager->getGatherings(); ?>
+								</p> 
+							</div>
 						</div>
+					</td>
+				</tr>
+				<tr>
+					<td></td>
+					<td class="desc">
+						<!-- Traditional Symbiota Description Tabs -->
 						<?php
 						echo $taxonManager->getDescriptionTabs();
 						?>
@@ -227,7 +348,7 @@ include($SERVER_ROOT.'/includes/header.php');
 				<tr>
 					<td colspan="2">
 						<div id="img-div" style="height:300px;overflow:hidden;">
-							<?php
+<!-- 							<?php
 							//Map
 							$aUrl = ''; $gAnchor = '';
 							$url = '';
@@ -255,7 +376,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							}
 							$taxonManager->echoImages(1);
 							?>
-						</div>
+ -->						</div>
 						<?php
 						$imgCnt = $taxonManager->getImageCount();
 						$tabText = $LANG['TOTAL_IMAGES'];
