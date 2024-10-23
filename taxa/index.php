@@ -281,6 +281,8 @@ include($SERVER_ROOT.'/includes/header.php');
 									<?php
 										echo linearGraph($wcdata['srad-avg'], $wcdata['srad-min'], $wcdata['srad-max'], $calendarlegend, "srad");
 									?>
+							</div>
+							<div class="instrument-cluster">
 								<h5>Wind Speed Profile</h5>
 								<?php
 									echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");

@@ -23,14 +23,17 @@ This stylesheet is defined last and will override all previously loaded sheets. 
 
 .dashpanel {
     border-radius: 4px; 
-    padding: 16px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 10px;
+    padding-top: 4px;
     margin-left: 16px;
     box-shadow: black 0px 2px 5px 0px;
 }
 
 .instrument-cluster {
     float:left;
-    width:33.33333%;
+    width:25%;
     padding:0 8px;
     text-align:center!important;
     display:inline-block;
