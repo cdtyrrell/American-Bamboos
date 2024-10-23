@@ -198,31 +198,12 @@ include($SERVER_ROOT.'/includes/header.php');
 						<?php
 							//Map
 							$aUrl = ''; $gAnchor = '';
-							$url = '';
-							//if(isset($MAP_THUMBNAILS) && $MAP_THUMBNAILS) $url = $taxonManager->getGoogleStaticMap();
-							//else $url = $CLIENT_ROOT.'/images/mappoint.png';
 							if($OCCURRENCE_MOD_IS_ACTIVE && $taxonManager->getDisplayLocality()){
 								$gAnchor = "openMapPopup('" . $taxonManager->getTid() . "'," . ($clid ? $clid:0) . ','. (!empty($GOOGLE_MAP_KEY) ? 'false' : 'true') . ")";
 							}
-							if($mapSrc = $taxonManager->getMapArr()){
-								$url = array_shift($mapSrc);
-								$aUrl = $url;
-							}
-							if($url){
-								echo '<div class="">';
-								if($gAnchor){
-									echo '<a href="#" onclick="' . $gAnchor . ';return false">';
-								}
-								elseif($aUrl){
-									echo '<a href="' . htmlspecialchars($aUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">';
-								}
-								echo '<img src="' . $url . '" title="' . $taxonManager->getTaxonName() . '" alt="' . $taxonManager->getTaxonName() . '" />';
-								if($aUrl || $gAnchor) echo '</a>';
-								if($gAnchor) echo '<br /><a href="#" onclick="'.$gAnchor.';return false">' . $LANG['OPEN_MAP'] . '</a>';
-								echo "</div>";
-							}
-							$taxonManager->echoImages(1);
-							?>
+							if($gAnchor) echo '<br /><a href="#" onclick="'.$gAnchor.';return false">' . $LANG['OPEN_MAP'] . '</a>';
+							echo "</div>";
+						?>
 
 						<!-- Alert Box -->
 						<div class="w3-container w3-display-container w3-round w3-theme-l4 w3-border w3-theme-border w3-margin-bottom w3-hide-small">
