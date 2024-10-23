@@ -249,15 +249,15 @@ include($SERVER_ROOT.'/includes/header.php');
 					</td>
 					<td class="desc">
 						<!-- Dashboard -->
-	        			<div class="dashboard">
+	        			<div class="dashpanel">
 							<h4>Habitat</h4>
-							<div class="dashpanel">
+							<div class="instrument-cluster">
 								<h5>Elevation Profile</h5>
 								<?php 
 								echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations(), array("3500","","2500","","1500","","500"), "elev", FALSE);
 								?>
 							</div>
-							<div class="dashpanel">
+							<div class="instrument-cluster">
 								<h5>Precipitation Profile</h5>
 								<?php
 									$wcdata = $taxonManager->getWC();
@@ -272,7 +272,7 @@ include($SERVER_ROOT.'/includes/header.php');
 									echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp");
 								?>
 							</div>
-							<div class="dashpanel">
+							<div class="instrument-cluster">
 								<h5>Humidity Profile</h5>
 									<?php
 										echo linearGraph($wcdata['vapr-avg'], $wcdata['vapr-min'], $wcdata['vapr-max'], $calendarlegend, "vapr");
