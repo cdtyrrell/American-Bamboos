@@ -199,8 +199,8 @@ include($SERVER_ROOT.'/includes/header.php');
 							//Map
 							$aUrl = ''; $gAnchor = '';
 							$url = '';
-							if(isset($MAP_THUMBNAILS) && $MAP_THUMBNAILS) $url = $taxonManager->getGoogleStaticMap();
-							else $url = $CLIENT_ROOT.'/images/mappoint.png';
+							//if(isset($MAP_THUMBNAILS) && $MAP_THUMBNAILS) $url = $taxonManager->getGoogleStaticMap();
+							//else $url = $CLIENT_ROOT.'/images/mappoint.png';
 							if($OCCURRENCE_MOD_IS_ACTIVE && $taxonManager->getDisplayLocality()){
 								$gAnchor = "openMapPopup('" . $taxonManager->getTid() . "'," . ($clid ? $clid:0) . ','. (!empty($GOOGLE_MAP_KEY) ? 'false' : 'true') . ")";
 							}
