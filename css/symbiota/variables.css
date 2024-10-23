@@ -2,7 +2,8 @@
    ========================================================================== */
 :root {
   --header-bg-image: url("../../images/layout/Bambusa_silhouette.jpg");
-  --header-bg-color: #2f6e5378; /** Transparent color if adding header bg-image **/
+  /* --header-bg-color: #2f6e5378; /** Transparent color if adding header bg-image **/
+  --header-bg-color: #70a23678;
   --header-font-color: #fff;
   --brand-font-size: 1.5rem;
   --title-font-family: "Averia Serif Libre", serif;
