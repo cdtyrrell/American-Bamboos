@@ -131,7 +131,7 @@ include($SERVER_ROOT.'/includes/header.php');
 					</td>
 				</tr>
 				<tr>
-					<td width="300" style="vertical-align=top">
+					<td width="28%" style="vertical-align=top">
 						<div id="family"><?php echo '<b>' . $LANG['FAMILY'] . ':</b> ' . $taxonManager->getTaxonFamily(); ?></div>
 						<?php
 						if($vernArr = $taxonManager->getVernaculars()){
@@ -177,7 +177,7 @@ include($SERVER_ROOT.'/includes/header.php');
 						?>
 
 						<!-- Map -->
-						<!-- <div class=""> -->
+						<div style="vertical-align:top;">
 							<hr>
 							<h4 class="">Distribution</h4>
 							<?php
@@ -193,7 +193,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							<?php 
 								echo '<span class="font-tiny">Reportedly collected from: ' . implode(', ', $countryinfo) . '</span>';
 							?>
-						<!-- </div> -->
+						</div>
 
 						<?php
 							//Map
