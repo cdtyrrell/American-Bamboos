@@ -50,8 +50,7 @@ This stylesheet is defined last and will override all previously loaded sheets. 
 .instrument-cluster-full {
     width:100%;
     padding:0px;
-    text-align:center!important;
-    display:block;
+    display:inline-block;
 }
 
 .gauge-bg {
