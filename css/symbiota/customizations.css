@@ -21,6 +21,13 @@ This stylesheet is defined last and will override all previously loaded sheets. 
     font-size: small;
 }
 
+/* Clear floats after the columns */
+section::after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+
 .dashpanel {
     border-radius: 4px; 
     padding-left: 16px;

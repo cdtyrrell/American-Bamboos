@@ -230,7 +230,7 @@ include($SERVER_ROOT.'/includes/header.php');
 					</td>
 					<td class="desc">
 						<!-- Dashboard -->
-	        			<div class="" style="width:100%">
+	        			<section>
 							<h4>Habitat</h4>
 							<div class="" style="width: 25%; height: 100px; float: left;">
 								<h5>Elevation Profile</h5>
@@ -269,9 +269,9 @@ include($SERVER_ROOT.'/includes/header.php');
 									echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
 								?>
 							</div>
-						</div>
-						<div style="content:'';display:table;clear:both;"></div>
-							<div class="">
+						</section>
+
+							<div class="width=100%;">
 								<p>
 								<?php
 									$habdesc = "<i>".$taxonManager->getTaxonName()."</i> is ";
