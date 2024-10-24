@@ -271,7 +271,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							</div>
 						</div>
 						
-							<div class="instrument-cluster-full">
+							<div class="">
 								<p>
 								<?php
 									$habdesc = "<i>".$taxonManager->getTaxonName()."</i> is ";
