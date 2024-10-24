@@ -31,9 +31,25 @@ This stylesheet is defined last and will override all previously loaded sheets. 
     box-shadow: black 0px 2px 5px 0px;
 }
 
-.instrument-cluster {
+.instrument-cluster-quarter {
     float:left;
     width:25%;
+    padding:0 8px;
+    text-align:center!important;
+    display:block;
+}
+
+.instrument-cluster-third {
+    float:left;
+    width:33.3333%;
+    padding:0 8px;
+    text-align:center!important;
+    display:block;
+}
+
+.instrument-cluster-full {
+    float:left;
+    width:100%;
     padding:0 8px;
     text-align:center!important;
     display:block;
