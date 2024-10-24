@@ -270,7 +270,7 @@ include($SERVER_ROOT.'/includes/header.php');
 								?>
 							</div>
 						</div>
-						<div class="dashpanel">
+						
 							<div class="instrument-cluster-full">
 								<p>
 								<?php
@@ -320,7 +320,7 @@ include($SERVER_ROOT.'/includes/header.php');
 								<?php echo $taxonManager->getGatherings(); ?>
 								</p> 
 							</div>
-						</div>
+						
 					</td>
 				</tr>
 				<tr>
