@@ -269,6 +269,8 @@ include($SERVER_ROOT.'/includes/header.php');
 									echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
 								?>
 							</div>
+						</div>
+						<div class="dashpanel">
 							<div class="instrument-cluster-full">
 								<p>
 								<?php
