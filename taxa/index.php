@@ -128,11 +128,11 @@ include($SERVER_ROOT.'/includes/header.php');
 							<?php
 						}
 						?>
+						<div id="family"><?php echo '<b>' . $LANG['FAMILY'] . ':</b> ' . $taxonManager->getTaxonFamily(); ?></div>
 					</td>
 				</tr>
 				<tr>
 					<td width="28%" style="vertical-align=top">
-						<div id="family"><?php echo '<b>' . $LANG['FAMILY'] . ':</b> ' . $taxonManager->getTaxonFamily(); ?></div>
 						<?php
 						if($vernArr = $taxonManager->getVernaculars()){
 							$primerArr = array();
