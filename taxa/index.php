@@ -271,7 +271,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							</div>
 						</div>
 						
-							<div class="">
+							<div class="" style="clear:both;">
 								<p>
 								<?php
 									$habdesc = "<i>".$taxonManager->getTaxonName()."</i> is ";
