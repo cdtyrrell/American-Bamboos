@@ -48,9 +48,8 @@ This stylesheet is defined last and will override all previously loaded sheets. 
 }
 
 .instrument-cluster-full {
-    float:left;
     width:100%;
-    padding:0 8px;
+    padding:0px;
     text-align:center!important;
     display:block;
 }
