@@ -232,13 +232,13 @@ include($SERVER_ROOT.'/includes/header.php');
 						<!-- Dashboard -->
 	        			<section>
 							<h4>Habitat</h4>
-							<div class="" style="width: 25%; height: 100px; float: left;">
+							<div class="" style="width: 25%; float: left;">
 								<h5>Elevation Profile</h5>
 								<?php 
 								echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations(), array("3500","","2500","","1500","","500"), "elev", FALSE);
 								?>
 							</div>
-							<div class="" style="width: 25%; height: 100px; float: left;">
+							<div class="" style="width: 25%; float: left;">
 								<h5>Precipitation Profile</h5>
 								<?php
 									$wcdata = $taxonManager->getWC();
@@ -253,7 +253,7 @@ include($SERVER_ROOT.'/includes/header.php');
 									echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp");
 								?>
 							</div>
-							<div class="" style="width: 25%; height: 100px; float: left;">
+							<div class="" style="width: 25%; float: left;">
 								<h5>Humidity Profile</h5>
 									<?php
 										echo linearGraph($wcdata['vapr-avg'], $wcdata['vapr-min'], $wcdata['vapr-max'], $calendarlegend, "vapr");
@@ -263,7 +263,7 @@ include($SERVER_ROOT.'/includes/header.php');
 										echo linearGraph($wcdata['srad-avg'], $wcdata['srad-min'], $wcdata['srad-max'], $calendarlegend, "srad");
 									?>
 							</div>
-							<div class="" style="width: 25%; height: 100px; float: left;">
+							<div class="" style="width: 25%; float: left;">
 								<h5>Wind Speed Profile</h5>
 								<?php
 									echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
