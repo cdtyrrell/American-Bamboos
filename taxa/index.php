@@ -270,7 +270,7 @@ include($SERVER_ROOT.'/includes/header.php');
 								?>
 							</div>
 						</div>
-						<div style="clear:both;"></div>
+						<div style="content:'';display:table;clear:both;"></div>
 							<div class="">
 								<p>
 								<?php
