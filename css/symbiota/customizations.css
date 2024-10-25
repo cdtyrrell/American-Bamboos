@@ -22,7 +22,7 @@ This stylesheet is defined last and will override all previously loaded sheets. 
 }
 
 /* Clear floats after the columns */
-section::after {
+.dashrow::after {
     content: "";
     display: table;
     clear: both;

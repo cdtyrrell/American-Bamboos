@@ -230,7 +230,8 @@ include($SERVER_ROOT.'/includes/header.php');
 					</td>
 					<td class="desc">
 						<!-- Dashboard -->
-	        			<section>
+	        			<div class="dashpanel">
+						<div class="dashrow">
 							<h4>Habitat</h4>
 							<div class="" style="width: 25%; float: left;">
 								<h5>Elevation Profile</h5>
@@ -269,7 +270,8 @@ include($SERVER_ROOT.'/includes/header.php');
 									echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
 								?>
 							</div>
-						</section>
+						</div>
+						</div>
 
 							<div class="width=100%;">
 								<p>
