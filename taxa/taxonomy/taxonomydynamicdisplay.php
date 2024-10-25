@@ -252,7 +252,6 @@ reset($treePath);
 					label: "Taxa Tree",
 					//dndController: dndSource,
 					persist: false,
-					autoExpand: true,
 					_createTreeNode: function(args){
 					   return new TaxonTreeNode(args);
 					},
