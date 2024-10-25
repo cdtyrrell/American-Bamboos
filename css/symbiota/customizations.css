@@ -22,7 +22,7 @@ This stylesheet is defined last and will override all previously loaded sheets. 
 }
 
 /* Clear floats after the columns */
-.dashrow::after {
+.dashrow:after {
     content: "";
     display: table;
     clear: both;
@@ -43,21 +43,13 @@ This stylesheet is defined last and will override all previously loaded sheets. 
     width:25%;
     padding:0 8px;
     text-align:center!important;
-    display:inline-block;
+    display: inline-block;
 }
 
-.instrument-cluster-third {
-    float:left;
-    width:33.3333%;
-    padding:0 8px;
-    text-align:center!important;
-    display:block;
-}
-
-.instrument-cluster-full {
-    width:100%;
-    padding:0px;
-    display:inline-block;
+@media screen and (max-width: 600px) {
+    .instrument-cluster-quarter {
+        width: 100%;
+    }
 }
 
 .gauge-bg {
