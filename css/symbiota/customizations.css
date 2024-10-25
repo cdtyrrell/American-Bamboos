@@ -46,7 +46,7 @@ This stylesheet is defined last and will override all previously loaded sheets. 
     display: inline-block;
 }
 
-@media screen and (max-width: 600px) {
+@media screen and (max-width: 1000px) {
     .instrument-cluster-quarter {
         width: 100%;
     }
@@ -149,4 +149,9 @@ This stylesheet is defined last and will override all previously loaded sheets. 
     fill:none;
     stroke:#fff;
     stroke-width:2;
+}
+
+.claro .dijitTreeRowSelected {
+    background-color: #cffae5;
+    background-image: url("");
 }
