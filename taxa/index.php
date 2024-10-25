@@ -231,47 +231,46 @@ include($SERVER_ROOT.'/includes/header.php');
 					<td class="desc">
 						<!-- Dashboard -->
 	        			<div class="dashpanel">
-						<div class="dashrow">
-							<h4>Habitat</h4>
-							<div class="" style="width: 25%; float: left;">
-								<h5>Elevation Profile</h5>
-								<?php 
-								echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations(), array("3500","","2500","","1500","","500"), "elev", FALSE);
-								?>
-							</div>
-							<div class="" style="width: 25%; float: left;">
-								<h5>Precipitation Profile</h5>
-								<?php
-									$wcdata = $taxonManager->getWC();
-									$calendarlegend = array("F","M","A","M","J","J","A","S","O","N");
-									//var_dump($wcdata['prec-avg']);
-									//var_dump($wcdata['prec-min']);
-									//var_dump($wcdata['prec-max']);
-									echo linearGraph($wcdata['prec-avg'], $wcdata['prec-min'], $wcdata['prec-max'], $calendarlegend, "prec");
-								?>
-								<h5>Temperature Profile</h5>
-								<?php
-									echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp");
-								?>
-							</div>
-							<div class="" style="width: 25%; float: left;">
-								<h5>Humidity Profile</h5>
-									<?php
-										echo linearGraph($wcdata['vapr-avg'], $wcdata['vapr-min'], $wcdata['vapr-max'], $calendarlegend, "vapr");
+							<div class="dashrow">
+								<h4>Habitat</h4>
+								<div class="" style="width: 25%; float: left;">
+									<h5>Elevation Profile</h5>
+									<?php 
+									echo linearGraph(null, array(0,0,0,0,0,0,0,0,0), $taxonManager->getElevations(), array("3500","","2500","","1500","","500"), "elev", FALSE);
 									?>
-								<h5>Solar Radiation Profile</h5>
+								</div>
+								<div class="" style="width: 25%; float: left;">
+									<h5>Precipitation Profile</h5>
 									<?php
-										echo linearGraph($wcdata['srad-avg'], $wcdata['srad-min'], $wcdata['srad-max'], $calendarlegend, "srad");
+										$wcdata = $taxonManager->getWC();
+										$calendarlegend = array("F","M","A","M","J","J","A","S","O","N");
+										//var_dump($wcdata['prec-avg']);
+										//var_dump($wcdata['prec-min']);
+										//var_dump($wcdata['prec-max']);
+										echo linearGraph($wcdata['prec-avg'], $wcdata['prec-min'], $wcdata['prec-max'], $calendarlegend, "prec");
 									?>
+									<h5>Temperature Profile</h5>
+									<?php
+										echo linearGraph($wcdata['tavg-avg'], $wcdata['tavg-min'], $wcdata['tavg-max'], $calendarlegend, "temp");
+									?>
+								</div>
+								<div class="" style="width: 25%; float: left;">
+									<h5>Humidity Profile</h5>
+										<?php
+											echo linearGraph($wcdata['vapr-avg'], $wcdata['vapr-min'], $wcdata['vapr-max'], $calendarlegend, "vapr");
+										?>
+									<h5>Solar Radiation Profile</h5>
+										<?php
+											echo linearGraph($wcdata['srad-avg'], $wcdata['srad-min'], $wcdata['srad-max'], $calendarlegend, "srad");
+										?>
+								</div>
+								<div class="" style="width: 25%; float: left;">
+									<h5>Wind Speed Profile</h5>
+									<?php
+										echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
+									?>
+								</div>
 							</div>
-							<div class="" style="width: 25%; float: left;">
-								<h5>Wind Speed Profile</h5>
-								<?php
-									echo linearGraph($wcdata['wind-avg'], $wcdata['wind-min'], $wcdata['wind-max'], $calendarlegend, "wind");
-								?>
-							</div>
-						</div>
-						</div>
 
 							<div class="width=100%;">
 								<p>
@@ -322,7 +321,7 @@ include($SERVER_ROOT.'/includes/header.php');
 								<?php echo $taxonManager->getGatherings(); ?>
 								</p> 
 							</div>
-						
+						</div>
 					</td>
 				</tr>
 				<tr>
