@@ -47,8 +47,8 @@ $boundLatMin = -90;
 $boundLatMax = 90;
 $boundLngMin = -180;
 $boundLngMax = 180;
-$latCen = 41.0;
-$longCen = -95.0;
+$latCen = -16.6;
+$longCen = -76.1;
 if(!empty($MAPPING_BOUNDARIES)){
 	$coorArr = explode(';', $MAPPING_BOUNDARIES);
 	if($coorArr && count($coorArr) == 4){
