@@ -98,6 +98,7 @@ function expandExtraImages(){
 }
 
 function openMapPopup(taxonVar,clid,leaflet=false){
+	console.log(leaflet);
 	var popupMap = window.open(`../collections/map/${leaflet?'leafletmap.php': 'googlemap.php'}?usethes=1&taxa=${taxonVar}`,'gmap','toolbar=0,scrollbars=1,width=950,height=700,left=20,top=20');
     if (popupMap.opener == null) popupMap.opener = self;
     popupMap.focus();
