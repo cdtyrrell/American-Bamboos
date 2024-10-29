@@ -17,6 +17,10 @@ This stylesheet is defined last and will override all previously loaded sheets. 
 	font-style: normal;
 }
 
+td .mapetc {
+    vertical-align: top;
+}
+
 .font-tiny {
     font-size: small;
 }

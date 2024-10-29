@@ -132,7 +132,7 @@ include($SERVER_ROOT.'/includes/header.php');
 					</td>
 				</tr>
 				<tr>
-					<td width="28%" style="vertical-align=top">
+					<td width="28%" class="mapetc">
 						<?php
 						if($vernArr = $taxonManager->getVernaculars()){
 							$primerArr = array();
