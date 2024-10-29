@@ -17,8 +17,8 @@ This stylesheet is defined last and will override all previously loaded sheets. 
 	font-style: normal;
 }
 
-td .mapetc {
-    vertical-align: top;
+.mapetc {
+    vertical-align: top !important;
 }
 
 .font-tiny {
