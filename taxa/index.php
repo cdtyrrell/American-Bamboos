@@ -86,7 +86,7 @@ include($SERVER_ROOT.'/includes/header.php');
 	if($taxonManager->getTaxonName()){
 		if(count($taxonManager->getAcceptedArr()) == 1){
 			$taxonRank = $taxonManager->getRankId();
-			if($taxonRank > 180){
+			if($taxonRank > 219){
 				?>
 				<table id="innertable">
 				<tr>
