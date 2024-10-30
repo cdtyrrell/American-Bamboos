@@ -58,7 +58,7 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 					The bamboos (Poaceae: Bambusoideae) are grasses that evolved in and adapted to forest 
 					habitats (though some species can now be found in open environments). There are 
 					more than 1,700 species of bamboo worldwide, over a third of which are native to the 
-					the Americas including one genus with four species (<i>Arundinaria</i>; "cane") that is 
+					the Americas. One genus (<i>Arundinaria</i>; "cane") with four species is 
 					native to what is now the southeastern continental United States.
 				</p>
 				<h2>Please Pardon Our Pollen!</h2>
