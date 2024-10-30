@@ -211,8 +211,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							<i class="fa fa-remove"></i>
 							</span>
 							<p>Please Note: Data, maps and profiles are provided as-is and are dynamically generated from specimen records. Inaccuracies and misidentifications can affect data quality. If you notice or suspect an error, please notify the maintainer at tyrrell@mpm.edu. Thank you!
-								<?php echo $taxonManager->getLastUpdate(); ?>
-							<div style="margin: 5px"><img src="https://img.shields.io/badge/Data Snapshot-21 Oct 2024-green.svg" /></div>
+							<div style="margin: 5px"><img src="https://img.shields.io/badge/Data Snapshot-<?php echo $taxonManager->getLastUpdate(); ?>-green.svg" /></div>
 						</p>
 						</div>
 						<?php
