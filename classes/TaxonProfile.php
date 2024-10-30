@@ -143,15 +143,11 @@ class TaxonProfile extends Manager {
 	//Last Update [CDT]
 	public function getLastUpdate(){
 		if(!$this->lastUpdate || $this->lastUpdate == "") {
-			if($this->getTidStr()) {
-				$sql = 'SELECT DATE_FORMAT(MAX(`dateLastModified`), "%e %b %Y") AS updated FROM `omoccurrences` WHERE `tidinterpreted` IN ('.$this->getTidStr().')';
-				$result = $this->conn->query($sql);
-				$row = $result->fetch_object();
-				$this->lastUpdate = $row['updated'];
-				$result->free();
-			} else {
-				$this->lastUpdate = "unknown";
-			}
+			$sql = 'SELECT DATE_FORMAT(MAX(`dateLastModified`), "%e %b %Y") AS updated FROM `omoccurrences` WHERE `tidinterpreted` IN ('.$this->getTidStr().')';
+			$result = $this->conn->query($sql);
+			$row = $result->fetch_object();
+			$this->lastUpdate = $row['updated'];
+			$result->free();
 		}
 		return $this->lastUpdate;
 	}
