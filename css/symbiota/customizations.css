@@ -154,8 +154,3 @@ This stylesheet is defined last and will override all previously loaded sheets. 
     stroke:#fff;
     stroke-width:2;
 }
-
-.claro .dijitTreeRowSelected {
-    background-color: #cffae5;
-    background-image: url("");
-}

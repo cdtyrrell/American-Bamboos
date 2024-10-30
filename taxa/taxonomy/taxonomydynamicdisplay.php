@@ -49,7 +49,7 @@ reset($treePath);
 	include_once($SERVER_ROOT.'/includes/head.php');
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
 	?>
-	<link rel="stylesheet" href="../../js/dojo-1.17.3/dijit/themes/claro/claro.css" media="screen">
+	<link rel="stylesheet" href="../../js/dojo-1.17.3/dijit/themes/tundra/tundra.css" media="screen">
 	<style>
 		.dijitLeaf,
 		.dijitIconLeaf,
@@ -104,7 +104,7 @@ reset($treePath);
 		}
 	</script>
 </head>
-<body class="claro">
+<body class="tundra">
 	<?php
 	$displayLeftMenu = (isset($taxa_admin_taxonomydisplayMenu)?$taxa_admin_taxonomydisplayMenu:false);
 	include($SERVER_ROOT.'/includes/header.php');
