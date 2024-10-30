@@ -146,7 +146,8 @@ class TaxonProfile extends Manager {
 			if($this->getTidStr()) {
 				$sql = 'SELECT DATE_FORMAT(MAX(`dateLastModified`), "%e %b %Y") AS updated FROM `omoccurrences` WHERE `tidinterpreted` IN ('.$tidStr.')';
 				$result = $this->conn->query($sql);
-				$this->lastUpdate = $result['updated'];
+				$row = $result->fetch_object()
+				$this->lastUpdate = $row['updated'];
 				$result->free();
 			} else {
 				$this->lastUpdate = "unknown";
