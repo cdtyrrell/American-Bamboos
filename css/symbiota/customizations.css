@@ -154,3 +154,7 @@ This stylesheet is defined last and will override all previously loaded sheets. 
     stroke:#fff;
     stroke-width:2;
 }
+
+.page-heading {
+    font-size: 1.75rem;
+  }
