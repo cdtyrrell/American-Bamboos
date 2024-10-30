@@ -144,9 +144,9 @@ class TaxonProfile extends Manager {
 	public function getLastUpdate(){
 		if(!$this->lastUpdate || $this->lastUpdate == "") {
 			if($this->getTidStr()) {
-				$sql = 'SELECT MAX(`dateLastModified`) AS updated FROM `omoccurrences` WHERE `tidinterpreted` IN ('.$tidStr.')';
+				$sql = 'SELECT DATE_FORMAT(MAX(`dateLastModified`), "%e %b %Y") AS updated FROM `omoccurrences` WHERE `tidinterpreted` IN ('.$tidStr.')';
 				$result = $this->conn->query($sql);
-				$this->lastUpdate = date_format($result['updated'],"Y-m-d");
+				$this->lastUpdate = $result['updated'];
 				$result->free();
 			} else {
 				$this->lastUpdate = "unknown";
