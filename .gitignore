@@ -7,7 +7,6 @@
 includes/head.php
 includes/leftmenu.php
 includes/spprofilehead.php
-includes/usagepolicy.php
 includes/citationgbif.php
 includes/citationdataset.php
 .DS_Store
