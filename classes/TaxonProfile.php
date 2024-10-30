@@ -12,7 +12,7 @@ class TaxonProfile extends Manager {
 	private $taxonFamily;
 	private $acceptance = true;
 	private $forwarded = false;
-	private $lastUpdate;
+	private $lastUpdate = "21 Oct 2024";
 
 	protected $acceptedArr = array();
 	protected $synonymArr = array();
