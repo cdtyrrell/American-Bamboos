@@ -69,7 +69,7 @@ $serverHost = UtilityFunctions::getDomain();
 			}
 			?>
 		</blockquote>
-		<p>Please see specific citations at the bottom of this page</p>
+		<p><b>Please see the bottom of this page for specific dataset citations</b></p>
 <!--
 		<h3>Glossary</h3>
 		<p>Please cite this portal's glossary as:</p>
@@ -109,7 +109,23 @@ $serverHost = UtilityFunctions::getDomain();
 				<li>
 					Data herein were aggregated from the Global Biodiversity Information Facility using (as of Oct 2022) the following query:</br>
 					<pre>
-					https://www.gbif.org/occurrence/search?occurrence_status=present&taxon_key=4139279&taxon_key=4106473&taxon_key=9779519&taxon_key=4132081&taxon_key=4131604&taxon_key=2702480&taxon_key=2705960&taxon_key=4108465&taxon_key=4106325&taxon_key=4106111&taxon_key=11096269&taxon_key=10934677&taxon_key=7672148&taxon_key=2706422&taxon_key=4115977&taxon_key=4140976&taxon_key=4136043&taxon_key=8166993&taxon_key=4116198&taxon_key=4152730&taxon_key=4138612&taxon_key=4138475&taxon_key=4110457&taxon_key=4109977&taxon_key=4107447&taxon_key=4127579&taxon_key=2703322&taxon_key=4124876&taxon_key=3232907&taxon_key=4121915&taxon_key=3232888&taxon_key=4112442&taxon_key=2705466&taxon_key=4108439&taxon_key=4116760&taxon_key=7745475&taxon_key=4116625&taxon_key=4112283&taxon_key=4133146&taxon_key=3232713&taxon_key=4144664&taxon_key=4144186&taxon_key=4143934&taxon_key=4126203&taxon_key=4129014&taxon_key=11031493&taxon_key=10795800
+						https://www.gbif.org/occurrence/search?occurrence_status=present&<br />
+						taxon_key=4139279&taxon_key=4106473&taxon_key=9779519&<br />
+						taxon_key=4132081&taxon_key=4131604&taxon_key=2702480&<br />
+						taxon_key=2705960&taxon_key=4108465&taxon_key=4106325&<br />
+						taxon_key=4106111&taxon_key=11096269&taxon_key=10934677&<br />
+						taxon_key=7672148&taxon_key=2706422&taxon_key=4115977&<br />
+						taxon_key=4140976&taxon_key=4136043&taxon_key=8166993&<br />
+						taxon_key=4116198&taxon_key=4152730&taxon_key=4138612&<br />
+						taxon_key=4138475&taxon_key=4110457&taxon_key=4109977&<br />
+						taxon_key=4107447&taxon_key=4127579&taxon_key=2703322&<br />
+						taxon_key=4124876&taxon_key=3232907&taxon_key=4121915&<br />
+						taxon_key=3232888&taxon_key=4112442&taxon_key=2705466&<br />
+						taxon_key=4108439&taxon_key=4116760&taxon_key=7745475&<br />
+						taxon_key=4116625&taxon_key=4112283&taxon_key=4133146&<br />
+						taxon_key=3232713&taxon_key=4144664&taxon_key=4144186&<br />
+						taxon_key=4143934&taxon_key=4126203&taxon_key=4129014&<br />
+						taxon_key=11031493&taxon_key=10795800
 					</pre>
 				</li>
 			</ul>
