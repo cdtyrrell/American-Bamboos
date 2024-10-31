@@ -137,7 +137,7 @@ $serverHost = UtilityFunctions::getDomain();
 		</p>
 
 		<h2>Individual Dataset Citations</h2>
-		<ul style="text-size: tiny;">
+		<ul style="font-size: tiny;">
 			<li>Flores Villela O, Comisión nacional para el conocimiento y uso de la biodiversidad C (2021). Historia natural del parque ecológico estatal de Omiltemi, Chilpancingo, Guerrero, méxico. Comisión nacional para el conocimiento y uso de la biodiversidad. Occurrence dataset https://doi.org/10.15468/bafcus accessed via GBIF.org on 2022-10-06.</li>
 			<li>Chávez Rendón C, Comisión nacional para el conocimiento y uso de la biodiversidad C (2021). Actualización e incremento del banco de datos de la colección de herbario del Jardín Etnobotánico de Oaxaca. Comisión nacional para el conocimiento y uso de la biodiversidad. Occurrence dataset https://doi.org/10.15468/jbeu2v accessed via GBIF.org on 2022-10-06.</li>
 			<li>García Ruiz I, Comisión nacional para el conocimiento y uso de la biodiversidad C (2021). Flora del Parque Nacional Pico de Tancítaro, Michoacán. Comisión nacional para el conocimiento y uso de la biodiversidad. Occurrence dataset https://doi.org/10.15468/kupcf4 accessed via GBIF.org on 2022-10-06.</li>
