@@ -110,7 +110,7 @@ $serverHost = UtilityFunctions::getDomain();
 					Data herein were aggregated from the Global Biodiversity Information Facility using (as of Oct 2022) the following query:</br>
 				</li>
 			</ul>
-			<p>
+			<p style="font-size: small;">
 					https://www.gbif.org/occurrence/search?occurrence_status=present&<br />
 					taxon_key=4139279&taxon_key=4106473&taxon_key=9779519&<br />
 					taxon_key=4132081&taxon_key=4131604&taxon_key=2702480&<br />
