@@ -106,29 +106,27 @@ $serverHost = UtilityFunctions::getDomain();
 					<?php echo $DEFAULT_TITLE; ?> asks that users not redistribute data obtained from this site without permission from data owners.
 					However, links or references to this site may be freely posted.
 				</li>
-				<li>
-					Data herein were aggregated from the Global Biodiversity Information Facility using (as of Oct 2022) the following query:</br>
-					<pre>
-						https://www.gbif.org/occurrence/search?occurrence_status=present&<br />
-						taxon_key=4139279&taxon_key=4106473&taxon_key=9779519&<br />
-						taxon_key=4132081&taxon_key=4131604&taxon_key=2702480&<br />
-						taxon_key=2705960&taxon_key=4108465&taxon_key=4106325&<br />
-						taxon_key=4106111&taxon_key=11096269&taxon_key=10934677&<br />
-						taxon_key=7672148&taxon_key=2706422&taxon_key=4115977&<br />
-						taxon_key=4140976&taxon_key=4136043&taxon_key=8166993&<br />
-						taxon_key=4116198&taxon_key=4152730&taxon_key=4138612&<br />
-						taxon_key=4138475&taxon_key=4110457&taxon_key=4109977&<br />
-						taxon_key=4107447&taxon_key=4127579&taxon_key=2703322&<br />
-						taxon_key=4124876&taxon_key=3232907&taxon_key=4121915&<br />
-						taxon_key=3232888&taxon_key=4112442&taxon_key=2705466&<br />
-						taxon_key=4108439&taxon_key=4116760&taxon_key=7745475&<br />
-						taxon_key=4116625&taxon_key=4112283&taxon_key=4133146&<br />
-						taxon_key=3232713&taxon_key=4144664&taxon_key=4144186&<br />
-						taxon_key=4143934&taxon_key=4126203&taxon_key=4129014&<br />
-						taxon_key=11031493&taxon_key=10795800
-					</pre>
-				</li>
 			</ul>
+			<p>
+				Data herein were aggregated from the Global Biodiversity Information Facility using (as of Oct 2022) the following query:</br>
+					https://www.gbif.org/occurrence/search?occurrence_status=present&<br />
+					taxon_key=4139279&taxon_key=4106473&taxon_key=9779519&<br />
+					taxon_key=4132081&taxon_key=4131604&taxon_key=2702480&<br />
+					taxon_key=2705960&taxon_key=4108465&taxon_key=4106325&<br />
+					taxon_key=4106111&taxon_key=11096269&taxon_key=10934677&<br />
+					taxon_key=7672148&taxon_key=2706422&taxon_key=4115977&<br />
+					taxon_key=4140976&taxon_key=4136043&taxon_key=8166993&<br />
+					taxon_key=4116198&taxon_key=4152730&taxon_key=4138612&<br />
+					taxon_key=4138475&taxon_key=4110457&taxon_key=4109977&<br />
+					taxon_key=4107447&taxon_key=4127579&taxon_key=2703322&<br />
+					taxon_key=4124876&taxon_key=3232907&taxon_key=4121915&<br />
+					taxon_key=3232888&taxon_key=4112442&taxon_key=2705466&<br />
+					taxon_key=4108439&taxon_key=4116760&taxon_key=7745475&<br />
+					taxon_key=4116625&taxon_key=4112283&taxon_key=4133146&<br />
+					taxon_key=3232713&taxon_key=4144664&taxon_key=4144186&<br />
+					taxon_key=4143934&taxon_key=4126203&taxon_key=4129014&<br />
+					taxon_key=11031493&taxon_key=10795800
+			<p>
 		</div>
 
 		<h2>Images</h2>
