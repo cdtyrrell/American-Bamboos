@@ -26,6 +26,9 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 			<div>
 				<h1 class="headline">Bienvenidos</h1>
 				<p>Dedicado a documentar y presentar información sobre la diversidad y distribución de especies de bambú nativas de América del Norte y del Sur.</p>
+				<p>Los bambúes (Poaceae: Bambusoideae) son gramíneas que evolucionaron y se adaptaron a hábitats forestales (aunque algunas especies ahora se pueden encontrar en entornos abiertos). Hay más de 1.700 especies de bambú en todo el mundo, más de un tercio de las cuales son nativas de América. Un género (<i>Arundinaria</i>; "caña") con cuatro especies es nativo de lo que ahora es el sureste continental de los Estados Unidos.</p>
+				<h2>¡Disculpe nuestro polen!</h2>
+				<p>Este sitio está en desarrollo activo, por favor, vuelva a visitarlo para ver las actualizaciones.</p>
 			</div>
 			<?php
 		}
@@ -34,6 +37,9 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 			<div>
 				<h1 class="headline">Bem-vindo</h1>
 				<p>Dedicado a documentar e apresentar informações sobre a diversidade e distribuição de espécies de bambu nativas da América do Norte e do Sul.</p>
+				<p>Os bambus (Poaceae: Bambusoideae) são gramíneas que evoluíram e se adaptaram a habitats florestais (embora algumas espécies possam ser encontradas em ambientes abertos). Existem mais de 1.700 espécies de bambu no mundo todo, mais de um terço das quais são nativas das Américas. Um gênero (<i>Arundinaria</i>; "cana") com quatro espécies é nativo do que hoje é o sudeste dos Estados Unidos continentais.</p>
+				<h2>Por favor, perdoem nosso pólen!</h2>
+				<p>Este site está em desenvolvimento ativo, volte para atualizações.</p>
 			</div>
 			<?php
 		}
@@ -42,6 +48,9 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 			<div>
 				<h1 class="headline">Bienvenue</h1>
 				<p>Dédié à la documentation et à la présentation d'informations sur la diversité et la répartition des espèces de bambou originaires d'Amérique du Nord et du Sud.</p>
+				<p>Les bambous (Poaceae : Bambusoideae) sont des graminées qui ont évolué et se sont adaptées aux habitats forestiers (bien que certaines espèces puissent désormais être trouvées dans des environnements ouverts). Il existe plus de 1700 espèces de bambous dans le monde, dont plus d'un tiers sont originaires des Amériques. Un genre (<i>Arundinaria</i> ; « canne ») comprenant quatre espèces est originaire de ce qui est aujourd'hui le sud-est des États-Unis continentaux.</p>
+				<h2>Veuillez pardonner notre pollen!</h2>
+				<p>Ce site est en cours de développement, veuillez consulter régulièrement les mises à jour.</p>
 			</div>
 			<?php
 		}
