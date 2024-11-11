@@ -46,7 +46,7 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 					</div>
 				</a>
 				<div class="brand-name">
-					<h1><?= $LANG['H_BRANDMAIN'] ?>!</h1>
+					<h1><?= $LANG['H_BRANDMAIN'] ?></h1>
 					<h2><?= $LANG['H_BRANDSUB'] ?></h2>
 				</div>
 			</div>

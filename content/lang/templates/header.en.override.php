@@ -11,6 +11,9 @@
 
 $LANG['H_BRANDMAIN'] = "American Bamboos";
 $LANG['H_BRANDSUB'] = "Native Bamboos of the Americas";
-
+$LANG['H_ABOUT'] = 'About';
+$LANG['H_SPECIMENS'] = 'Specimens';
+$LANG['H_TEXT_SEARCH'] = 'Text Search';
+$LANG['H_SPECIES'] = 'Species';
 
 ?>
