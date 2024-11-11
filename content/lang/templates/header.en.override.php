@@ -16,4 +16,5 @@ $LANG['H_SPECIMENS'] = 'Specimens';
 $LANG['H_TEXT_SEARCH'] = 'Text Search';
 $LANG['H_SPECIES'] = 'Species';
 
+$LANG['F_MOD_MAINT_BY'] = "modified and maintained by";
 ?>
