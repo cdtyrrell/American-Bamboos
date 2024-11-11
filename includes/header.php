@@ -64,11 +64,11 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 						</a>
 					</li>
 					<li>
-						<a href="#">Specimens</a>
+						<a href="#"><?= $LANG['H_SPECIMENS'] ?></a>
 						<ul>
 							<li>
 								<a href="<?= $CLIENT_ROOT . $collectionSearchPage ?>">
-									Text Search<?= $LANG[''] ?>
+									<?= $LANG['H_TEXT_SEARCH'] ?>
 								</a>
 							</li>
 							<li>
@@ -80,11 +80,11 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/taxa/taxonomy/taxonomydynamicdisplay.php?target=8" rel="noopener noreferrer">
-							Species<?= $LANG[''] ?>
+							<?= $LANG['H_SPECIES'] ?>
 						</a>
 					</li>
 					<li>
-						<a href="#">About</a>
+						<a href="#"><?= $LANG['H_ABOUT'] ?></a>
 						<ul>
 							<li>
 								<a href="<?= $CLIENT_ROOT ?>/includes/usagepolicy.php">
