@@ -13,7 +13,8 @@ $LANG['H_BRANDMAIN'] = "Bambous américains";
 $LANG['H_BRANDSUB'] = "Bambous indigènes des Amériques";
 $LANG['H_ABOUT'] = 'À propos';
 $LANG['H_SPECIMENS'] = 'Spécimens';
-$LANG['H_TEXT_SEARCH'] = 'Recherche de Texte';
+$LANG['H_TEXT_SEARCH'] = 'Rechercher Texte';
 $LANG['H_SPECIES'] = 'Espèces';
 
+$LANG['F_MOD_MAINT_BY'] = "modifié et maintenu par";
 ?>
