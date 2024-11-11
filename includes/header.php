@@ -46,8 +46,8 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 					</div>
 				</a>
 				<div class="brand-name">
-					<h1>American Bamboos</h1>
-					<h2>Native Bamboos of the Americas</h2>
+					<h1><?= $LANG['H_BRANDMAIN'] ?></h1>
+					<h2><?= $LANG['H_BRANDSUB'] ?></h2>
 				</div>
 			</div>
 		</div>
